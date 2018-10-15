@@ -3,11 +3,22 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>exchange</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no">
+      <meta name="description" content="Newdex - the first global decerntralized exchange based on EOS，represents a new generation of decentralized exchanges，and it will lead the industry into a wonderful era of decentralized transactions.">
+      <meta name="keywords" content="EOS exchange，decerntralized exchange，exchange">
+      <title>Newdex - The first global decerntralized exchange base on EOS</title>
+      <link rel="stylesheet" href="<%= BASE_URL %>font.css">
+      <link rel="shortcut icon" type="image/x-icon" href="<%= BASE_URL %>favicon.ico">
+      <script type="text/javascript">
+          function resize() {
+              const width = screen.width > 750 ? '50px' : screen.width / 750 * 100 + 'px';
+              document.getElementsByTagName('html')[0].style.fontSize = width;
+          }
+          window.onresize = resize;
+          resize();
+      </script>
   </head>
-  <body>
+  <body style="max-width: 750px; margin: auto; overflow-x: hidden">
     <noscript>
       <strong>We're sorry but exchange doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>

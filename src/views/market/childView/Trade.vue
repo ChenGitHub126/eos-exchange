@@ -1,0 +1,522 @@
+<template>
+  <div class="trade">
+    <!-- coin & 收藏 -->
+    <div class="tools">
+      <div>
+        <span class="symbol" @click="changeSymbol = true">
+          <span>{{symbol1}}/{{symbol2}}</span>
+          <span class="iconfont icon-huaban37 changeSymbol"></span>
+        </span>
+        <span class="iconfont icon-huaban29 icon fr" v-if="!isFavorite" @click="handleSelfAdd"></span>
+        <span class="iconfont icon-huaban30 icon fr color-this" v-if="isFavorite" @click="handleSelfCancel"></span>
+      </div>
+      <!-- <div class="iconfont" @click="handleSelfAdd(symbol)"></div>
+      <div class="iconfont" @click="handleSelfCancel(symbol)"></div> -->
+    </div>
+
+    <!-- mainContent -->
+    <div class="tradeContent">
+      <TradeLeft :symbolInfo="symbolInfo"
+        :precision="precision"
+        :priceDefault="priceDefault"
+        :statusInfo="statusInfo"
+        :newPrice="toFixed(newPrice, precision.price)" class="item"/>
+      <TradeRight :symbolInfo="symbolInfo"
+        :symbolData="symbolData"
+        :newPrice="toFixed(newPrice, precision.price)" class="item"/>
+    </div>
+
+    <!-- order -->
+    <div class="orderContent">
+      <div class="chooseType">
+        <span class="type" @click="type = 1" :class="{'active': type === 1}">{{ $t('quotation.nowList') }}</span>
+        <span class="type" @click="type = 2" :class="{'active': type === 2}">{{ $t('quotation.oldList') }}</span>
+        <span class="fr color-yellow" @click="tipShow = true">
+          <span class="iconfont icon-huaban32" style="font-size: .25rem;"></span>
+          <span>{{ $t('public.tip') }}</span>
+        </span>
+      </div>
+      <div class="typeList">
+        <order-list-now v-if="type === 1" :symbol="symbol" :statusInfo="statusInfo"/>
+        <order-list-history v-if="type === 2" :symbol="symbol"/>
+      </div>
+    </div>
+
+    <!-- 切换交易对 -->
+    <mt-popup
+      v-model="changeSymbol"
+      position="left">
+        <change-symbol v-if="changeSymbol" @listenClose="handleClose" />
+    </mt-popup>
+
+    <!-- 切换交易对 -->
+    <mt-popup
+      class="popup"
+      v-model="tipShow">
+        <newdex-tip v-if="tipShow" @listenClose="handleClose" />
+    </mt-popup>
+  </div>
+</template>
+
+<script>
+import Io from '@/utils/socket/index';
+import { Toast } from 'mint-ui';
+import DApp from '@/utils/moreWallet';
+import { toFixed } from '@/utils/public';
+import OrderListHistory from '@/components/OrderListHistory';
+import OrderListNow from '@/components/OrderListNow';
+import TradeLeft from '../components/TradeLeft';
+import TradeRight from '../components/TradeRight';
+import ChangeSymbol from '../components/ChangeSymbol';
+import NewdexTip from '../components/NewdexTip';
+
+export default {
+  data() {
+    return {
+      changeSymbol: false, // 切换交易对
+      tipShow: false, // 提示
+      type: 1, // 订单类型  1:当前委托  2:历史委托
+
+      symbol: 'iq_eos',
+      symbol1: 'IQ',
+      symbol2: 'EOS',
+      symbolData: { // 交易对数据
+        amount: 0,
+        change: 0,
+        close: 0,
+        count: 0,
+        high: 0,
+        low: 0,
+        open: 0,
+        price: 0,
+        volume: null,
+        precision: {
+          coin: 4,
+          price: 4,
+        },
+      },
+      symbolInfo: { // 交易对信息
+      },
+      precision: {
+        coin: 4,
+        price: 4,
+      },
+      newPrice: 0,
+
+      priceDefault: { // 挂单价
+        buy: '0.0000',
+        sell: '0.0000',
+      },
+      isFavorite: false, // 是否收藏
+      statusInfo: { // 交易对上架状态
+        status: 0,
+      },
+    };
+  },
+  props: [
+  ],
+  components: {
+    OrderListHistory,
+    OrderListNow,
+    TradeLeft,
+    TradeRight,
+    ChangeSymbol,
+    NewdexTip,
+  },
+  watch: {
+    '$route.params.symbol': function listen() {
+      this.handleUnsubscribeWs();
+      this.handleMouted();
+    },
+  },
+  created() {
+  },
+  mounted() {
+    this.handleMouted();
+  },
+  methods: {
+    handleMouted() {
+      this.symbolInfo = this.$store.state.app.trad;
+      this.precision = this.$store.state.app.precision;
+      this.symbol = this.$route.params.symbol.toLowerCase();
+      const symbolArr = this.symbol.toUpperCase().split('_');
+      this.symbol1 = symbolArr[0];
+      this.symbol2 = symbolArr[1];
+
+      this.handlaGetSymbolInfo();
+      this.handleLoadHeardWs();
+      this.handleGetSymbolStatus();
+
+      // 绑定账号
+      // Io.accountBind(this.$store.state.app.accountInfo.account_name);
+    },
+    // 关闭切换币种
+    handleClose() {
+      this.changeSymbol = false;
+      this.tipShow = false;
+    },
+    // 截取小数
+    toFixed(numb, p) {
+      return toFixed(numb, p);
+    },
+    // 获取头部信息
+    handleLoadHeardWs() {
+      const params = {
+        symbol: this.symbol,
+      };
+      Io.cfwsHeard(params, (data) => {
+        this.symbolData = data;
+        if (data.precision) {
+          this.precision = data.precision;
+          this.newPrice = data.price;
+        }
+      });
+    },
+    // 获取交易对上架信息
+    handleGetSymbolStatus() {
+      const params = {
+        symbol: this.symbol.toUpperCase(),
+      };
+      this.$http.get('/symbol/getSymbolStatus', { params }).then((res) => {
+        if (res.code !== 0) {
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        this.statusInfo = res.symbolInfo;
+
+        // 服务器暂停
+        if (Number(res.exchangeStatus) === 0) {
+          sessionStorage.setItem('serverStatus', false); // 服务暂停
+          return;
+        }
+        sessionStorage.setItem('serverStatus', true); // 服务正常
+      });
+    },
+    // 获取交易对信息
+    handlaGetSymbolInfo() {
+      const param = {
+        symbol: this.symbol,
+      };
+      this.$http.post('/order/getSymbolInfo', param).then((res) => {
+        if (res.code !== 0) {
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        const info = res.symbolInfo;
+        const sym = info.symbol.split('_');
+        this.symbolInfo = {
+          symbol1: sym[0],
+          symbol2: sym[1],
+          symbol1_code: info.bidContract,
+          symbol2_code: info.askContract,
+          coinDecimal: info.coinInfo.coinDecimal,
+          priceDecimal: info.coinInfo.priceDecimal,
+        };
+        this.$store.dispatch('setTrad', this.symbolInfo);
+
+        this.precision = {
+          coin: info.coinInfo.coinDecimal,
+          price: info.coinInfo.priceDecimal,
+        };
+
+        this.priceDefault = {
+          buy: info.bidPrice,
+          sell: info.askPrice,
+        };
+
+        // 查询收藏列表
+        this.handleGetSelf();
+      });
+    },
+    /* -------- 交易对收藏 start -------- */
+    // 添加收藏
+    handleSelfAdd() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        this.handleGetTimestampJson();
+        return;
+      }
+      this.isFavorite = true;
+      const params = {
+        accountNo: this.$store.state.app.accountInfo.account_name,
+        symbols: this.symbol,
+        enable: 1,
+      };
+      this.$http.post('/accountFavorite/setting', params).then((res) => {
+        if (res.code === 401) {
+          this.isFavorite = false;
+          localStorage.removeItem('token');
+          Toast({
+            message: this.$t('error.token'),
+            position: 'center',
+            duration: 2000,
+          });
+          // 延时调用授权
+          setTimeout(() => {
+            this.handleGetTimestampJson();
+          }, 2000);
+          return;
+        }
+        if (res.code !== 0) {
+          this.isFavorite = false;
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        // Toast({
+        //   message: '操作成功',
+        //   position: 'center',
+        //   duration: 2000,
+        // });
+        this.isFavorite = true;
+      });
+    },
+    // 取消收藏
+    handleSelfCancel() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        this.handleGetTimestampJson();
+        return;
+      }
+      this.isFavorite = false;
+      const params = {
+        accountNo: this.$store.state.app.accountInfo.account_name,
+        symbols: this.symbol.toUpperCase(),
+        enable: 0,
+      };
+      this.$http.post('/accountFavorite/setting', params).then((res) => {
+        if (res.code === 401) {
+          this.isFavorite = true;
+          localStorage.removeItem('token');
+          Toast({
+            message: this.$t('error.token'),
+            position: 'center',
+            duration: 2000,
+          });
+          // 延时调用授权
+          setTimeout(() => {
+            this.handleGetTimestampJson();
+          }, 2000);
+          return;
+        }
+        if (res.code !== 0) {
+          this.isFavorite = true;
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        this.isFavorite = false;
+      });
+    },
+    // 获取收藏列表
+    handleGetSelf() {
+      const params = {
+        accountNo: this.$store.state.app.accountInfo.account_name,
+      };
+      this.$http.get('/accountFavorite/list', { params }).then((res) => {
+        if (res.code !== 0) {
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        const thisFacorite = res.favoriteList.find(item => item.symbol.toUpperCase() === this.symbol.toUpperCase());
+        if (thisFacorite) {
+          this.isFavorite = true;
+          return;
+        }
+        this.isFavorite = false;
+      });
+    },
+    /* -------- 交易对收藏 end -------- */
+    /* -------- 权限校验 start -------- */
+    // 获取服务器时间戳
+    handleGetTimestampJson() {
+      this.$http.get('/common/getTimestampJson').then((res) => {
+        if (res.code !== 0) {
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        const timestamp = res.timestamp;
+        DApp.signText(`${this.$store.state.app.accountInfo.account_name} ${timestamp}`, (err, data) => {
+          if (err) {
+            Toast(this.$t('error.tokenError'));
+            return;
+          }
+          // 针对tp特殊处理对签名
+          if (this.$store.state.app.channel === 'tokenpocket') {
+            this.handleTokenPocket(data, timestamp);
+            return;
+          }
+          const signature = data;
+          this.handleAccountReg(signature, timestamp);
+        });
+      });
+    },
+    // 权限获取校验
+    handleAccountReg(sign, time) {
+      const params = {
+        signature: sign, // 钱包签名
+        account: this.$store.state.app.accountInfo.account_name, // 账户名
+        timestamp: time, // 时间戳
+        type: this.$store.state.app.channel, // channel
+        // type: 4, // channel
+      };
+      this.$http.post('/account/verify', params).then((res) => {
+        if (res.code !== 0) {
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        localStorage.setItem('token', res.token);
+        if (this.isFavorite) {
+          this.handleSelfCancel();
+          return;
+        }
+        this.handleSelfAdd();
+      });
+    },
+    // tokenpocket sdk签名自带时间戳 - 特殊处理
+    handleTokenPocket(data, time) {
+      const params = {
+        signature: data.signature, // 钱包签名
+        account: this.$store.state.app.accountInfo.account_name, // 账户名
+        timestamp: time, // 服务器时间戳
+        mTimeStamp: data.timestamp, // tokenpocket返回的时间戳
+        type: this.$store.state.app.channel, // channel
+      };
+      this.$http.post('/account/tokenPocketVerify', params).then((res) => {
+        if (res.code !== 0) {
+          Toast({
+            message: res.msg,
+            position: 'center',
+            duration: 2000,
+          });
+          return;
+        }
+        localStorage.setItem('token', res.token);
+        if (this.isFavorite) {
+          this.handleSelfCancel();
+          return;
+        }
+        this.handleSelfAdd();
+      });
+    },
+    /* -------- 权限校验 end -------- */
+    // 取消所有推送
+    handleUnsubscribeWs() {
+      Io.cfwsUnsubscribe();
+      Io.addListenerOrder('stop');
+    },
+  },
+  beforeDestroy() {
+    this.handleUnsubscribeWs();
+  },
+};
+</script>
+
+<style scoped lang="scss">
+@import "../../../assets/css/public.scss";
+
+.popup{
+  border-radius: .3rem;
+}
+
+.trade{
+  font-size: .36rem;
+  // padding: 0rem .25rem;
+  background: #fafafa;
+  color: $color-333;
+
+  .tools{
+    padding: 0rem .25rem;
+    background: #FFF;
+    height: .8rem;
+    line-height: .8rem;
+
+    .symbol{
+      position: relative;
+
+      .changeSymbol{
+        position: absolute;
+        font-size: .16rem;
+        margin-left: .1rem;
+      }
+    }
+
+    .icon{
+      font-size: .38rem;
+    }
+  }
+
+  .tradeContent{
+    display: flex;
+    padding: 0.1rem .25rem;
+    background: #FFF;
+
+    .item{
+      flex: 1;
+
+      &:nth-child(1){
+        margin-right: .4rem;
+        min-width: 3.4rem;
+      }
+      &:nth-child(2){
+        min-width: 3rem;
+      }
+    }
+  }
+
+  .orderContent{
+    margin-top: .1rem;
+    font-size: .25rem;
+
+    .chooseType{
+      padding: 0.15rem .25rem;
+      color: $color-999;
+
+      .active{
+        color: $color-333;
+        font-weight: bold;
+      }
+    }
+
+    .type{
+      margin-right: .5rem;
+    }
+
+    .typeList{
+      // padding: .24rem .25rem;
+      background: #FFF;
+    }
+  }
+
+}
+</style>
+
+
+// WEBPACK FOOTER //
+// src/views/market/childView/Trade.vue

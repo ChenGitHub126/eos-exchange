@@ -1,0 +1,213 @@
+$color-000: #000;
+$color-333: #333;
+$color-e3e3e3: #e3e3e3;
+$color-999: #999;
+$color-666: #666;
+$color-yellow: #f5a623;
+$color-green: #00be66;
+$color-red: #ea573c;
+$color-white: #fff;
+$color-blue: #0094d5;
+
+$color-this: #0094d5;
+$active-white: rgba(96,115,154,.09);
+$active-green: #1baf6b;
+$active-red: #de462a;
+
+$color-sell: #00be66;
+$color-buy: #00be66;
+$color-navWhite: #fff;
+$color-nav: #fff;
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: Arial,Microsoft YaHei,sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+}
+html .mint-loadmore-bottom,
+html .mint-loadmore-top, body .mint-loadmore-bottom,
+body .mint-loadmore-top {
+  color: $color-999;
+}
+img {
+  border: none;
+}
+input {
+  outline: none;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
+}
+a {
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
+  color: #6b6c6e;
+}
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  -webkit-transition: color .2s linear;
+  transition: color .2s linear;
+}
+a:active {
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+}
+div {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+table {
+  border-collapse: collapse;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+i, em {
+  font-weight: normal;
+  font-style: normal;
+}
+input,
+select,
+button {
+  border: none;
+  outline: none;
+}
+select {
+  -webkit-appearance: none;
+}
+
+.color-333 {
+  color: $color-333 !important;
+}
+.color-999 {
+  color: $color-999 !important;
+}
+.color-666 {
+  color: $color-666 !important;
+}
+.color-this {
+  color: $color-this !important;
+}
+.color-red {
+  color: $color-red !important;
+}
+.color-green {
+  color: $color-green !important;
+}
+
+.bgcolor-999 {
+  background: $color-999 !important;
+}
+
+.bgcolor-green {
+  background: $color-green !important;
+}
+.bgcolor-red {
+  background: $color-red !important;
+}
+.bgcolor-blue {
+  background-color: $color-blue !important;
+}
+.bgcolor-yellow {
+  background-color: $color-yellow !important;
+}
+.bgcolor-this {
+  background: $color-this !important;
+}
+
+.fl {
+  float: left !important;
+}
+.fr {
+  float: right !important;
+}
+.point {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $color-red;
+  margin: 0 .08rem;
+}
+.clearfix:after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.box-shadow {
+  -webkit-box-shadow: 0 0 10px #ddd;
+  box-shadow: 0 0 10px #ddd;
+  background-color: #fff;
+}
+.bor-radius {
+  border-radius: .08rem;
+}
+.pt {
+  padding-top: 0.2rem !important;
+}
+.pt0 {
+  padding-top: 0 !important;
+}
+.pb {
+  padding-bottom: 0.2rem !important;
+}
+.pbx {
+  padding-bottom: 0.15rem !important;
+}
+.pl {
+  padding-left: 0.2rem !important;
+}
+.pl0 {
+  padding-left: 0 !important;
+}
+.pr {
+  padding-right: 0.2rem !important;
+}
+.pl0 {
+  padding-right: 0 !important;
+}
+.mt {
+  margin-top: 0.25rem !important;
+}
+.mb {
+  margin-bottom: 0.25rem !important;
+}
+.ml {
+  margin-left: 0.25rem !important;
+}
+.mr {
+  margin-right: 0.25rem !important;
+}
+.fontx {
+  font-size: 0.25rem !important;
+}
+.fontz {
+  font-size: 0.3rem !important;
+}
+.fontd {
+  font-size: 0.35rem !important;
+}
+.mtb {
+  margin: .2rem 0 !important;
+}
