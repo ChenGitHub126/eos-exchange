@@ -72,7 +72,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/market/childView/CoinHistoryList.vue

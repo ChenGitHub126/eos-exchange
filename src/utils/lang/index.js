@@ -28,7 +28,3 @@ const i18n = new VueI18n({
 });
 
 export default i18n;
-
-
-// WEBPACK FOOTER //
-// ./src/utils/lang/index.js

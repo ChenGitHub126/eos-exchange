@@ -37,7 +37,3 @@ new Vue({
   i18n,
   render: h => h(App),
 });
-
-
-// WEBPACK FOOTER //
-// ./src/main.js

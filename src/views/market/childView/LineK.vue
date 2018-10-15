@@ -291,7 +291,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/market/childView/LineK.vue

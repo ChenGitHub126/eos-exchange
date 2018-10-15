@@ -76,7 +76,3 @@ export default {
 }
 
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/order/components/OrderDetail.vue

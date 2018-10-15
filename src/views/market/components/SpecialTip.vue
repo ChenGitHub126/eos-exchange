@@ -49,7 +49,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/market/components/SpecialTip.vue

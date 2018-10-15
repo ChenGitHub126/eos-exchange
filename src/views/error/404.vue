@@ -12,7 +12,3 @@ export default {
 <style lang="scss" scoped>
 
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/error/404.vue

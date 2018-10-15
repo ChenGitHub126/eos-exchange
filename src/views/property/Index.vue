@@ -140,7 +140,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/property/Index.vue

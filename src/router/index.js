@@ -144,8 +144,3 @@ myRouter.afterEach(() => {});
 
 export default myRouter;
 
-
-
-
-// WEBPACK FOOTER //
-// ./src/router/index.js

@@ -4,11 +4,10 @@ function resolve(dir) {
   return path.join(__dirname, dir);
 }
 
-console.log('');
-console.log('本地启动或构建的文件信息 | 开始--------------------------------------------------------------');
-console.log();
-console.log('本地启动或构建的文件信息 | 结束--------------------------------------------------------------');
-console.log('');
+console.log('本地启动或构建的文件信息 | ------------------------------开始--------------------------------');
+
+console.log('本地启动或构建的文件信息 | ------------------------------结束--------------------------------');
+
 
 // const baseUrl = process.env.NODE_ENV === 'production' ? '/multi-page-Vue/dist/' : '/';
 
@@ -72,9 +71,6 @@ module.exports = {
         target: 'https://newdex.340wan.com',
         ws: true,
         changeOrigin: true,
-        // pathRewrite: {
-        //   '^/api': 'https://newdex.340wan.com'
-        // }
       },
     },
   },

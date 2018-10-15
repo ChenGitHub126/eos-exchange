@@ -358,7 +358,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/Account.vue

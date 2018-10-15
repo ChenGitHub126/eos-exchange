@@ -127,7 +127,3 @@ const app = {
 };
 
 export default app;
-
-
-// WEBPACK FOOTER //
-// ./src/store/modules/app.js

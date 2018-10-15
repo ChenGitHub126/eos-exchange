@@ -60,7 +60,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/ServerStop.vue

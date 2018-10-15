@@ -74,7 +74,7 @@ export default {
   index: {
     bannerTitle: '全球首家EOS去中心化交易所',
     new: '最新！',
-    news: '公告', 
+    news: '公告',
     riseList: '涨幅榜',
     turnoverList: '成交量榜',
     more: '查看更多',
@@ -111,13 +111,13 @@ export default {
     iqTip1: '委托买单者，在成交结算时收取转账费，挂单或撤销不收取',
     iqTip2: '委托卖单者，在成功挂单或撤销时收取转账费，成交结算不收取',
     iqTip3: '转账费从账户余额中扣除，需要预留至少0.1%的IQ余额',
-    toAddFavoriteSymbol: '快去添加你感兴趣的交易对吧', 
-    add: '添加', 
-    tipNewdexTitle: '温馨提示', 
-    tipNewdex: 'Newdex是去中心化交易所，不对任何项目作主观判断，亦不对投资结果负责，强烈建议您在详细了解项目后再做投资决定。', 
-    agreeTip: '使用Newdex交易前，请先确认并同意《用户使用协议》的内容再进行交易', 
-    agree: '我已阅读并同意', 
-    agreement: '《用户使用协议》',  
+    toAddFavoriteSymbol: '快去添加你感兴趣的交易对吧',
+    add: '添加',
+    tipNewdexTitle: '温馨提示',
+    tipNewdex: 'Newdex是去中心化交易所，不对任何项目作主观判断，亦不对投资结果负责，强烈建议您在详细了解项目后再做投资决定。',
+    agreeTip: '使用Newdex交易前，请先确认并同意《用户使用协议》的内容再进行交易',
+    agree: '我已阅读并同意',
+    agreement: '《用户使用协议》',
     agreeTitle: '使用协议',
     luckyTip: 'LUCKY交易说明',
     luckyTip1: '分红的LUCKY领取24小时后才可出售',
@@ -139,7 +139,7 @@ export default {
     about: '估值',
     change: '切换账户',
     balance: '余额',
-    shortChange: '切换', 
+    shortChange: '切换',
   },
   more: {
     toAccount: '委托账户',
@@ -194,8 +194,3 @@ export default {
     msg3: '给您造成不便，敬请谅解',
   },
 };
-
-
-
-// WEBPACK FOOTER //
-// ./src/utils/lang/zh-CN.js

@@ -134,7 +134,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/more/components/ToAccount.vue

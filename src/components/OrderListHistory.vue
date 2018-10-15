@@ -423,7 +423,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/OrderListHistory.vue

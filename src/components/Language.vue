@@ -203,7 +203,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/Language.vue

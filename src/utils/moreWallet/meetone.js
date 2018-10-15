@@ -149,7 +149,3 @@ const MeetOne = {
   /* -------- 签名 end -------- */
 };
 export default MeetOne;
-
-
-// WEBPACK FOOTER //
-// ./src/utils/moreWallet/meetone.js

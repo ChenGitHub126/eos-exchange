@@ -144,7 +144,3 @@ const TokenPocket = {
 };
 
 export default TokenPocket;
-
-
-// WEBPACK FOOTER //
-// ./src/utils/moreWallet/tokenpocket.js

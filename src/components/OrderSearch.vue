@@ -222,7 +222,3 @@ export default {
 }
 
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/OrderSearch.vue

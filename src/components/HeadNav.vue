@@ -77,7 +77,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/HeadNav.vue

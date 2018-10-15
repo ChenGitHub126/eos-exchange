@@ -78,7 +78,3 @@ export default {
 }
 
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/layout/Layout.vue

@@ -176,12 +176,12 @@ export default {
       //     }, 500);
       //     return;
       //   }
-        this.$store.dispatch('setToAccount', 'newdexpocket');
-        // if (Number(res.exchangeStatus) === 0) {
-        //   sessionStorage.setItem('serverStatus', false); // 服务暂停
-        //   return;
-        // }
-        sessionStorage.setItem('serverStatus', true); // 服务正常
+      this.$store.dispatch('setToAccount', 'newdexpocket');
+      // if (Number(res.exchangeStatus) === 0) {
+      //   sessionStorage.setItem('serverStatus', false); // 服务暂停
+      //   return;
+      // }
+      sessionStorage.setItem('serverStatus', true); // 服务正常
       // });
     },
     // 获取用户是否同意使用协议

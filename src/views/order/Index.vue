@@ -40,7 +40,3 @@ export default {
         height: 100%;
     }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/order/Index.vue

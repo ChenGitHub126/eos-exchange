@@ -82,7 +82,3 @@ const MoreWallet = {
 };
 
 export default MoreWallet;
-
-
-// WEBPACK FOOTER //
-// ./src/utils/moreWallet/morewallet.js

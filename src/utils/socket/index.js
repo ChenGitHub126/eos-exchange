@@ -224,7 +224,3 @@ const Io = {
 
 }
 export default Io
-
-
-// WEBPACK FOOTER //
-// ./src/utils/socket/index.js

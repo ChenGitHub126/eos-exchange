@@ -114,7 +114,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/Tabbar.vue

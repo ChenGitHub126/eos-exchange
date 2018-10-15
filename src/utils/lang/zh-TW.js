@@ -74,7 +74,7 @@ export default {
   index: {
     bannerTitle: '全球首家EOS去中心化交易所',
     new: '最新！',
-    news: '公告', 
+    news: '公告',
     riseList: '漲幅榜',
     turnoverList: '成交量榜',
     more: '查看更多',
@@ -114,10 +114,10 @@ export default {
     toAddFavoriteSymbol: '快去添加你感興趣的交易對吧',
     add: '添加',
     tipNewdexTitle: '溫馨提示',
-    tipNewdex: 'Newdex是去中心化交易所，不對任何項目作主觀判斷，亦不對投資結果負責，強烈建議您在詳細了解項目后再做投資決定', 
+    tipNewdex: 'Newdex是去中心化交易所，不對任何項目作主觀判斷，亦不對投資結果負責，強烈建議您在詳細了解項目后再做投資決定',
     agreeTip: '使用Newdex交易前，請先確認並同意《用戶使用協議》的內容在進行交易',
-    agree: '我已閱讀并同意', 
-    agreement: '《用戶使用協議》', 
+    agree: '我已閱讀并同意',
+    agreement: '《用戶使用協議》',
     agreeTitle: '使用協議',
     luckyTip: 'LUCKY交易說明',
     luckyTip1: '分紅的LUCKY領取24小時后才可出售',
@@ -139,7 +139,7 @@ export default {
     about: '估值',
     change: '切換帳戶',
     balance: '餘額',
-    shortChange: '切換', 
+    shortChange: '切換',
   },
   more: {
     toAccount: '委託帳戶',
@@ -150,9 +150,9 @@ export default {
     form: '提交工單',
     formTip: '問題反饋',
     main: '主鏈',
-    what: '什麼是委託賬戶？', 
-    content1: '委託賬戶即Newdex官方使用的資產委託及結算賬戶，該賬戶在EOS鏈上，信息公開透明，數據實時可查。', 
-    content2: 'Newdex在執行訂單撮合前，需先凍結用戶掛單的資產，保證撮合成功后可執行資產結算，成交資產實時轉到用戶賬戶。', 
+    what: '什麼是委託賬戶？',
+    content1: '委託賬戶即Newdex官方使用的資產委託及結算賬戶，該賬戶在EOS鏈上，信息公開透明，數據實時可查。',
+    content2: 'Newdex在執行訂單撮合前，需先凍結用戶掛單的資產，保證撮合成功后可執行資產結算，成交資產實時轉到用戶賬戶。',
     content3: '同時用戶在執行撤單動作時，其凍結的資產也將及時返回賬戶中。',
     content4: '為了資金安全起見，Newdex已啟用冷錢包帳戶：',
   },
@@ -194,8 +194,3 @@ export default {
     msg3: '給您造成不便，敬請諒解',
   },
 };
-
-
-
-// WEBPACK FOOTER //
-// ./src/utils/lang/zh-TW.js

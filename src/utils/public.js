@@ -74,6 +74,3 @@ export function GetUrlPara() {
   return params;
 }
 
-
-// WEBPACK FOOTER //
-// ./src/utils/public.js

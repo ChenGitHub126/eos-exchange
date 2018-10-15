@@ -233,9 +233,3 @@ CFClient.prototype.ready = function(callback) {
 //   module.exports = CFClient
 // }
 export default CFClient
-
-
-
-
-// WEBPACK FOOTER //
-// ./src/utils/socket/cfws.js

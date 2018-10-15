@@ -257,7 +257,3 @@ const Scatter = {
 };
 
 export default Scatter;
-
-
-// WEBPACK FOOTER //
-// ./src/utils/moreWallet/scatter.js

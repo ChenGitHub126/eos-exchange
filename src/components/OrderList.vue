@@ -888,6 +888,3 @@ export default {
 }
 </style>
 
-
-// WEBPACK FOOTER //
-// src/components/OrderList.vue

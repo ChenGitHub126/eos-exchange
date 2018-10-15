@@ -322,7 +322,3 @@ export default {
         top: -100px;
     }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/more/Index.vue

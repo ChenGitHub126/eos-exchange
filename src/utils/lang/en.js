@@ -74,7 +74,7 @@ export default {
   index: {
     bannerTitle: 'The first EOS based decentralized exchange in the world',
     new: 'NEW!',
-    news: 'Notice', 
+    news: 'Notice',
     riseList: 'Top Gainers',
     turnoverList: ' VOL Top',
     more: 'View More',
@@ -116,9 +116,9 @@ export default {
     iqTip3: 'Fee will be charged from account balance, you need to remain at least 0.1% IQ in balance.',
     toAddFavoriteSymbol: 'Get started on adding your favourite exchange pair',
     add: 'Add',
-    tipNewdexTitle: 'Kind Warning', 
-    tipNewdex: 'Newdex is a decentralized exchange, which does not make subjective judgment on any project and is not responsible for the investment results. It is strongly recommended that you make investment decisions after knowing the project in details. ', 
-    agreeTip: 'Please confirm and agree to the contents of the User Agreement before trading on Newdex.', 
+    tipNewdexTitle: 'Kind Warning',
+    tipNewdex: 'Newdex is a decentralized exchange, which does not make subjective judgment on any project and is not responsible for the investment results. It is strongly recommended that you make investment decisions after knowing the project in details. ',
+    agreeTip: 'Please confirm and agree to the contents of the User Agreement before trading on Newdex.',
     agree: 'I have read and agree to',
     agreement: 'User Agreement',
     agreeTitle: 'User Agreement',
@@ -142,7 +142,7 @@ export default {
     about: 'Value',
     change: 'Switch Account',
     balance: 'Balance',
-    shortChange: 'Switch', 
+    shortChange: 'Switch',
   },
   more: {
     toAccount: ' Entrusted Account',
@@ -153,9 +153,9 @@ export default {
     form: 'Support',
     formTip: 'Question Feedback',
     main: 'Main Chain',
-    what: 'What is entrusted account？', 
-    content1: 'Entrusted account is the account for entrusting assets and settlement, which is stored on EOS chain. The information is open and transparent. The data are real-time checkable. ', 
-    content2: "Before matching an order, Newdex needs to freeze the assets that user places on that order, to ensure the assets settlement after matching successfully, and to transfer the dealt assets to user's account in real time. ", 
+    what: 'What is entrusted account？',
+    content1: 'Entrusted account is the account for entrusting assets and settlement, which is stored on EOS chain. The information is open and transparent. The data are real-time checkable. ',
+    content2: "Before matching an order, Newdex needs to freeze the assets that user places on that order, to ensure the assets settlement after matching successfully, and to transfer the dealt assets to user's account in real time. ",
     content3: "Meanwhile, when user is revoking an order, the entrusted assets will be returned to user's account timely.",
     content4: 'For the safety of the assets, Newdex has enabled the offline wallet account:',
   },
@@ -197,7 +197,3 @@ export default {
     msg3: 'Sorry for the inconvenience.',
   },
 }
-
-
-// WEBPACK FOOTER //
-// ./src/utils/lang/en.js

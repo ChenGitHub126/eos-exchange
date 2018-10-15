@@ -410,7 +410,3 @@ export default {
   background: #fafafa;
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/index/Index.vue

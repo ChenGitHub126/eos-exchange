@@ -123,7 +123,3 @@ export default {
   padding: .35rem 0rem;
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/views/market/Index.vue

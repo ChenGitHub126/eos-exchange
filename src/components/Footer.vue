@@ -6,9 +6,9 @@
 </template>
 
 <script>
-    // import Language from '@/components/Language';
+// import Language from '@/components/Language';
 
-    export default {
+export default {
 
-    }
+};
 </script>

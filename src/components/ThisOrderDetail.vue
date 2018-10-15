@@ -312,7 +312,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/ThisOrderDetail.vue

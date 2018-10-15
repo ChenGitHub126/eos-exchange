@@ -605,7 +605,3 @@ export default {
   }
 }
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/OrderListNow.vue

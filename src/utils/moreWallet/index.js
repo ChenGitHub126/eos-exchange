@@ -79,7 +79,3 @@ const DApp = {
 }
 
 export default DApp;
-
-
-// WEBPACK FOOTER //
-// ./src/utils/moreWallet/index.js

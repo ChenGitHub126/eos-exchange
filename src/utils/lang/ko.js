@@ -74,7 +74,7 @@ export default {
   index: {
     bannerTitle: '전세계 최초EOS계정을 통해서 거래 진행하는 탈중양화 거래소',
     new: '최신!',
-    news: '공고', 
+    news: '공고',
     riseList: '변동 리스트',
     turnoverList: '거래량 리스트',
     more: '더 보기',
@@ -111,14 +111,14 @@ export default {
     iqTip1: '매입자는 거래 성공만 수수료를 내고, 주문 위탁과 주문 취소 수수료 없음',
     iqTip2: '매도자는 주문 위탁 성공과 주문 취소할 경우만 수수료를 내고 거래 성공하면 수수료 없음',
     iqTip3: '수수료는 잔액 중 빼야 되고 적어도 0.1%의 IQ 잔액이 남겨야 합니다.',
-    toAddFavoriteSymbol: '관심 있는 코인 페어 추가 가보세요',  
-    add: '추가', 
-    tipNewdexTitle: '주의 사항', 
-    tipNewdex: 'Newdew는 탈중앙화 거래소이며, 어떤 항목도 주관적으로 판단하지 않습니다. 투자 결과도 채김을 지지 않습니다. 고객님은 꼭 항목에 대해 자세히 알아봐야 투자 결정을 합니다.', 
-    agreeTip: 'Newdex거래 사용하기전에《사용자 사용 합의》에 대한 내용을 먼저 동의하고 나서 거래 진행 시작합니다.', 
-    agree: '이미 읽고 동의하였습니다.', 
-    agreement: '《사용자 사용 합의》', 
-    agreeTitle: '사용 합의', 
+    toAddFavoriteSymbol: '관심 있는 코인 페어 추가 가보세요',
+    add: '추가',
+    tipNewdexTitle: '주의 사항',
+    tipNewdex: 'Newdew는 탈중앙화 거래소이며, 어떤 항목도 주관적으로 판단하지 않습니다. 투자 결과도 채김을 지지 않습니다. 고객님은 꼭 항목에 대해 자세히 알아봐야 투자 결정을 합니다.',
+    agreeTip: 'Newdex거래 사용하기전에《사용자 사용 합의》에 대한 내용을 먼저 동의하고 나서 거래 진행 시작합니다.',
+    agree: '이미 읽고 동의하였습니다.',
+    agreement: '《사용자 사용 합의》',
+    agreeTitle: '사용 합의',
     luckyTip: 'LUCKY거래 설명',
     luckyTip1: '수익 배당은 LUCKY받은 24시간 후 매도 진행 가능합니다.',
   },
@@ -139,7 +139,7 @@ export default {
     about: '평가',
     change: '계정 전환',
     balance: '잔액',
-    shortChange: '전환', 
+    shortChange: '전환',
   },
   more: {
     toAccount: '계정 위탁',
@@ -150,9 +150,9 @@ export default {
     form: '문의 등록',
     formTip: '문제 피드백',
     main: '메인',
-    what: '계정 위탁 무엇입니까?', 
-    content1: '계정 위탁은 Newdex 공식적으로 사용하는 자산 위탁 및 계정 결산입니다. 계정은 EOS체인에 정보 공개 투명하여, 데이터 실시간 검색 가능합니다. ', 
-    content2: 'Newdex는 주문 성사 시키기 전에 사용자의 위탁 자금을 봉쇄하여 성사 시킨후 자산 결산을 진행할 수 있도록 약속합니다. 거래 자산을 실시간 사용자의 계정으로 옮길 수 있도록 합니다. ', 
+    what: '계정 위탁 무엇입니까?',
+    content1: '계정 위탁은 Newdex 공식적으로 사용하는 자산 위탁 및 계정 결산입니다. 계정은 EOS체인에 정보 공개 투명하여, 데이터 실시간 검색 가능합니다. ',
+    content2: 'Newdex는 주문 성사 시키기 전에 사용자의 위탁 자금을 봉쇄하여 성사 시킨후 자산 결산을 진행할 수 있도록 약속합니다. 거래 자산을 실시간 사용자의 계정으로 옮길 수 있도록 합니다. ',
     content3: '또는 사용자가 주문 쉬소할 때 봉쇄한 자산을 실시간 계정으로 반환할 수 있습니다.',
     content4: '자금 안전을 위하여 Newdex는 냉지갑 계정 기용：',
   },
@@ -194,8 +194,3 @@ export default {
     msg3: '불편해 줘서 죄송합니다.',
   },
 };
-
-
-
-// WEBPACK FOOTER //
-// ./src/utils/lang/ko.js

@@ -3,7 +3,3 @@ const getters = {
 };
 
 export default getters;
-
-
-// WEBPACK FOOTER //
-// ./src/store/getters.js

@@ -832,7 +832,3 @@ export default {
 }
 
 </style>
-
-
-// WEBPACK FOOTER //
-// src/components/TableList.vue
