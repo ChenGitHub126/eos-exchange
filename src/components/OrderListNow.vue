@@ -183,6 +183,7 @@ export default {
     * ORDER_FAIL(4, "orderfail", "下单失败"),
     * CANCEL_FAIL(5, "cancelfail", "撤单失败");
     */
+    console.log('OrderListNow.vue', 'IO开始监听订单状态的改变');
     Io.addListenerOrder('start', (res) => {
       // console.log('-------------当前订单-------------'); // eslint-disable-line
       if (res.type === 'orderupdate' || res.type === 'ordersuccess') { // 下单成功 - 接口获取新的列表
@@ -237,6 +238,7 @@ export default {
           // accountNo: 'eosxhbeosxhb', // 账户名 - 测试
           symbol: this.symbol, // 交易对
         };
+        console.log('OrderListNow.vue', '获取指定交易对的当前订单记录');
         this.$http.post('/order/queryCurrentOrderPage', params).then((res) => {
           this.loading = false;
           const list = res.page.list;
@@ -326,6 +328,7 @@ export default {
     },
     handleGetSymbolStatus(row) {
       // 撤单接口请求
+      console.log('OrderListNow.vue', '撤销当前订单');
       const params = {
         uuid: row.uuid, // 订单uuid
         symbol: row.symbol, // 交易对

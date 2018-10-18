@@ -5,7 +5,7 @@ function CFClient(opts) {
         opts = {}
     }
     this.env = opts.env ? opts.env : 'local';
-    this.debug = !!opts.debug
+    this.debug = !!opts.debug;
     var uri = 'ws://127.0.0.1:7071';
     if (this.env == 'production') {
         if (location.hostname == 'newdex.340wan.com') {

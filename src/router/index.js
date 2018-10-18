@@ -89,35 +89,35 @@ export const constantRouterMap = [
         ],
     },
     // 资产
-    {
-        path: '/property',
-        component: Layout,
-        redirect: '/property',
-        meta: { title: 'exchang' },
-        children: [
-            {
-                path: '/',
-                name: 'property',
-                component: resolve => require(['@/views/property/Index'], resolve),
-                meta: { title: 'Newdex - Property' },
-            }
-        ],
-    },
+    // {
+    //     path: '/property',
+    //     component: Layout,
+    //     redirect: '/property',
+    //     meta: { title: 'exchang' },
+    //     children: [
+    //         {
+    //             path: '/',
+    //             name: 'property',
+    //             component: resolve => require(['@/views/property/Index'], resolve),
+    //             meta: { title: 'Newdex - Property' },
+    //         }
+    //     ],
+    // },
     // 更多
-    {
-        path: '/more',
-        component: Layout,
-        redirect: '/more',
-        meta: { title: 'exchang' },
-        children: [
-            {
-                path: '/',
-                name: 'more',
-                component: resolve => require(['@/views/more/Index'], resolve),
-                meta: { title: 'Newdex - More' },
-            }
-        ],
-    },
+    // {
+    //     path: '/more',
+    //     component: Layout,
+    //     redirect: '/more',
+    //     meta: { title: 'exchang' },
+    //     children: [
+    //         {
+    //             path: '/',
+    //             name: 'more',
+    //             component: resolve => require(['@/views/more/Index'], resolve),
+    //             meta: { title: 'Newdex - More' },
+    //         }
+    //     ],
+    // },
     // error
     {
         path: '*',

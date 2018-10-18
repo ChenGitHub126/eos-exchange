@@ -74,4 +74,6 @@ module.exports = {
       },
     },
   },
+
+  lintOnSave: undefined
 };

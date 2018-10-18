@@ -33,10 +33,12 @@ https.defaults.transformRequest = [(data, header) => { // 开始请求前期
 }];
 
 // 请求前
-https.interceptors.request.use((config) => { // eslint-disable-line
+https.interceptors.request.use(
+  config => // eslint-disable-lines
   // Indicator.open();
-  return config;
-}, error => Promise.reject(error));
+    config
+  , error => Promise.reject(error),
+);
 
 https.interceptors.response.use((response) => { // 请求后
   // Indicator.close();
@@ -45,11 +47,11 @@ https.interceptors.response.use((response) => { // 请求后
 }, (error) => {
   // Indicator.close();
   if (!error.response) {
-    // Toast({
-    //   message: 'Request error',
-    //   position: 'center',
-    //   duration: 4000,
-    // });
+    Toast({
+      message: 'Request error',
+      position: 'center',
+      duration: 4000,
+    });
     return false;
   }
   switch (error.response.status) {

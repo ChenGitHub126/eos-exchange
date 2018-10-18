@@ -97,7 +97,7 @@ export default {
   },
   watch: {
     '$store.state.app.accountInfo': function listen() {
-      // Toast(`获取到account：${this.$store.state.app.accountInfo.account_name}`)
+      // Toast(`获取到account：${this.$store.state.app.accountInfo.account_name}`);
       this.handleGetCoinBanlance();
     },
   },
@@ -134,8 +134,9 @@ export default {
     handleCencel() {
       this.accountChange = false;
     },
-    // 获取币种余额
+    // 获取EOS余额及其它币种余额
     handleGetCoinBanlance() {
+      console.log('Account.vue', '获取EOS余额及其它币种余额');
       try {
         const params = {
           account: this.$store.state.app.accountInfo.account_name,

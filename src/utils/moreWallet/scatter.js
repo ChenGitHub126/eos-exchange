@@ -54,6 +54,7 @@ const Scatter = {
       // if (self.scatter.identity) {
       //   window.scatter.forgetIdentity(); // 登出
       // }
+      window.scatter = null;
       return;
     }
     setTimeout(() => {
@@ -184,7 +185,7 @@ const Scatter = {
       });
     });
   },
-  /* -------- 签名 start -------- */
+  /* -------- 签名 end -------- */
 
   /* -------- 转账 start ------- */
   /*

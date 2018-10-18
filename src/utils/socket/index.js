@@ -2,7 +2,7 @@
 import CFClient from './cfws';
 import moment from 'moment';
 
-const host = /*window.location.host*/'192.168.8.11:8890';
+const host = /*window.location.host*/'newdex.340wan.com';
 let env = '';
 switch (host) {
     // case 'dapp.340wan.com':
@@ -222,5 +222,5 @@ const Io = {
         })
     }
 
-}
+};
 export default Io

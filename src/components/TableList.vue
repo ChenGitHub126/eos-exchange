@@ -134,24 +134,24 @@ import { Toast } from 'mint-ui';
 export default {
   data() {
     return {
-      partition: [ // 分区
+      partition: [ // 分区(当前仅获取EOS交易对)
         'eos',
       ],
       allData: {}, // 所有数据
       showData: [], // 展示的数据 - 用于各个分区数据展示
       showDialog: false,
 
-      // 排序
-      quoteChange: 0,
-      newPrice: 0,
-      dealCount: 0,
+      // 排序 - 0： 不排序 | 1: 升序 | 2： 降序
+      quoteChange: 0, // 涨跌幅
+      newPrice: 0, // 最新价
+      dealCount: 0, // 成交量
 
       // 收藏列表
       allFavoriteData: [],
 
       // loading
       loading: true,
-      first: true,
+      first: true, // 来源为是否为tabBar
 
       // 当前交易对
       symbol: '',
@@ -181,6 +181,7 @@ export default {
       this.handleWsListen();
     },
     '$route.params.symbol': function listen(newVal) {
+      console.log('symbol', newVal);
       this.symbol = newVal;
     },
   },
@@ -198,7 +199,7 @@ export default {
     },
     // 跳转到交易
     handleToTrade(item) {
-      this.$store.dispatch('setPrecision', item.precision);
+      this.$store.dispatch('setPrecision', item.precision); // 设置精度
       const params = {
         symbol: item.symbol,
       };
@@ -229,15 +230,15 @@ export default {
     handleWsListen() {
       this.loading = true;
       this.partition.forEach((item) => {
-        Io.cfwsUnsubscribe(`markets.${item}`);
+        Io.cfwsUnsubscribe(`markets.${item}`); // 停止交易对推送
         const subCoinPair = (item).toLowerCase() || 'eos';
+        console.log('TableList.vue', '获取行情列表');
         const params = {
           symbol: subCoinPair,
           offset: 0,
           count: 1000,
         };
         Io.cfwsPricesSymbol(params, (res) => {
-          // console.log(`WS 返回：${res}`)
           this.loading = false;
           const rows = Array.isArray(res) ? res : [res];
 
@@ -249,6 +250,7 @@ export default {
               return;
             }
             // 排序展示
+            // (首页跳入 - type - 1: 涨幅榜 | 2: 交易量)
             if (this.$route.params.type && this.first) {
               this.first = false;
               if (this.$route.params.type === 1) {
@@ -259,6 +261,7 @@ export default {
               this.handleSort(item, 2);
               return;
             }
+            // (直接tabBar进入)
             this.handleSort(item);
             return;
           }
@@ -342,9 +345,9 @@ export default {
           const value1 = obj1[property];
           const value2 = obj2[property];
           if (type === 1) {
-            return value1 - value2;
+            return value1 - value2; // 升序
           }
-          return value2 - value1;
+          return value2 - value1; // 降序
         };
       };
       // 首页的排序
@@ -386,6 +389,7 @@ export default {
     },
     // 自选
     handleFavorite() {
+      console.log('TableList.vue', '获取自选列表');
       this.loading = true;
       this.showData = [];
       // 异步获取自选交易对 - 进行匹配添加list
@@ -408,6 +412,7 @@ export default {
         this.allFavoriteData.forEach((item) => {
           // 循环 allData 列表
           for (const i in this.allData) { // eslint-disable-line
+            console.log(i);
             if (i !== 'self') {
               this.allData[i].forEach(((list) => {
                 if (item.symbol === list.symbol.toUpperCase()) {

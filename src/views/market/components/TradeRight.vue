@@ -98,7 +98,7 @@ export default {
       Io.cfwsDepth(params, (data) => {
         this.wsData = data;
         this.handleWsData(this.wsData);
-
+        // 卖盘列表显示到最后
         if (this.first) {
           this.first = false;
           setTimeout(() => {
@@ -125,7 +125,7 @@ export default {
         }
         // this.sellCount += Number(vv[1]);
       });
-      // 卖盘需要进行倒序
+      // 卖盘需要进行倒序 (这也没倒啊???)
       const asksArr = asks;
       this.data.asks = asksArr;
       if (asksArr.length > 50) {

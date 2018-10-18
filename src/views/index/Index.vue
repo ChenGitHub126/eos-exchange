@@ -8,7 +8,7 @@
         <div class="bannerTitle">{{$t('index.bannerTitle')}}</div>
       </div>
       <div class="fr langu">
-        <!-- <language/> -->
+         <!--<language/>-->
       </div>
     </div>
     <!-- banner end -->

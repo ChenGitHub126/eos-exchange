@@ -47,12 +47,13 @@ export default {
       showTabbar: true, // 显示tabbar
       language: null,
 
-      get: false,
-      versionTip: false,
+      get: false, // 用户信息获取状态
+      versionTip: false, // 版本更新提示
     };
   },
   watch: {
     $route(newVal) {
+      // 根据路由判断tabBar是否显示
       if (newVal.name === 'orderDetail'
                     || newVal.name === 'selfAreaSetting'
                     || newVal.name === 'coinHistoryList') {
@@ -64,6 +65,7 @@ export default {
     },
     '$store.state.app.accountInfo': function listen() {
       if (this.$store.state.app.accountInfo && this.$store.state.app.accountInfo.account_name) {
+        console.log('App.vue', '执行IO');
         this.handleGetAccountAgree();
         this.handleNotReadCount();
         Io.accountOut(this.$store.state.app.accountInfo.account_name); // 退出账号
@@ -92,17 +94,22 @@ export default {
   methods: {
     // 获取dapp名称
     handleGetChannel() {
-      const oldChannel = localStorage.getItem('channel');
-      const newChannel = GetUrlPara().channel;
-      let channel = newChannel && oldChannel !== newChannel ? newChannel : oldChannel;
-      if (!channel) {
-        channel = 'scatter';
-      }
+      // const oldChannel = localStorage.getItem('channel');
+      // const newChannel = GetUrlPara().channel;
+      // let channel = newChannel && oldChannel !== newChannel ? newChannel : oldChannel;
+      // if (!channel) {
+      //   channel = 'scatter';
+      // }
+
+      // 暂时设置为仅支持scatter
+      const channel = 'scatter';
+
       this.$store.dispatch('setChannel', channel);
       DApp.setChannel(channel);
 
       // 只有获得channel后，才能继续
-      this.handleCheckAvailable();
+      // this.handleCheckAvailable(); // 暂时不检测版本
+
       setTimeout(() => {
         this.handleGetAccount();
       }, 1000);
@@ -153,7 +160,7 @@ export default {
         }
       });
     },
-    // 获取委托账户
+    // 获取委托账户(已无用，改为在查询服务器状态时一起返回)
     handleGetChainFlyAccount() {
       this.$http.post('/account/exchangeEosAccount').then((res) => {
         if (res.code !== 0) {
@@ -167,8 +174,9 @@ export default {
         this.$store.dispatch('setToAccount', res.exchangeEosAccount);
       });
     },
-    // 查询服务器状态 - 0：暂停 | 1：正常
+    // 查询服务器状态 - 0：暂停 | 1：正常，(并设置委托账户)
     handleCheckServerStop() {
+      console.log('App.vue', '检查服务器状态并设置委托账户');
       // this.$http.get('common/getCommonParam').then((res) => {
       //   if (res.code !== 0) {
       //     setTimeout(() => {
@@ -186,47 +194,49 @@ export default {
     },
     // 获取用户是否同意使用协议
     handleGetAccountAgree() {
-      const params = {
-        account: this.$store.state.app.accountInfo.account_name,
-        type: 1, // 1 - eos | 2 - 其他
-      };
-      this.$http.post('/account/getAccountAgreement', params).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        if (res.status === 1) {
-          sessionStorage.setItem('accountAgree', true);
-          return;
-        }
-        sessionStorage.setItem('accountAgree', false);
-      });
+      // const params = {
+      //   account: this.$store.state.app.accountInfo.account_name,
+      //   type: 1, // 1 - eos | 2 - 其他
+      // };
+      // this.$http.post('/account/getAccountAgreement', params).then((res) => {
+      //   if (res.code !== 0) {
+      //     Toast({
+      //       message: res.msg,
+      //       position: 'center',
+      //       duration: 2000,
+      //     });
+      //     return;
+      //   }
+      //   if (res.status === 1) {
+      sessionStorage.setItem('accountAgree', true);
+      //     return;
+      //   }
+      //   sessionStorage.setItem('accountAgree', false);
+      // });
     },
     // 获取账户未读消息总数
     handleNotReadCount() {
-      const params = {
-        accountNo: this.$store.state.app.accountInfo.account_name,
-      };
-      this.$http.post('/order/getUnReadCount', params).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        this.$store.dispatch('setUnReadCount', res.unReadCount);
-      });
+      console.log('App.vue', '获取账户未读消息总数');
+      // const params = {
+      //   accountNo: this.$store.state.app.accountInfo.account_name,
+      // };
+      // this.$http.post('/order/getUnReadCount', params).then((res) => {
+      //   if (res.code !== 0) {
+      //     Toast({
+      //       message: res.msg,
+      //       position: 'center',
+      //       duration: 2000,
+      //     });
+      //     return;
+      //   }
+      //   this.$store.dispatch('setUnReadCount', res.unReadCount);
+      // });
     },
     // 监听账户订单状态
     handleOrderUpdata() {
       Io.addListenerOrder('stop');
       Io.addListenerOrder('start', (res) => {
+        console.log('App.vue', res);
         if (res.type === 'orderupdate') { // 订单更新 - 查询未读订单条数
           this.handleNotReadCount();
         }

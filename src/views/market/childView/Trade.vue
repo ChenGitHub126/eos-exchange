@@ -10,8 +10,8 @@
         <span class="iconfont icon-huaban29 icon fr" v-if="!isFavorite" @click="handleSelfAdd"></span>
         <span class="iconfont icon-huaban30 icon fr color-this" v-if="isFavorite" @click="handleSelfCancel"></span>
       </div>
-      <!-- <div class="iconfont" @click="handleSelfAdd(symbol)"></div>
-      <div class="iconfont" @click="handleSelfCancel(symbol)"></div> -->
+       <!--<div class="iconfont " @click="handleSelfAdd(symbol)"></div>-->
+      <!--<div class="iconfont" @click="handleSelfCancel(symbol)"></div>-->
     </div>
 
     <!-- mainContent -->
@@ -49,7 +49,7 @@
         <change-symbol v-if="changeSymbol" @listenClose="handleClose" />
     </mt-popup>
 
-    <!-- 切换交易对 -->
+    <!-- tip -->
     <mt-popup
       class="popup"
       v-model="tipShow">
@@ -136,7 +136,7 @@ export default {
   },
   methods: {
     handleMouted() {
-      this.symbolInfo = this.$store.state.app.trad;
+      this.symbolInfo = this.$store.state.app.trad; // ????
       this.precision = this.$store.state.app.precision;
       this.symbol = this.$route.params.symbol.toLowerCase();
       const symbolArr = this.symbol.toUpperCase().split('_');
@@ -161,6 +161,7 @@ export default {
     },
     // 获取头部信息
     handleLoadHeardWs() {
+      console.log('Trade.vue', 'IO获取头部信息');
       const params = {
         symbol: this.symbol,
       };
@@ -174,6 +175,7 @@ export default {
     },
     // 获取交易对上架信息
     handleGetSymbolStatus() {
+      console.log('Trade.vue', '获取交易对上架信息和状态');
       const params = {
         symbol: this.symbol.toUpperCase(),
       };
@@ -198,6 +200,7 @@ export default {
     },
     // 获取交易对信息
     handlaGetSymbolInfo() {
+      console.log('Trade.vue', '获取指定交易对信息');
       const param = {
         symbol: this.symbol,
       };
@@ -250,6 +253,7 @@ export default {
         symbols: this.symbol,
         enable: 1,
       };
+      console.log('Trade.vue', '添加自选交易对');
       this.$http.post('/accountFavorite/setting', params).then((res) => {
         if (res.code === 401) {
           this.isFavorite = false;
@@ -274,11 +278,11 @@ export default {
           });
           return;
         }
-        // Toast({
-        //   message: '操作成功',
-        //   position: 'center',
-        //   duration: 2000,
-        // });
+        Toast({
+          message: '添加成功',
+          position: 'center',
+          duration: 2000,
+        });
         this.isFavorite = true;
       });
     },
@@ -295,6 +299,7 @@ export default {
         symbols: this.symbol.toUpperCase(),
         enable: 0,
       };
+      console.log('Trade.vue', '移除自选交易对');
       this.$http.post('/accountFavorite/setting', params).then((res) => {
         if (res.code === 401) {
           this.isFavorite = true;
@@ -319,11 +324,17 @@ export default {
           });
           return;
         }
+        Toast({
+          message: '取消成功',
+          position: 'center',
+          duration: 2000,
+        });
         this.isFavorite = false;
       });
     },
-    // 获取收藏列表
+    // 获取收藏列表 (判断当前交易对是否在收藏列表)
     handleGetSelf() {
+      console.log('TableList.vue', '查询自选列表，判断当前交易对是否在收藏列表');
       const params = {
         accountNo: this.$store.state.app.accountInfo.account_name,
       };
@@ -348,6 +359,7 @@ export default {
     /* -------- 权限校验 start -------- */
     // 获取服务器时间戳
     handleGetTimestampJson() {
+      console.log('Trade.vue', '获取服务器时间戳');
       this.$http.get('/common/getTimestampJson').then((res) => {
         if (res.code !== 0) {
           Toast({
@@ -358,6 +370,7 @@ export default {
           return;
         }
         const timestamp = res.timestamp;
+        // 把EOS账户名+时间戳作为字符串交给scatter用publicKey进行签名处理
         DApp.signText(`${this.$store.state.app.accountInfo.account_name} ${timestamp}`, (err, data) => {
           if (err) {
             Toast(this.$t('error.tokenError'));
@@ -382,6 +395,7 @@ export default {
         type: this.$store.state.app.channel, // channel
         // type: 4, // channel
       };
+      console.log('Trade.vue', '向服务器验证签名，返回token');
       this.$http.post('/account/verify', params).then((res) => {
         if (res.code !== 0) {
           Toast({

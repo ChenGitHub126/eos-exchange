@@ -19,18 +19,18 @@
         <div class="name">{{ $t('public.order') }}</div>
       </div>
     </div>
-    <div class="tabar-item">
-      <div class="content" :class="{'color-this': active === 3}" @click="handleChangeTabbar(3)">
-        <div class="iconfont icon-huaban7 img"></div>
-        <div class="name">{{ $t('public.property') }}</div>
-      </div>
-    </div>
-    <div class="tabar-item">
-      <div class="content" :class="{'color-this': active === 4}" @click="handleChangeTabbar(4)">
-        <div class="iconfont icon-huaban8 img"></div>
-        <div class="name">{{ $t('public.more') }}</div>
-      </div>
-    </div>
+    <!--<div class="tabar-item">-->
+      <!--<div class="content" :class="{'color-this': active === 3}" @click="handleChangeTabbar(3)">-->
+        <!--<div class="iconfont icon-huaban7 img"></div>-->
+        <!--<div class="name">{{ $t('public.property') }}</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="tabar-item">-->
+      <!--<div class="content" :class="{'color-this': active === 4}" @click="handleChangeTabbar(4)">-->
+        <!--<div class="iconfont icon-huaban8 img"></div>-->
+        <!--<div class="name">{{ $t('public.more') }}</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 

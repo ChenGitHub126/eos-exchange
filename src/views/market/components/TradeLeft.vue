@@ -1,6 +1,6 @@
 <template>
   <div class="tradeLeft">
-    <!-- 买入卖出 -->
+    <!-- 买入卖出切换 -->
     <div class="typeBtn">
       <!-- 买入 -->
       <span class="buy btn" @click="handleSellOrBuy('buy')"
@@ -110,6 +110,7 @@
       </div>
       <!-- btn -->
       <div class="btnDiv m40" v-if="statusInfo.status !== 0">
+          <!-- btn - 暂停交易 / 即将下架 / 已下架 -->
         <button class="btn btnFlex" v-if="statusInfo.status === 1" @click="stop = true">
           <span class="iconfont icon-huaban32 warn"></span>
           <span>{{ $t('quotation.stop')}}</span>
@@ -414,6 +415,7 @@ export default {
     },
     // 获取交易对余额
     handleGetSymbil(next) {
+      console.log('TradeLeft.vue', '获取交易对余额');
       const params = {
         code: this.$store.state.app.trad.symbol1_code,
         coin: this.$store.state.app.trad.symbol2,
@@ -459,7 +461,7 @@ export default {
     toFixed(numb, p) {
       return toFixed(numb, p);
     },
-    // 买入 / 卖出
+    // 买入 / 卖出 切换
     handleSellOrBuy(type) {
       this.activeType = type;
       this.price = '0.0000';
@@ -875,6 +877,7 @@ export default {
       //     return;
       //   }
       // }
+      console.log('TradeLeft.vue', '服务器状态验证');
       this.$http.get('common/getCommonParam').then((res) => {
         if (res.code !== 0) {
           return;
