@@ -45,7 +45,7 @@ CFClient.prototype.connect = function() {
     this.ws.onclose = function(evt) {
         me.onclose(evt);
     };
-}
+};
 
 CFClient.prototype.onmessage = function(evt) {
     var msg = evt.data ? JSON.parse(evt.data): {};
@@ -76,7 +76,7 @@ CFClient.prototype.onmessage = function(evt) {
             }
         }
     }
-}
+};
 
 CFClient.prototype.resubscribe = function(subscribes) {
     if (subscribes.length > 12) {

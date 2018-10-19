@@ -148,7 +148,7 @@ export default {
       this.$i18n.locale = this.language;
       this.$store.dispatch('setLanguage', this.language);
     },
-    // 判断版本是否支持
+    // 判断版本是否支持(不检测)
     handleCheckAvailable() {
       DApp.checkAvailable((e, available) => {
         if (e == null && !available) {

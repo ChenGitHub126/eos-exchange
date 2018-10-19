@@ -5,36 +5,16 @@
 import Eos from 'eosjs';
 import Ecc from 'eosjs-ecc';
 import axios from 'axios';
+import config from '../../config';
 
 // store
 import store from '../../store';
 
-const envobj = {
-  httpEndpoint: 'https://mainnet.meet.one',
-  protocol: 'https',
-  host: 'mainnet.meet.one',
-  port: 443,
-  chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
-};
 // 配置
-const EosJs = Eos({
-  httpEndpoint: envobj.httpEndpoint,
-  chainId: envobj.chainId,
-  verbose: false,
-});
+const EosJs = Eos(config.scatterConfig.eosConfig);
 // 网络
-const network = {
-  blockchain: 'eos',
-  protocol: envobj.protocol,
-  host: envobj.host,
-  port: envobj.port,
-  chainId: envobj.chainId,
-};
-const eosOptions = {
-  broadcast: true,
-  sign: true,
-  chainId: envobj.chainId,
-};
+const network = config.scatterConfig.network;
+const eosOptions = config.scatterConfig.eosOptions;
 
 const Scatter = {
   // 保存window.scatter

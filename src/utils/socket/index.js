@@ -2,24 +2,14 @@
 import CFClient from './cfws';
 import moment from 'moment';
 
-const host = /*window.location.host*/'newdex.340wan.com';
+const host = window.location.host;
 let env = '';
 switch (host) {
-    // case 'dapp.340wan.com':
-    case '192.168.8.11:8890':
-    case '0.0.0.0:8890':
-    case '192.168.8.253:8890':
+    case '192.168.56.1:8081':
+    case '192.168.56.1:8080':
         env = 'development';
         break;
     case 'dapp.340wan.com':
-    // case '192.168.8.253:8890':
-    // case '0.0.0.0:8890':
-    case 'newdex.340wan.com':
-    case 'www.newdex.io':
-    case 'test.newdex.io':
-    case 'dapp.newdex.io':
-    case 'm.newdex.io':
-    case 'newdex.io':
         env = 'production';
         break;
     default:

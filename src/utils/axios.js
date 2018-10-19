@@ -40,7 +40,8 @@ https.interceptors.request.use(
   , error => Promise.reject(error),
 );
 
-https.interceptors.response.use((response) => { // 请求后
+// 请求后
+https.interceptors.response.use((response) => {
   // Indicator.close();
   const res = response.data;
     return res; // eslint-disable-line

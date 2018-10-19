@@ -14,41 +14,41 @@
     <!-- banner end -->
 
     <!-- notice start -->
-    <div class="noticeDiv">
-      <div class="notice" v-show="!specialNew || specialNew.isLooked">
-        <div class="noticeTool fl">
-          <!-- <span class="iconfont icon-homepage-notice-ic color-this noticeIcon"></span> -->
-          <span class="color-this">{{ $t('index.news')}}：</span>
-        </div>
-        <div class="noticeItem fl" id="notice">
-          <div class="notices" v-for="(item, index) in noticeList" :key="index">
-            <div class="noti-item">
-              <a :href="item.html_url">{{ item.title }}</a>
-            </div>
-          </div>
-          <div class="notices" v-for="(item, index) in noticeList" :key="index + '1'">
-            <div class="noti-item">
-              <a :href="item.html_url">{{ item.title }}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- special notice start -->
-      <div class="notice" v-show="specialNew && !specialNew.isLooked">
-        <div class="noticeTool fl">
-          <span class="iconfont icon-huaban46 color-yellow noticeIcon"></span>
-          <span class="color-yellow">{{ $t('index.new')}}</span>
-        </div>
-        <div class="noticeItem fl">
-          <div class="notices">
-            <div class="noti-item">
-              <a href="javascript:;" @click="handleToSpecialNotice(specialNew.html_url)">{{ specialNew ? specialNew.title : '' }}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- special notice end -->
-    </div>
+    <!--<div class="noticeDiv">-->
+      <!--<div class="notice" v-show="!specialNew || specialNew.isLooked">-->
+        <!--<div class="noticeTool fl">-->
+          <!--&lt;!&ndash; <span class="iconfont icon-homepage-notice-ic color-this noticeIcon"></span> &ndash;&gt;-->
+          <!--<span class="color-this">{{ $t('index.news')}}：</span>-->
+        <!--</div>-->
+        <!--<div class="noticeItem fl" id="notice">-->
+          <!--<div class="notices" v-for="(item, index) in noticeList" :key="index">-->
+            <!--<div class="noti-item">-->
+              <!--<a :href="item.html_url">{{ item.title }}</a>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="notices" v-for="(item, index) in noticeList" :key="index + '1'">-->
+            <!--<div class="noti-item">-->
+              <!--<a :href="item.html_url">{{ item.title }}</a>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--&lt;!&ndash; special notice start &ndash;&gt;-->
+      <!--<div class="notice" v-show="specialNew && !specialNew.isLooked">-->
+        <!--<div class="noticeTool fl">-->
+          <!--<span class="iconfont icon-huaban46 color-yellow noticeIcon"></span>-->
+          <!--<span class="color-yellow">{{ $t('index.new')}}</span>-->
+        <!--</div>-->
+        <!--<div class="noticeItem fl">-->
+          <!--<div class="notices">-->
+            <!--<div class="noti-item">-->
+              <!--<a href="javascript:;" @click="handleToSpecialNotice(specialNew.html_url)">{{ specialNew ? specialNew.title : '' }}</a>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--&lt;!&ndash; special notice end &ndash;&gt;-->
+    <!--</div>-->
     <!-- notice end -->
 
     <!-- accountInfo start -->
@@ -58,49 +58,49 @@
     <!-- accountInfo end -->
 
     <!-- content table start -->
-    <div class="content">
-      <div class="contentTop" style="width:100%">
-        <div class="item" :class="{'activeThis': activeIndex === 1}" @click="handleActiveChange(1)">
-          {{ $t('index.riseList') }}
-        </div>
-        <div class="item" :class="{'activeThis': activeIndex === 2}" @click="handleActiveChange(2)">
-          24H{{ $t('index.turnoverList') }}
-        </div>
-      </div>
-      <div class="data">
-        <table-list :activeIndex="activeIndex"/>
-      </div>
-      <div class="more">
-        <a href="javascript:;" class="color-blue" @click="handleToMore">{{ $t('index.more') }}&gt;</a>
-      </div>
-    </div>
+    <!--<div class="content">-->
+      <!--<div class="contentTop" style="width:100%">-->
+        <!--<div class="item" :class="{'activeThis': activeIndex === 1}" @click="handleActiveChange(1)">-->
+          <!--{{ $t('index.riseList') }}-->
+        <!--</div>-->
+        <!--<div class="item" :class="{'activeThis': activeIndex === 2}" @click="handleActiveChange(2)">-->
+          <!--24H{{ $t('index.turnoverList') }}-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="data">-->
+        <!--<table-list :activeIndex="activeIndex"/>-->
+      <!--</div>-->
+      <!--<div class="more">-->
+        <!--<a href="javascript:;" class="color-blue" @click="handleToMore">{{ $t('index.more') }}&gt;</a>-->
+      <!--</div>-->
+    <!--</div>-->
     <!-- content table end -->
 
     <!-- advantage 优势 start -->
-    <div class="advantage color-333">
-      <div class="topTitle color-this">{{ $t('index.special') }}</div>
-      <div class="item">
-        <img src="@/assets/img/index/homepage-user-ic.png" alt="" class="img">
-        <div class="itemTitle color-this">{{ $t('index.experience') }}</div>
-        <div class="tip">{{ $t('index.experienceTip1') }}</div>
-        <div v-if="$store.state.app.language === 'en'" class="tip">{{ $t('index.experienceTip3') }}</div>
-        <div class="tip">{{ $t('index.experienceTip2') }}</div>
-      </div>
-      <div class="item">
-        <img src="@/assets/img/index/homepage-security-ic.png" alt="" class="img">
-        <div class="itemTitle color-this">{{ $t('index.safe') }}</div>
-        <div class="tip">{{ $t('index.safeTip1') }}</div>
-        <div v-if="$store.state.app.language === 'en'" class="tip">{{ $t('index.safeTip3') }}</div>
-        <div class="tip">{{ $t('index.safeTip2') }}</div>
-      </div>
-      <div class="item">
-        <img src="@/assets/img/index/homepage-open-ic.png" alt="" class="img">
-        <div class="itemTitle color-this">{{ $t('index.data') }}</div>
-        <div class="tip">{{ $t('index.dataTip1') }}</div>
-        <div v-if="$store.state.app.language === 'en'" class="tip">{{ $t('index.dataTip3') }}</div>
-        <div class="tip">{{ $t('index.dataTip2') }}</div>
-      </div>
-    </div>
+    <!--<div class="advantage color-333">-->
+      <!--<div class="topTitle color-this">{{ $t('index.special') }}</div>-->
+      <!--<div class="item">-->
+        <!--<img src="@/assets/img/index/homepage-user-ic.png" alt="" class="img">-->
+        <!--<div class="itemTitle color-this">{{ $t('index.experience') }}</div>-->
+        <!--<div class="tip">{{ $t('index.experienceTip1') }}</div>-->
+        <!--<div v-if="$store.state.app.language === 'en'" class="tip">{{ $t('index.experienceTip3') }}</div>-->
+        <!--<div class="tip">{{ $t('index.experienceTip2') }}</div>-->
+      <!--</div>-->
+      <!--<div class="item">-->
+        <!--<img src="@/assets/img/index/homepage-security-ic.png" alt="" class="img">-->
+        <!--<div class="itemTitle color-this">{{ $t('index.safe') }}</div>-->
+        <!--<div class="tip">{{ $t('index.safeTip1') }}</div>-->
+        <!--<div v-if="$store.state.app.language === 'en'" class="tip">{{ $t('index.safeTip3') }}</div>-->
+        <!--<div class="tip">{{ $t('index.safeTip2') }}</div>-->
+      <!--</div>-->
+      <!--<div class="item">-->
+        <!--<img src="@/assets/img/index/homepage-open-ic.png" alt="" class="img">-->
+        <!--<div class="itemTitle color-this">{{ $t('index.data') }}</div>-->
+        <!--<div class="tip">{{ $t('index.dataTip1') }}</div>-->
+        <!--<div v-if="$store.state.app.language === 'en'" class="tip">{{ $t('index.dataTip3') }}</div>-->
+        <!--<div class="tip">{{ $t('index.dataTip2') }}</div>-->
+      <!--</div>-->
+    <!--</div>-->
     <!-- 优势 end -->
 
     <!-- footer start -->
@@ -154,7 +154,7 @@ export default {
   },
   watch: {
     '$store.state.app.language': function listen() {
-      this.handleGetZendeskNote();
+      // this.handleGetZendeskNote();
     },
   },
   created() {
@@ -162,7 +162,7 @@ export default {
     this.specialNew = localStorage.getItem('specialNew') ? JSON.parse(localStorage.getItem('specialNew')) : null;
   },
   mounted() {
-    this.handleGetZendeskNote();
+    // this.handleGetZendeskNote();
   },
   methods: {
     // 跳转重要公告
