@@ -19,7 +19,7 @@
         <span class="borderTop"></span>
         <select class="select" v-model="priceType">
           <option value="0">{{ $t('quotation.limit') }}</option>
-          <option value="1">{{ $t('quotation.market') }}</option>
+          <!--<option value="1">{{ $t('quotation.market') }}</option>-->
         </select>
       </div>
 
@@ -196,7 +196,7 @@ import AccountAgree from '@/views/market/components/AccountAgree';
 import OldDownTip from '@/views/market/components/OldDownTip';
 import ServerStop from '@/components/ServerStop';
 
-import { toFixed } from '@/utils/public';
+import { toFixed, uuid } from '@/utils/public';
 import { Decimal } from 'decimal.js';
 import { Toast } from 'mint-ui';
 import DApp from '@/utils/moreWallet';
@@ -704,9 +704,21 @@ export default {
       /* -------- 买入 -------- */
       let params = {};
       if (this.priceType === '0') {
-        // 限价 - 买入
-        let buyPrice = Decimal.mul(this.thisPrice, this.num).toString();
-        buyPrice = toFixed(buyPrice, 4);
+          // 限价 - 买入
+          let buyPrice = Decimal.mul(this.thisPrice, this.num).toString();
+          buyPrice = toFixed(buyPrice, 4);
+
+        const param = {
+            maker: this.$store.state.app.accountInfo.account_name,
+            quantity: `${this.num} ${this.symbol1}`,
+            price: this.thisPrice,
+            bid_contract: this.$store.state.app.trad.symbol2_code,
+            source: 1,
+            uuid: uuid(64, 10),
+        };
+        console.log(param);
+        DApp.bids();
+
         const memo = {
           type: 'buy-limit',
           symbol: this.symbol.toUpperCase(),

@@ -4,7 +4,10 @@
     <div class="tools">
       <div>
         <span class="symbol" @click="changeSymbol = true">
-          <span>{{symbol1}}/{{symbol2}}</span>
+          <span>
+              <!--{{symbol1}}/{{symbol2}}-->
+              {{$store.state.app.symbolInfo.name}}
+          </span>
           <span class="iconfont icon-huaban37 changeSymbol"></span>
         </span>
         <span class="iconfont icon-huaban29 icon fr" v-if="!isFavorite" @click="handleSelfAdd"></span>
@@ -22,7 +25,6 @@
         :statusInfo="statusInfo"
         :newPrice="toFixed(newPrice, precision.price)" class="item"/>
       <TradeRight :symbolInfo="symbolInfo"
-        :symbolData="symbolData"
         :newPrice="toFixed(newPrice, precision.price)" class="item"/>
     </div>
 
@@ -69,6 +71,7 @@ import TradeLeft from '../components/TradeLeft';
 import TradeRight from '../components/TradeRight';
 import ChangeSymbol from '../components/ChangeSymbol';
 import NewdexTip from '../components/NewdexTip';
+import axios from 'axios';
 
 export default {
   data() {
@@ -172,31 +175,32 @@ export default {
           this.newPrice = data.price;
         }
       });
+
     },
     // 获取交易对上架信息
     handleGetSymbolStatus() {
       console.log('Trade.vue', '获取交易对上架信息和状态');
-      const params = {
-        symbol: this.symbol.toUpperCase(),
-      };
-      this.$http.get('/symbol/getSymbolStatus', { params }).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        this.statusInfo = res.symbolInfo;
-
-        // 服务器暂停
-        if (Number(res.exchangeStatus) === 0) {
-          sessionStorage.setItem('serverStatus', false); // 服务暂停
-          return;
-        }
+      // const params = {
+      //   symbol: this.symbol.toUpperCase(),
+      // };
+      // this.$http.get('/symbol/getSymbolStatus', { params }).then((res) => {
+      //   if (res.code !== 0) {
+      //     Toast({
+      //       message: res.msg,
+      //       position: 'center',
+      //       duration: 2000,
+      //     });
+      //     return;
+      //   }
+      //   this.statusInfo = res.symbolInfo;
+      //
+      //   // 服务器暂停
+      //   if (Number(res.exchangeStatus) === 0) {
+      //     sessionStorage.setItem('serverStatus', false); // 服务暂停
+      //     return;
+      //   }
         sessionStorage.setItem('serverStatus', true); // 服务正常
-      });
+      // });
     },
     // 获取交易对信息
     handlaGetSymbolInfo() {
@@ -204,6 +208,12 @@ export default {
       const param = {
         symbol: this.symbol,
       };
+
+      axios.get('http://120.220.14.100:8581/exchangeApi/wallet/geteoswalletasset')
+          .then(res => {
+              console.log(res);
+          });
+
       this.$http.post('/order/getSymbolInfo', param).then((res) => {
         if (res.code !== 0) {
           Toast({
@@ -213,15 +223,16 @@ export default {
           });
           return;
         }
+        console.log(111, res);
         const info = res.symbolInfo;
         const sym = info.symbol.split('_');
         this.symbolInfo = {
-          symbol1: sym[0],
-          symbol2: sym[1],
+          symbol1: this.symbol1,
+          symbol2: this.symbol2,
           symbol1_code: info.bidContract,
           symbol2_code: info.askContract,
-          coinDecimal: info.coinInfo.coinDecimal,
-          priceDecimal: info.coinInfo.priceDecimal,
+          coinDecimal: this.$store.state.app.symbolInfo.precision.coin,
+          priceDecimal: this.$store.state.app.symbolInfo.precision.price,
         };
         this.$store.dispatch('setTrad', this.symbolInfo);
 

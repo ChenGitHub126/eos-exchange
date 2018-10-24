@@ -45,7 +45,8 @@
           <div class="info">
             <div>
               <div class="coin">
-                {{ item.symbol.split('_')[0].toUpperCase() }}/{{ item.symbol.split('_')[1].toUpperCase() }}
+                  {{ item.name.toUpperCase() }}
+                <!--{{ item.symbol.split('_')[0].toUpperCase() }}/{{ item.symbol.split('_')[1].toUpperCase() }}-->
               </div>
               <div class="tip">
                 24H{{ $t('public.dealCount') }}
@@ -90,7 +91,8 @@
         :class="{'active':symbol === item.symbol}"
         v-for="(item, index) in showData" :key="index" @click="handleToTrade(item)">
         <div class="symbolName">
-          {{ item.symbol.split('_')[0].toUpperCase() }}/{{ item.symbol.split('_')[1].toUpperCase() }}
+          <!--{{ item.symbol.split('_')[0].toUpperCase() }}/{{ item.symbol.split('_')[1].toUpperCase() }}-->
+          {{ item.name.toUpperCase() }}
         </div>
         <div class="symbolPrice">{{ handleToFixed(item.price, item.precision.price) }}</div>
         <div class="symbolChange"
@@ -130,6 +132,7 @@
 import Io from '@/utils/socket/index';
 import { toFixed } from '@/utils/public';
 import { Toast } from 'mint-ui';
+import axios from 'axios';
 
 export default {
   data() {
@@ -199,6 +202,8 @@ export default {
     },
     // 跳转到交易
     handleToTrade(item) {
+        console.log(item)
+      this.$store.dispatch('setSymbolInfo', item); // 设置交易对信息
       this.$store.dispatch('setPrecision', item.precision); // 设置精度
       const params = {
         symbol: item.symbol,
@@ -230,6 +235,73 @@ export default {
     handleWsListen() {
       this.loading = true;
       this.partition.forEach((item) => {
+
+          let modelData = [];
+          let eosSymbolArr = [];
+          axios.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_symbol_new').then(res => {
+              const data = res.data.data;
+              const list = data.list;
+              if (list) {
+                  list.forEach((v, i, arr) => {
+                      if (v.chain_symbol.toUpperCase() === 'EOS') {
+                          eosSymbolArr.push(v.symbol);
+                          modelData.push({
+                              symbol: v.symbol,
+                              name: v.name,
+                              precision: {
+                                  coin: v.min_precision2,
+                                  price: v.min_amount2.toString().split('.')[1].length
+                              },
+                          });
+                      }
+                  })
+              }
+
+              axios.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_quotations',{
+                  params: {
+                      symbol: eosSymbolArr.toString()
+                  }
+              }).then(res => {
+                  const data1 = res.data.data;
+                  const list1 = data1.list;
+                  list1.forEach((v, i, arr) => {
+                      modelData.forEach((val, index, array) => {
+                          if (v.symbol === val.symbol) {
+                              val.amount = v.quote_volume;
+                              val.price = v.latest;
+                              val.change = v.percent_change;
+                              val.high = v.highest_bid;
+                              val.low = v.lowest_ask;
+                          }
+                      })
+                  });
+                  console.log(modelData);
+                  this.loading = false;
+                  this.allData[item] = modelData;
+                  // 自选 - 行情页
+                  if (this.activeIndex === 1 && this.$route.name !== 'index') {
+                      this.handleFavorite();
+                      return;
+                  }
+                  // 排序展示
+                  // (首页跳入 - type - 1: 涨幅榜 | 2: 交易量)
+                  if (this.$route.params.type && this.first) {
+                      this.first = false;
+                      if (this.$route.params.type === 1) {
+                          this.quoteChange = 2;
+                      } else {
+                          this.dealCount = 2;
+                      }
+                      this.handleSort(item, 2);
+                      return;
+                  }
+                  // (直接tabBar进入)
+                  this.handleSort(item);
+                  return;
+              });
+          });
+        return;
+
         Io.cfwsUnsubscribe(`markets.${item}`); // 停止交易对推送
         const subCoinPair = (item).toLowerCase() || 'eos';
         console.log('TableList.vue', '获取行情列表');
@@ -241,7 +313,6 @@ export default {
         Io.cfwsPricesSymbol(params, (res) => {
           this.loading = false;
           const rows = Array.isArray(res) ? res : [res];
-
           if (rows.length > 1) {
             this.allData[item] = rows;
             // 自选 - 行情页
@@ -277,6 +348,7 @@ export default {
     },
     // 单条数据更新
     handleThisDataUpdata(res, key) {
+        console.log('TableList.vue' ,'单条数据更新');
       const newTableData = this.allData[key].find(item => item.symbol.toLowerCase() === res.symbol);
       if (newTableData) {
         newTableData.change = res.change;
@@ -412,7 +484,6 @@ export default {
         this.allFavoriteData.forEach((item) => {
           // 循环 allData 列表
           for (const i in this.allData) { // eslint-disable-line
-            console.log(i);
             if (i !== 'self') {
               this.allData[i].forEach(((list) => {
                 if (item.symbol === list.symbol.toUpperCase()) {

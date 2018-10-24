@@ -28,7 +28,7 @@ const Scatter = {
   init() {
     if (window.scatter) {
       this.scatter = window.scatter;
-      this.scatterEosJs = this.scatter.eos(network, Eos, eosOptions, 'https');
+      this.scatterEosJs = this.scatter.eos(network, Eos, eosOptions, config.scatterConfig.network.protocol);
       this.hasScatter = true;
       // 登出
       // if (self.scatter.identity) {
@@ -65,18 +65,39 @@ const Scatter = {
       symbol: params.coin,
       account: store.state.app.accountInfo.account_name,
     };
-    axios.post('https://api.bp.fish/v1/chain/get_currency_balance', JSON.stringify(newParams)).then((res) => {
-      if (!res.data.length) {
+
+//       eos.contract('hello23zhang').then(function (c) {
+//       // ,{"__optionOverrides":{"messageOnly":true}}
+//       c.cancelorder("er("scope","maker","uuid").then(function (value) {
+//   }).catch(function (e) {
+//     // i({type: "EOS_TRANSFER_FAILED", e: e});
+//     console.log("in("invoke transfer fail");
+
+    this.EosJs.getCurrencyBalance(newParams).then(res => {
+      if (!res.length) {
         callback(null, `0.0000 ${params.coin}`);
-        return;
-      }
-      const returnData = res.data[0];
-      callback(null, returnData);
-    }).catch((e) => {
-      console.log(`e: ${e}`); // eslint-disable-line
+          return;
+        }
+        const returnData = res[0];
+        callback(null, returnData);
+      }).catch((e) => {
+        console.log(`e: ${e}`); // eslint-disable-line
     });
   },
   /* -------- 获取余额 end -------- */
+
+  bids() {
+      try {
+          this.scatterEosJs.contract('hello23zhang').then(res => {
+              console.log('hello23zhang', res);
+          })
+      }
+      catch (e) {
+          console.log(e)
+          // this.bids()
+      }
+
+  },
 
   /* -------- 获取账户信息 start ------- */
   /*
@@ -91,6 +112,7 @@ const Scatter = {
       }, 500);
       return;
     }
+
     const self = this;
     // 登出
     // if (self.scatter.identity) {

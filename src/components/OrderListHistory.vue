@@ -98,6 +98,7 @@
 import { toLocalTime } from '@/utils/public';
 // import { Toast } from 'mint-ui';
 import Io from '@/utils/socket/index';
+import axios from 'axios';
 
 export default {
   data() {
@@ -172,6 +173,13 @@ export default {
     },
     /* 数据请求操作 start */
     handleGetOrderList(page) { // 查询订单记录列表信息
+        axios.get('http://120.220.14.100:8088/onedex/v1/order/history', {
+            params: {
+                account_name: this.$store.state.app.accountInfo.account_name
+            }
+        }).then(res => {
+           console.log(res);
+        });
       try {
         this.loading = true;
         const params = {

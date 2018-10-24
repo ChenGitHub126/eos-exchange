@@ -16,7 +16,7 @@ switch (host) {
         env = 'local';
         break;
 }
-const client = new CFClient({env, debug: false});
+const client = new CFClient({env: 'production', debug: false});
 
 const Io = {
     lastSubscribe: null,

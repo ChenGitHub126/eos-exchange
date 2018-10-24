@@ -3,7 +3,7 @@ import qs from 'qs'; // fromData 转 string
 import { Toast } from 'mint-ui';
 import store from '@/store';
 
-const ApiVersion = '/api'; // 默认请求地址
+const ApiVersion = '/api'; // 默认请求地址 http://120.220.14.100:8088
 const https = axios.create({
   baseURL: ApiVersion,
   timeout: 20000,

@@ -3,9 +3,9 @@
     <!-- banner start -->
     <div class="banner">
       <div class="center">
-        <div class="iconfont icon-huaban23 logoIcon"></div>
-        <!-- <div class="bannerTitle">全球首家基于EOS的去中心交易所</div> -->
-        <div class="bannerTitle">{{$t('index.bannerTitle')}}</div>
+        <!--<div class="iconfont icon-huaban23 logoIcon"></div>-->
+         <div class="bannerTitle">全球首家EOS“完全”去中心化交易所</div>
+        <!--<div class="bannerTitle">{{$t('index.bannerTitle')}}</div>-->
       </div>
       <div class="fr langu">
          <!--<language/>-->
@@ -256,7 +256,7 @@ export default {
 
 // bannner 样式
 .banner{
-  background: linear-gradient(to right, #0C186D, #3248CA );
+  background: linear-gradient(to right bottom, #FC6257, #FFE03B );
   background-size: cover;
   height: 3.34rem;
   max-width: 100%;
@@ -265,11 +265,14 @@ export default {
   position: relative;
 
   .center{
-    width: 6rem;
+    width: 4rem;
+    height: 1rem;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background: url("../../assets/img/index/logo.png") no-repeat center;
+    background-size: 100% 100%;
 
     .logoIcon{
       font-size: .6rem;
@@ -277,8 +280,12 @@ export default {
     }
 
     .bannerTitle{
+      position: absolute;
+      left: -10%;
+      bottom: -.45rem;
+      width: 120%;
       color: rgba(255, 255, 255, .7);
-      font-size: 0.32rem;
+      font-size: 0.28rem;
       font-weight: 300;
     }
   }

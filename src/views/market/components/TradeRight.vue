@@ -38,6 +38,7 @@
 // import { Decimal } from 'decimal.js';
 import Io from '@/utils/socket/index';
 import { toFixed } from '@/utils/public';
+import axios from 'axios';
 
 export default {
   data() {
@@ -54,12 +55,12 @@ export default {
       buyCount: 0,
       sellCount: 0,
       first: true,
+      symbolData: this.$store.state.app.symbolInfo
     };
   },
   props: [
     'symbolInfo',
     'newPrice',
-    'symbolData',
   ],
   components: {
   },
@@ -95,8 +96,30 @@ export default {
       const params = {
         symbol: this.symbol.toLowerCase(),
       };
+
+        axios.get('http://120.220.14.100:8088/onedex/v1/order/book', {
+            params: {
+                base: this.symbol.toUpperCase().split('_')[1],
+                quote: this.symbol.toUpperCase().split('_')[0],
+                limit: '50'
+            }
+        }).then(res => {
+            const data = res.data.data;
+            const map = data.map;
+            console.log(map)
+            this.handleDepthData(map);
+            // 卖盘列表显示到最后
+            if (this.first) {
+                this.first = false;
+                setTimeout(() => {
+                    document.getElementsByClassName('list')[0].scrollTop = 10000;
+                }, 100);
+            }
+        });
+
       Io.cfwsDepth(params, (data) => {
         this.wsData = data;
+        console.log(data);
         this.handleWsData(this.wsData);
         // 卖盘列表显示到最后
         if (this.first) {
@@ -107,6 +130,45 @@ export default {
         }
       });
     },
+
+    // 处理数据 - 精度
+    handleDepthData(data) {
+          const asks = [];
+          this.sellCount = 0;
+          data.asks.forEach((v) => {
+              asks.push({
+                  price: toFixed(Number(v.price), this.symbolInfo.priceDecimal),
+                  num: toFixed(Number(v.amount), this.symbolInfo.coinDecimal),
+              });
+              if (this.sellCount < Number(v.amount)) {
+                  this.sellCount = Number(v.amount);
+              }
+              // this.sellCount += Number(vv[1]);
+          });
+          // 卖盘需要进行倒序 (这也没倒啊???)
+          const asksArr = asks;
+          this.data.asks = asksArr;
+          if (asksArr.length > 50) {
+              this.data.asks = asksArr.slice(0, 50);
+          }
+
+          const bids = [];
+          this.buyCount = 0;
+          data.bids.forEach((v) => {
+              bids.push({
+                  price: toFixed(Number(v.price), this.symbolInfo.priceDecimal),
+                  num: toFixed(Number(v.price), this.symbolInfo.coinDecimal),
+              });
+              if (this.buyCount < Number(v.amount)) {
+                  this.buyCount = Number(v.amount);
+              }
+              // this.buyCount += Number(vv[1]);
+          });
+          this.data.bids = bids;
+          if (bids.length > 50) {
+              this.data.bids = bids.slice(0, 50);
+          }
+      },
 
     // 处理数据 - 精度
     handleWsData(data) {

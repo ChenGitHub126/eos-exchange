@@ -10,6 +10,9 @@
 const app = {
   state: {
     language: 'zh-CN', // 多语言
+    symbolInfo: localStorage.getItem('symbolInfo') ? JSON.parse(localStorage.getItem('symbolInfo')) : {
+
+    },
     trad: localStorage.getItem('trad') ? JSON.parse(localStorage.getItem('trad')) : { // 交易对默认信息 - key
       id: 1,
       symbol1: 'IQ',
@@ -36,6 +39,11 @@ const app = {
     SET_LANGUAGE: (state, language) => {
       state.language = language;
       localStorage.setItem('language', language);
+    },
+    // 默认交易对信息 - function
+    SET_SYMBOLINFO: (state, info) => {
+      state.symbolInfo = info;
+      localStorage.setItem('symbolInfo', JSON.stringify(info));
     },
     // 默认交易对信息 - function
     SET_TRAD: (state, trad) => {
@@ -86,6 +94,10 @@ const app = {
   actions: {
     setLanguage({ commit }, language) {
       commit('SET_LANGUAGE', language);
+    },
+    // 默认交易对信息 - set
+    setSymbolInfo({ commit }, info) {
+      commit('SET_SYMBOLINFO', info);
     },
     // 默认交易对信息 - set
     setTrad({ commit }, trad) {
