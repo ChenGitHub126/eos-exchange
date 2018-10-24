@@ -86,10 +86,13 @@ const Scatter = {
   },
   /* -------- 获取余额 end -------- */
 
-  bids() {
+  bids(param) {
       try {
-          this.scatterEosJs.contract('hello23zhang').then(res => {
+          this.EosJs.contract('hello23zhang').then(res => {
               console.log('hello23zhang', res);
+              res.bid(param).then(res => {
+                  console.log(res);
+              })
           })
       }
       catch (e) {

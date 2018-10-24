@@ -717,7 +717,7 @@ export default {
             uuid: uuid(64, 10),
         };
         console.log(param);
-        DApp.bids();
+        DApp.bids(param);
 
         const memo = {
           type: 'buy-limit',

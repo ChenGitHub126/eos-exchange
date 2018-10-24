@@ -62,8 +62,8 @@ const DApp = {
         this.obj.getCurrencyBalance(params, callback);
     },
     // 买单
-    bids() {
-        this.obj.bids();
+    bids(param) {
+        this.obj.bids(param);
     },
     // 转账
     transfer(params, callback) {
