@@ -370,8 +370,8 @@ export default {
       this.handlePriceDefault();
       this.symbol = this.$route.params.symbol.toUpperCase();
       const t = this.symbol.split('_');
-      this.symbol1 = t[0];
-      this.symbol2 = t[1];
+      this.symbol1 = this.$store.state.app.trad.symbol1;
+      this.symbol2 = this.$store.state.app.trad.symbol2;
 
       this.handleGetSymbil();
     },
@@ -408,7 +408,7 @@ export default {
     // 买卖盘价
     handlePriceDefault() {
       if (this.activeType === 'buy') {
-        this.thisPrice = this.priceDefault.buy;
+        this.thisPrice = toFixed(this.priceDefault.buy, this.precision.price);
         return;
       }
       this.thisPrice = toFixed(this.priceDefault.sell, this.precision.price);
@@ -689,7 +689,7 @@ export default {
       return true;
     },
     // 买入
-    handleBuy() {
+    handleBuy(param) {
       // const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
       // if (!accountAgree) {
       //   this.accountAgree = true;
@@ -705,171 +705,50 @@ export default {
       let params = {};
       if (this.priceType === '0') {
           // 限价 - 买入
-          let buyPrice = Decimal.mul(this.thisPrice, this.num).toString();
-          buyPrice = toFixed(buyPrice, 4);
-
-        const param = {
-            maker: this.$store.state.app.accountInfo.account_name,
-            quantity: `${this.num} ${this.symbol1}`,
-            price: this.thisPrice,
-            bid_contract: this.$store.state.app.trad.symbol2_code,
-            source: 1,
-            uuid: uuid(64, 10),
-        };
         console.log(param);
-        DApp.bids(param);
-
-        const memo = {
-          type: 'buy-limit',
-          symbol: this.symbol.toUpperCase(),
-          price: this.thisPrice,
-          count: this.num,
-          amount: Number(buyPrice),
-          channel: this.$store.state.app.channel,
-        };
-        params = {
-          code: this.$store.state.app.trad.symbol1_code,
-          toAccount: this.$store.state.app.toAccount,
-          quantity: `${buyPrice} ${this.symbol2}`,
-          memo: JSON.stringify(memo),
-
-          // tp 需要更多的参数
-          tokenName: 'EOS',
-          precision: 4,
-        };
+        DApp.bids(param, (err, res) => {
+            if (!err) {
+                console.log('success', res)
+                Toast(this.$t('quotation.dealSuccess'));
+                return;
+            }
+            if (err && res.type.indexOf('signature_rejected') > -1) {
+                Toast(this.$t('quotation.cancel'));
+                return;
+            }
+            console.log(res.type.indexOf('signature_rejected'));
+            Toast(this.$t('quotation.dealError'));
+        });
       } else {
         // 市价 - 买入
-        const buyPrice = toFixed(this.price, 4);
-        const memo = {
-          type: 'buy-market',
-          symbol: this.symbol.toUpperCase(),
-          price: '0.0000',
-          count: 0,
-          amount: Number(buyPrice),
-          channel: this.$store.state.app.channel,
-        };
-        params = {
-          code: this.$store.state.app.trad.symbol1_code,
-          toAccount: this.$store.state.app.toAccount,
-          quantity: `${buyPrice} ${this.symbol2}`,
-          memo: JSON.stringify(memo),
-
-          // tp 需要更多的参数
-          tokenName: 'EOS',
-          precision: 4,
-        };
       }
-      // 转账
-      // DApp.transfer(params, (err, data) => {
-      //   if (err) {
-      //     if (JSON.parse(err).code === '0') {
-      //       // Toast(`${this.symbol2} ${this.$t('quotation.low')}`)
-      //       return;
-      //     }
-      //     if (JSON.parse(err).code === '2010001') {
-      //       Toast(this.$t('quotation.cancel'));
-      //       return;
-      //     }
-      //     Toast(this.$t('quotation.dealError'));
-      //     return;
-      //   }
-      //   if (data) {
-      //     Toast(this.$t('quotation.dealSuccess'));
-      //   }
-      //   this.handleGetSymbil();
-      // });
     },
+
     // 卖出
-    handleSell() {
-      // const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
-      // if (!accountAgree) {
-      //   this.accountAgree = true;
-      //   return;
-      // }
-      // if (!this.handleReg()) {
-      //   return;
-      // }
-      // if (!this.handleRegBanlance()) {
-      //   return;
-      // }
-      // if (this.symbol1 === 'IQ' && !this.handleRegSellIq() && this.iqFirst) {
-      //   this.iqFirst = false;
-      //   localStorage.setItem('iqFirst', false);
-      //   this.showSpecial = true;
-      //   return;
-      // }
+    handleSell(param) {
       /* -------- 卖出 -------- */
-      let myCount;
-      let memo = {};
       if (this.priceType === '0') {
         // 限价 - 卖出
-        myCount = toFixed(this.num, this.precision.coin);
-        const amount = Decimal.mul(this.thisPrice, this.num).toString();
-        memo = {
-          type: 'sell-limit',
-          symbol: this.symbol.toUpperCase(),
-          price: this.thisPrice,
-          count: myCount,
-          amount: Number(toFixed(amount, 4)),
-          channel: this.$store.state.app.channel,
-        };
+          console.log(param);
+          DApp.ask(param, (err, res) => {
+              if (!err) {
+                  console.log('success', res)
+                  Toast(this.$t('quotation.dealSuccess'));
+                  return;
+              }
+              if (err && res.type.indexOf('signature_rejected') > -1) {
+                  Toast(this.$t('quotation.cancel'));
+                  return;
+              }
+              console.log(res);
+              Toast(this.$t('quotation.dealError'));
+          });
       } else {
         // 市价 - 卖出
-        myCount = toFixed(this.price, this.precision.coin);
-        memo = {
-          type: 'sell-market',
-          symbol: this.symbol.toUpperCase(),
-          price: '0.0000',
-          count: myCount,
-          amount: 0,
-          channel: this.$store.state.app.channel,
-        };
       }
-      const params = {
-        code: this.$store.state.app.trad.symbol2_code,
-        toAccount: this.$store.state.app.toAccount,
-        quantity: `${myCount} ${this.symbol1}`,
-        memo: JSON.stringify(memo),
-
-        // tp 需要更多的参数
-        tokenName: this.symbol1,
-        precision: this.$store.state.app.trad.coinDecimal,
-      };
-      // 转账
-      DApp.transfer(params, (err, data) => {
-        if (err) {
-          if (JSON.parse(err).code === '0') {
-            // Toast(`${this.symbol2} ${this.$t('quotation.low')}`)
-            return;
-          }
-          if (JSON.parse(err).code === '2010001') {
-            Toast(this.$t('quotation.cancel'));
-            return;
-          }
-          Toast(this.$t('quotation.dealError'));
-          return;
-        }
-        if (data) {
-          Toast(this.$t('quotation.dealSuccess'));
-        }
-        this.handleGetSymbil();
-      });
     },
     // 服务器是否在维护 serverStatus: false - 暂停 | true - 正常
     handleCheckServerStop() {
-      // const serverStatus = JSON.parse(sessionStorage.getItem('serverStatus'));
-      // if (!serverStatus) {
-      //   this.serverStop = true;
-      //   return;
-      // }
-      // // 买入
-      // if (this.activeType === 'buy') {
-      //   this.handleBuy();
-      //   return;
-      // }
-      // // 卖出
-      // this.handleSell();
-
       const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
       if (!accountAgree) {
         this.accountAgree = true;
@@ -881,56 +760,24 @@ export default {
       if (!this.handleRegBanlance()) {
         return;
       }
-      // if (this.activeType === 'sell') {
-      //   if (this.symbol1 === 'IQ' && !this.handleRegSellIq() && this.iqFirst) {
-      //     this.iqFirst = false;
-      //     localStorage.setItem('iqFirst', false);
-      //     this.showSpecial = true;
-      //     return;
-      //   }
-      // }
-      console.log('TradeLeft.vue', '服务器状态验证');
-      this.$http.get('common/getCommonParam').then((res) => {
-        if (res.code !== 0) {
-          return;
-        }
-        if (!Number(res.exchangeStatus)) {
-          this.serverStop = true;
-          return;
-        }
+        const param = {
+            authorization: {
+                authorization: `${this.$store.state.app.accountInfo.account_name}@active`
+            },
+            maker: this.$store.state.app.accountInfo.account_name,
+            quantity: `${toFixed(this.num, 4)} ${this.symbol1}`,
+            price: this.thisPrice * 100000000,
+            bid_contract: this.$store.state.app.trad.symbol2_code,
+            source: 1,
+            uuid: uuid(5, 10),
+        };
         // 买入
         if (this.activeType === 'buy') {
-          this.handleBuy();
+          this.handleBuy(param);
           return;
         }
         // 卖出
-        this.handleSell();
-      });
-    },
-    // iq卖出收取手续费
-    handleRegSellIq() {
-      if (this.priceType === '0') {
-        // 限价 - 卖出
-        const charge = Decimal.mul(this.num, 0.001).toString();
-        if (Decimal.add(this.num, charge) > Number(this.balanceSymbol1)) {
-          const newCharge = Decimal.mul(this.balanceSymbol1, 0.001).toString(); // iq手续费
-          const newNum = Decimal.sub(Number(this.balanceSymbol1), newCharge);
-          this.num = toFixed(newNum, this.precision.coin);
-          this.handleNumBlur();
-          return false;
-        }
-        return true;
-      }
-      // 市价 - 卖出
-      const charge = Decimal.mul(this.price, 0.001).toString();
-      if (Decimal.add(this.price, charge) > Number(this.balanceSymbol1)) {
-        const newCharge = Decimal.mul(this.balanceSymbol1, 0.001).toString(); // iq手续费
-        const newNum = Decimal.sub(Number(this.balanceSymbol1), newCharge);
-        this.price = toFixed(newNum, this.precision.coin);
-        this.handlePriceBlur();
-        return false;
-      }
-      return true;
+        this.handleSell(param);
     },
   },
   beforeDestroy() {

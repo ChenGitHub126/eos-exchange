@@ -7,25 +7,9 @@ const ApiVersion = '/api'; // 默认请求地址 http://120.220.14.100:8088
 const https = axios.create({
   baseURL: ApiVersion,
   timeout: 20000,
-  auth: {
-    // username: localStorage.getItem('token') || '',
-  },
 });
 
 https.defaults.transformRequest = [(data, header) => { // 开始请求前期
-  const headerThis = header;
-  headerThis.account = null;
-  if (store.state.app.accountInfo && store.state.app.accountInfo.account_name) {
-    headerThis.account = store.state.app.accountInfo.account_name;
-  }
-  headerThis.token = null;
-  if (localStorage.getItem('token')) {
-    headerThis.token = localStorage.getItem('token');
-  }
-  headerThis.language = null;
-  if (localStorage.getItem('language')) {
-    headerThis.language = localStorage.getItem('language');
-  }
   if (!header['Content-Type']) {
     return qs.stringify(data);
   }

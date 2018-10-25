@@ -14,11 +14,10 @@ const envobj = {
 };
 
 const scatterConfig = {
+    contract: 'hello23zhang',
     eosConfig: {
-        // keyProvider: '5JXUnLCE8b36hrLTSJUyhcJzbi3MwQb8XmCypJf3Hs3jyR8gscj',
         httpEndpoint: envobj.httpEndpoint,
         chainId: envobj.chainId,
-        // verbose: false,
     },
     network: {
         blockchain: 'eos',

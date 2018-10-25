@@ -9,6 +9,7 @@ import config from '../../config';
 
 // store
 import store from '../../store';
+import scatterConfig from "../../config/scatterConfig";
 
 // 配置
 const EosJs = Eos(config.scatterConfig.eosConfig);
@@ -85,22 +86,40 @@ const Scatter = {
   },
   /* -------- 获取余额 end -------- */
 
-  bids(param) {
+  bids(param, callback) {
       try {
-          console.log(param);
-          this.scatterEosJs.contract('hello23zhang').then(res => {
-              console.log('hello23zhang', res.bid);
-              res.bid(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid).then(res => {
-                  console.log(res);
+          this.scatterEosJs.contract(scatterConfig.contract).then(res => {
+              res.bid(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid, param.authorization)
+                  .then(res => {
+                      callback(false, res)
+                  }).catch(err => {
+                    console.log(err);
+                    callback(true, err)
               })
           })
       }
       catch (e) {
           console.log(e)
-          // this.bids()
       }
-
   },
+
+    ask(param, callback) {
+        try {
+            this.scatterEosJs.contract(scatterConfig.contract).then(res => {
+                res.ask(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid, param.authorization)
+                    .then(res => {
+                        callback(false, res)
+                    }).catch(err => {
+                        console.log(err);
+                        callback(true, err)
+                })
+            })
+        }
+        catch (e) {
+            console.log(e)
+        }
+
+    },
 
   /* -------- 获取账户信息 start ------- */
   /*

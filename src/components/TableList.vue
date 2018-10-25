@@ -238,8 +238,8 @@ export default {
 
           let modelData = [];
           let eosSymbolArr = [];
-          axios.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_symbol_new').then(res => {
-              const data = res.data.data;
+          this.$http.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_symbol_new').then(res => {
+              const data = res.data;
               const list = data.list;
               if (list) {
                   list.forEach((v, i, arr) => {
@@ -259,10 +259,9 @@ export default {
                   })
               }
 
-              axios.get('http://120.220.14.100:8581/exchangeApi/wallet/geteoswalletasset')
+              this.$http.get('http://120.220.14.100:8581/exchangeApi/wallet/geteoswalletasset')
                   .then(res => {
-                  console.log(res)
-                      const data2 = res.data.data;
+                      const data2 = res.data;
                       const list2 = data2.list;
                       list2.forEach((v, i, arr) => {
                           modelData.forEach((val, index, array) => {
@@ -337,27 +336,7 @@ export default {
           this.loading = false;
           const rows = Array.isArray(res) ? res : [res];
           if (rows.length > 1) {
-            this.allData[item] = rows;
-            // 自选 - 行情页
-            if (this.activeIndex === 1 && this.$route.name !== 'index') {
-              this.handleFavorite();
-              return;
-            }
-            // 排序展示
-            // (首页跳入 - type - 1: 涨幅榜 | 2: 交易量)
-            if (this.$route.params.type && this.first) {
-              this.first = false;
-              if (this.$route.params.type === 1) {
-                this.quoteChange = 2;
-              } else {
-                this.dealCount = 2;
-              }
-              this.handleSort(item, 2);
-              return;
-            }
-            // (直接tabBar进入)
-            this.handleSort(item);
-            return;
+
           }
 
           // 单条数据更新

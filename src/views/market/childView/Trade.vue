@@ -165,17 +165,16 @@ export default {
     // 获取头部信息
     handleLoadHeardWs() {
       console.log('Trade.vue', 'IO获取头部信息');
-      const params = {
-        symbol: this.symbol,
-      };
-      Io.cfwsHeard(params, (data) => {
-        this.symbolData = data;
-        if (data.precision) {
-          this.precision = data.precision;
-          this.newPrice = data.price;
-        }
-      });
-
+      // const params = {
+      //   symbol: this.symbol,
+      // };
+      // Io.cfwsHeard(params, (data) => {
+      //   this.symbolData = data;
+      //   if (data.precision) {
+      //     this.precision = data.precision;
+      //     this.newPrice = data.price;
+      //   }
+      // });
     },
     // 获取交易对上架信息
     handleGetSymbolStatus() {
