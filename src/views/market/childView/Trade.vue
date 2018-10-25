@@ -205,50 +205,25 @@ export default {
     // 获取交易对信息
     handlaGetSymbolInfo() {
       console.log('Trade.vue', '获取指定交易对信息');
-      const param = {
-        symbol: this.symbol,
-      };
-
-      axios.get('http://120.220.14.100:8581/exchangeApi/wallet/geteoswalletasset')
-          .then(res => {
-              console.log(res);
-          });
-
-      this.$http.post('/order/getSymbolInfo', param).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        console.log(111, res);
-        const info = res.symbolInfo;
-        const sym = info.symbol.split('_');
         this.symbolInfo = {
-          symbol1: this.symbol1,
-          symbol2: this.symbol2,
-          symbol1_code: info.bidContract,
-          symbol2_code: info.askContract,
+          symbol1: this.$store.state.app.symbolInfo.name2,
+          symbol2: this.$store.state.app.symbolInfo.name1,
+          symbol1_code: this.$store.state.app.symbolInfo.code1,
+          symbol2_code: this.$store.state.app.symbolInfo.code2,
           coinDecimal: this.$store.state.app.symbolInfo.precision.coin,
           priceDecimal: this.$store.state.app.symbolInfo.precision.price,
         };
         this.$store.dispatch('setTrad', this.symbolInfo);
 
-        this.precision = {
-          coin: info.coinInfo.coinDecimal,
-          price: info.coinInfo.priceDecimal,
-        };
+        this.precision = this.$store.state.app.symbolInfo.precision;
 
         this.priceDefault = {
-          buy: info.bidPrice,
-          sell: info.askPrice,
+          buy: 1,
+          sell: 1,
         };
 
         // 查询收藏列表
         this.handleGetSelf();
-      });
     },
     /* -------- 交易对收藏 start -------- */
     // 添加收藏

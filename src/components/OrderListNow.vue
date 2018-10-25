@@ -131,6 +131,7 @@ import { toLocalTime } from '@/utils/public';
 import DApp from '@/utils/moreWallet';
 import Io from '@/utils/socket/index';
 import { Toast, MessageBox } from 'mint-ui';
+import axios from 'axios';
 
 export default {
   data() {
@@ -238,6 +239,15 @@ export default {
           // accountNo: 'eosxhbeosxhb', // 账户名 - 测试
           symbol: this.symbol, // 交易对
         };
+
+          axios.get('http://120.220.14.100:8088/onedex/v1/order/current', {
+              params: {
+                  account_name: this.$store.state.app.accountInfo.account_name
+              }
+          }).then(res => {
+              console.log(res);
+          });
+
         console.log('OrderListNow.vue', '获取指定交易对的当前订单记录');
         this.$http.post('/order/queryCurrentOrderPage', params).then((res) => {
           this.loading = false;

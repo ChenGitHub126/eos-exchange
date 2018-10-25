@@ -2,13 +2,13 @@
   <div class="list">
     <!-- 订单中心title -->
     <div class="title">
-      <div class="clearDiv" @click="handleRead()" v-if="$store.state.app.unReadCount">
-        <span class="iconfont icon-huaban45 clear"></span>
-        <span class="unReadCount" v-if="$store.state.app.unReadCount">
-          {{ $t('public.unReadCount') }}:{{ $store.state.app.unReadCount }}
-        </span>
-      </div>
-      <div class="iconfont icon-huaban15 search" :class="{'color-this': searchData}" @click="search = true"></div>
+      <!--<div class="clearDiv" @click="handleRead()" v-if="$store.state.app.unReadCount">-->
+        <!--<span class="iconfont icon-huaban45 clear"></span>-->
+        <!--<span class="unReadCount" v-if="$store.state.app.unReadCount">-->
+          <!--{{ $t('public.unReadCount') }}:{{ $store.state.app.unReadCount }}-->
+        <!--</span>-->
+      <!--</div>-->
+      <!--<div class="iconfont icon-huaban15 search" :class="{'color-this': searchData}" @click="search = true"></div>-->
       <div class="name">{{ $t('public.orderCenter') }}</div>
     </div>
     <div style="clear: both;"></div>
@@ -35,8 +35,8 @@
           <div class="itemTitle">
             <!-- 交易对 -->
             <div class="symbol">
-              <span class="color-red" v-if="item.direction === 2">{{ $t('public.sellShort') }}</span>
-              <span class="color-green" v-if="item.direction === 1">{{ $t('public.buyShort') }}</span>
+              <span class="color-red" v-if="item.type === 'ask'">{{ $t('public.sellShort') }}</span>
+              <span class="color-green" v-if="item.type === 'bid'">{{ $t('public.buyShort') }}</span>
               <span class="coin" @click.stop="handleToTrade(item)">{{ item.symbol1 }}/{{ item.symbol2 }}</span>
               <span class="time tip">{{ item.localTime }}</span>
             </div>
@@ -46,15 +46,15 @@
               <span v-if="item.orderStatus === 0" class="color-333">
                 <button class="btn" @click="handleCancelOrder(item)">{{ $t('public.revoke') }}</button>
               </span>
-              <span v-if="item.dealStatus === 0 && item.orderStatus === 2">{{ $t('order.status3') }}</span>
-              <span v-if="item.dealStatus === 1 && item.orderStatus === 2"
-                :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">
-                {{ $t('order.status4') }}<span class="iconfont icon-huaban11" style="font-size: .25rem;"></span>
-              </span>
-              <span v-if="item.dealStatus === 2"
-                :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">
-                {{ $t('order.status2') }}<span class="iconfont icon-huaban11" style="font-size: .25rem;"></span>
-              </span>
+              <!--<span v-if="item.dealStatus === 0 && item.orderStatus === 2">{{ $t('order.status3') }}</span>-->
+              <!--<span v-if="item.dealStatus === 1 && item.orderStatus === 2"-->
+                <!--:class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">-->
+                <!--{{ $t('order.status4') }}<span class="iconfont icon-huaban11" style="font-size: .25rem;"></span>-->
+              <!--</span>-->
+              <!--<span v-if="item.dealStatus === 2"-->
+                <!--:class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">-->
+                <!--{{ $t('order.status2') }}<span class="iconfont icon-huaban11" style="font-size: .25rem;"></span>-->
+              <!--</span>-->
             </div>
           </div>
 
@@ -62,57 +62,57 @@
           <div class="showContent">
             <div class="">
               <div class="tip">{{ $t('public.myPrice') }}</div>
-              <div class="num">{{ Number(item.orderPriceStr) !== 0 ? item.orderPriceStr : $t('quotation.market') }}</div>
+              <div class="num">{{ Number(item.price) !== 0 ? item.price : $t('quotation.market') }}</div>
             </div>
             <div class="">
               <div class="tip">{{ $t('public.count') }}</div>
-              <div class="num">{{ item.orderCountStr || '—' }}</div>
+              <div class="num">{{ item.amount || '—' }}</div>
             </div>
-            <div class="">
-              <div class="tip pointDiv">
-                <span class="point" v-if="!item.readStatus"></span>
-                {{ $t('public.dealCount') }}
-              </div>
-              <div class="num">{{ item.dealCountStr || '—' }}</div>
-            </div>
+            <!--<div class="">-->
+              <!--<div class="tip pointDiv">-->
+                <!--&lt;!&ndash;<span class="point" v-if="!item.readStatus"></span>&ndash;&gt;-->
+                <!--{{ $t('public.dealCount') }}-->
+              <!--</div>-->
+              <!--<div class="num">{{ item.dealCountStr || '—' }}</div>-->
+            <!--</div>-->
           </div>
-          <div class="showContent" style="margin-top: .2rem;" v-if="item.dealStatus !== 0">
+          <div class="showContent" style="margin-top: .2rem;" v-if="item.open">
             <div class="">
               <div class="tip">{{ $t('public.dealAveragePrice') }}</div>
-              <div class="num">{{ item.dealPriceStr }}</div>
+              <div class="num">{{ item.filled_amount }}</div>
             </div>
-            <div class="">
-              <div class="tip">{{ $t('public.dealTotal') }}</div>
-              <div class="num">{{ item.dealAmountStr || '—' }}</div>
-            </div>
+            <!--<div class="">-->
+              <!--<div class="tip">{{ $t('public.dealTotal') }}</div>-->
+              <!--<div class="num">{{ item.dealAmountStr || '—' }}</div>-->
+            <!--</div>-->
             <div class="">
               <div class="tip">{{ $t('public.charge') }}</div>
-              <div class="num">{{ item.totalChargeStr || '—' }}</div>
+              <div class="num">{{ item.finish_time || '—' }}</div>
             </div>
           </div>
           <!-- 订单详情 -->
-          <div class="hiddenContent" v-if="item.open" @click="handleGoToDetail(item)">
-            <div class="detail">
-              <div class="detailTitle">
-                <div class="tip">{{ $t('public.dealPrice') }}</div>
-                <div class="tip">{{ $t('public.dealCount') }}</div>
-                <div class="tip">{{ $t('public.charge') }}</div>
-              </div>
-              <div class="datailList" v-if="item.orderDealRecords.length" v-for="(list, i) in item.orderDealRecords" :key="i">
-                <div class="num">{{ list.dealPriceStr }}</div>
-                <div class="num">{{ list.dealCountStr }}</div>
-                <div class="num" v-if="item.direction === 2">{{ list.askChargeStr }}</div>
-                <div class="num" v-if="item.direction === 1">{{ list.bidChargeStr }}</div>
-              </div>
-              <div v-if="item.orderDealRecords && !item.orderDealRecords.length" class="color-999" style="text-align:center;font-size: .25rem;">
-                {{ $t('public.noData') }}
-              </div>
-            </div>
+          <!--<div class="hiddenContent" v-if="item.open" @click="handleGoToDetail(item)">-->
+            <!--<div class="detail">-->
+              <!--<div class="detailTitle">-->
+                <!--<div class="tip">{{ $t('public.dealPrice') }}</div>-->
+                <!--<div class="tip">{{ $t('public.dealCount') }}</div>-->
+                <!--<div class="tip">{{ $t('public.charge') }}</div>-->
+              <!--</div>-->
+              <!--<div class="datailList" v-if="item.orderDealRecords.length" v-for="(list, i) in item.orderDealRecords" :key="i">-->
+                <!--<div class="num">{{ list.dealPriceStr }}</div>-->
+                <!--<div class="num">{{ list.dealCountStr }}</div>-->
+                <!--<div class="num" v-if="item.direction === 2">{{ list.askChargeStr }}</div>-->
+                <!--<div class="num" v-if="item.direction === 1">{{ list.bidChargeStr }}</div>-->
+              <!--</div>-->
+              <!--<div v-if="item.orderDealRecords && !item.orderDealRecords.length" class="color-999" style="text-align:center;font-size: .25rem;">-->
+                <!--{{ $t('public.noData') }}-->
+              <!--</div>-->
+            <!--</div>-->
 
-            <div class="go color-this" @click="handleGoToDetail(item)">
-              <span class="iconfont icon-huaban36-copy goRight"></span>
-            </div>
-          </div>
+            <!--<div class="go color-this" @click="handleGoToDetail(item)">-->
+              <!--<span class="iconfont icon-huaban36-copy goRight"></span>-->
+            <!--</div>-->
+          <!--</div>-->
 
         </div>
 
@@ -170,6 +170,7 @@ import OrderSearch from '@/components/OrderSearch';
 import { toLocalTime } from '@/utils/public';
 import DApp from '@/utils/moreWallet';
 import { Toast, MessageBox } from 'mint-ui';
+import axios from 'axios';
 
 export default {
   data() {
@@ -211,7 +212,8 @@ export default {
   created() {
   },
   mounted() {
-    this.handleGetOrderList();
+    // this.handleGetOrderList();
+      this.handleGetOrderListNow()
   },
   methods: {
     // 跳转到交易对
@@ -264,7 +266,11 @@ export default {
       this.dataList = [];
       this.searchData = null; // 清空查询条件
       this.isSearchStarus = null; // 取消查询状态
-      this.handleGetOrderList();
+        if (index === 1) {
+            this.handleGetOrderListNow();
+        } else {
+            this.handleGetOrderListHistory()
+        }
     },
     // 关闭暂停提示框
     handleClose() {
@@ -275,7 +281,12 @@ export default {
     loadTop() {
       this.searchData = null; // 清空查询条件
       this.isSearchStarus = null; // 取消查询状态
-      this.handleGetOrderList();
+      // this.handleGetOrderList();
+        if (this.active === 1) {
+            this.handleGetOrderListNow();
+        } else {
+            this.handleGetOrderListHistory()
+        }
     },
     // 上啦加载更多
     loadBottom() {
@@ -386,10 +397,109 @@ export default {
       this.handleGetOrderList(null, this.searchData);
     },
     /* 数据请求操作 start */
+
+    handleGetOrderListNow(page, data) {
+        this.loading = true;
+        axios.get('http://120.220.14.100:8088/onedex/v1/order/current', {
+            params: {
+                account_name: this.$store.state.app.accountInfo.account_name
+            }
+        }).then(res => {
+            this.loading = false;
+            this.first = false;
+
+            const data = res.data.data;
+            // const list = data.list;
+            const list = [{
+                "maker": "onedexchange",
+                "price": "90000000.0000",
+                "amount": "0.2000",
+                "base_symbol": "EOS",
+                "quote_symbol": "ABC",
+                "publish_account": "onedexchange",
+                "type": "bid",
+                "order_id": "2",
+                "create_time": "2018-10-19T09:01:36.000",
+                "source": "1"
+            }];
+            list.forEach((item) => {
+                this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+                this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+                const localTime = toLocalTime(item.create_time);
+                this.$set(item, 'localTime', localTime.substr(5, 5));
+                this.$set(item, 'orderStatus', 0);
+                this.$set(item, 'open', false);
+            });
+
+            // if (res.page.totalPage <= this.page) {
+            this.allLoaded = true;
+            // } else {
+            //     this.allLoaded = false;
+            // }
+
+            // 判断刷新 / 更多
+            if (!page) {
+                this.handleRefresh(list);
+                return;
+            }
+            this.handleTopage(list);
+        });
+    },
+    handleGetOrderListHistory(page, data) {
+      this.loading = true;
+      axios.get('http://120.220.14.100:8088/onedex/v1/order/history', {
+          params: {
+              account_name: this.$store.state.app.accountInfo.account_name
+          }
+      }).then(res => {
+          this.loading = false;
+          this.first = false;
+
+          const data= res.data.data;
+          // const list = data.list;
+          const list = [{
+              "maker": "onedexchange",
+              "price": "110000000.0000",
+              "amount": "2.5000",
+              "filled_amount": "2.4975",
+              "base_symbol": "EOS",
+              "quote_symbol": "ABC",
+              "publish_account": "onedexchange",
+              "type": "bid",
+              "status": "filled",
+              "order_id": "5",
+              "create_time": "2018-10-19T09:27:21.500",
+              "finish_time": "2018-10-19 18:50:04",
+              "source": "1"
+          }];
+          list.forEach((item) => {
+              this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+              this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+              const localTime = toLocalTime(item.create_time);
+              this.$set(item, 'localTime', localTime.substr(5, 5));
+              this.$set(item, 'orderStatus', 1);
+              this.$set(item, 'open', true);
+          });
+
+          // if (res.page.totalPage <= this.page) {
+          this.allLoaded = true;
+          // } else {
+          //     this.allLoaded = false;
+          // }
+
+          // 判断刷新 / 更多
+          if (!page) {
+              this.handleRefresh(list);
+              return;
+          }
+          this.handleTopage(list);
+      });
+      },
+
     handleGetOrderList(page, data) { // 查询订单记录列表信息
       try {
         // 获取未读条数
-        this.handleNotReadCount();
+        // this.handleNotReadCount();
 
         this.loading = true;
         let params = null;
@@ -803,7 +913,7 @@ export default {
 
       &>div{
         flex: 3;
-        text-align: right;
+        text-align: center;
         margin-right: .4rem;
 
         &:last-child{

@@ -66,13 +66,6 @@ const Scatter = {
       account: store.state.app.accountInfo.account_name,
     };
 
-//       eos.contract('hello23zhang').then(function (c) {
-//       // ,{"__optionOverrides":{"messageOnly":true}}
-//       c.cancelorder("er("scope","maker","uuid").then(function (value) {
-//   }).catch(function (e) {
-//     // i({type: "EOS_TRANSFER_FAILED", e: e});
-//     console.log("in("invoke transfer fail");
-
     this.EosJs.getCurrencyBalance(newParams).then(res => {
       if (!res.length) {
         callback(null, `0.0000 ${params.coin}`);
@@ -83,14 +76,21 @@ const Scatter = {
       }).catch((e) => {
         console.log(`e: ${e}`); // eslint-disable-line
     });
+    //     const param = {
+    //         scope: store.state.app.accountInfo.account_name,
+    //     };
+    //   this.EosJs.getTableRows(param).then(res => {
+    //       console.log(res);
+    //   })
   },
   /* -------- 获取余额 end -------- */
 
   bids(param) {
       try {
-          this.EosJs.contract('hello23zhang').then(res => {
-              console.log('hello23zhang', res);
-              res.bid(param).then(res => {
+          console.log(param);
+          this.scatterEosJs.contract('hello23zhang').then(res => {
+              console.log('hello23zhang', res.bid);
+              res.bid(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid).then(res => {
                   console.log(res);
               })
           })

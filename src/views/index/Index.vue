@@ -256,7 +256,7 @@ export default {
 
 // bannner 样式
 .banner{
-  background: linear-gradient(to right bottom, #FC6257, #FFE03B );
+  background: #FF6000;
   background-size: cover;
   height: 3.34rem;
   max-width: 100%;

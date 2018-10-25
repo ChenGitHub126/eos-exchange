@@ -243,9 +243,11 @@ export default {
               const list = data.list;
               if (list) {
                   list.forEach((v, i, arr) => {
-                      if (v.chain_symbol.toUpperCase() === 'EOS') {
+                      if (v.chain_symbol.toUpperCase() === 'QILINEOS') {
                           eosSymbolArr.push(v.symbol);
                           modelData.push({
+                              asset_code1: v.asset_code1,
+                              asset_code2: v.asset_code2,
                               symbol: v.symbol,
                               name: v.name,
                               precision: {
@@ -256,6 +258,27 @@ export default {
                       }
                   })
               }
+
+              axios.get('http://120.220.14.100:8581/exchangeApi/wallet/geteoswalletasset')
+                  .then(res => {
+                  console.log(res)
+                      const data2 = res.data.data;
+                      const list2 = data2.list;
+                      list2.forEach((v, i, arr) => {
+                          modelData.forEach((val, index, array) => {
+                              if (v.symbol === val.asset_code1) {
+                                  console.log(123);
+                                  val.code1 = v.publish_account
+                                  val.name1 = v.display_symbol
+                              }
+                              if (v.symbol === val.asset_code2) {
+                                  val.code2 = v.publish_account
+                                  val.name2 = v.display_symbol
+                              }
+                          })
+                      });
+                      // this.allData[item] = modelData;
+              });
 
               axios.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_quotations',{
                   params: {

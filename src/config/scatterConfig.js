@@ -9,17 +9,16 @@ const envobj = {
     httpEndpoint: 'https://api.kylin-testnet.eospace.io',
     protocol: 'https',
     host: 'api.kylin-testnet.eospace.io',
-    port: 80,
+    port: 443,
     chainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
 };
 
 const scatterConfig = {
     eosConfig: {
-        keyProvider: '5JXUnLCE8b36hrLTSJUyhcJzbi3MwQb8XmCypJf3Hs3jyR8gscj',
+        // keyProvider: '5JXUnLCE8b36hrLTSJUyhcJzbi3MwQb8XmCypJf3Hs3jyR8gscj',
         httpEndpoint: envobj.httpEndpoint,
         chainId: envobj.chainId,
-        verbose: false,
-        broadcast: true
+        // verbose: false,
     },
     network: {
         blockchain: 'eos',

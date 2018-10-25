@@ -760,24 +760,24 @@ export default {
         };
       }
       // 转账
-      DApp.transfer(params, (err, data) => {
-        if (err) {
-          if (JSON.parse(err).code === '0') {
-            // Toast(`${this.symbol2} ${this.$t('quotation.low')}`)
-            return;
-          }
-          if (JSON.parse(err).code === '2010001') {
-            Toast(this.$t('quotation.cancel'));
-            return;
-          }
-          Toast(this.$t('quotation.dealError'));
-          return;
-        }
-        if (data) {
-          Toast(this.$t('quotation.dealSuccess'));
-        }
-        this.handleGetSymbil();
-      });
+      // DApp.transfer(params, (err, data) => {
+      //   if (err) {
+      //     if (JSON.parse(err).code === '0') {
+      //       // Toast(`${this.symbol2} ${this.$t('quotation.low')}`)
+      //       return;
+      //     }
+      //     if (JSON.parse(err).code === '2010001') {
+      //       Toast(this.$t('quotation.cancel'));
+      //       return;
+      //     }
+      //     Toast(this.$t('quotation.dealError'));
+      //     return;
+      //   }
+      //   if (data) {
+      //     Toast(this.$t('quotation.dealSuccess'));
+      //   }
+      //   this.handleGetSymbil();
+      // });
     },
     // 卖出
     handleSell() {
