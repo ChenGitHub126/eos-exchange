@@ -128,7 +128,6 @@ export default {
   },
   watch: {
     '$route.params.symbol': function listen() {
-      this.handleUnsubscribeWs();
       this.handleMouted();
     },
   },
@@ -147,8 +146,6 @@ export default {
       this.symbol2 = symbolArr[1];
 
       this.handlaGetSymbolInfo();
-      this.handleLoadHeardWs();
-      this.handleGetSymbolStatus();
 
       // 绑定账号
       // Io.accountBind(this.$store.state.app.accountInfo.account_name);
@@ -161,45 +158,6 @@ export default {
     // 截取小数
     toFixed(numb, p) {
       return toFixed(numb, p);
-    },
-    // 获取头部信息
-    handleLoadHeardWs() {
-      console.log('Trade.vue', 'IO获取头部信息');
-      // const params = {
-      //   symbol: this.symbol,
-      // };
-      // Io.cfwsHeard(params, (data) => {
-      //   this.symbolData = data;
-      //   if (data.precision) {
-      //     this.precision = data.precision;
-      //     this.newPrice = data.price;
-      //   }
-      // });
-    },
-    // 获取交易对上架信息
-    handleGetSymbolStatus() {
-      console.log('Trade.vue', '获取交易对上架信息和状态');
-      // const params = {
-      //   symbol: this.symbol.toUpperCase(),
-      // };
-      // this.$http.get('/symbol/getSymbolStatus', { params }).then((res) => {
-      //   if (res.code !== 0) {
-      //     Toast({
-      //       message: res.msg,
-      //       position: 'center',
-      //       duration: 2000,
-      //     });
-      //     return;
-      //   }
-      //   this.statusInfo = res.symbolInfo;
-      //
-      //   // 服务器暂停
-      //   if (Number(res.exchangeStatus) === 0) {
-      //     sessionStorage.setItem('serverStatus', false); // 服务暂停
-      //     return;
-      //   }
-        sessionStorage.setItem('serverStatus', true); // 服务正常
-      // });
     },
     // 获取交易对信息
     handlaGetSymbolInfo() {
@@ -425,14 +383,8 @@ export default {
       });
     },
     /* -------- 权限校验 end -------- */
-    // 取消所有推送
-    handleUnsubscribeWs() {
-      Io.cfwsUnsubscribe();
-      Io.addListenerOrder('stop');
-    },
   },
   beforeDestroy() {
-    this.handleUnsubscribeWs();
   },
 };
 </script>

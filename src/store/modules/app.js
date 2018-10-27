@@ -25,6 +25,7 @@ const app = {
     },
     toAccount: localStorage.getItem('toAccount') ? localStorage.getItem('toAccount') : null, // 智能合约
     accountInfo: localStorage.getItem('accountInfo') ? JSON.parse(localStorage.getItem('accountInfo')) : null, // 账户信息
+    permission: false, // 授权信息
     detail: localStorage.getItem('detail') ? JSON.parse(localStorage.getItem('detail')) : null, // 订单详情
     channel: localStorage.getItem('channel') ? localStorage.getItem('channel') : '', // app名称
     precision: localStorage.getItem('precision') ? JSON.parse(localStorage.getItem('precision')) : { // 精度
@@ -59,6 +60,11 @@ const app = {
     SET_ACCOUNTINFO: (state, accountInfo) => {
       state.accountInfo = accountInfo;
       localStorage.setItem('accountInfo', JSON.stringify(accountInfo));
+    },
+    // 授权信息
+    SET_PERMISSION: (state, permission) => {
+      state.permission = permission;
+      // localStorage.setItem('accountInfo', JSON.stringify(accountInfo));
     },
     // 订单详情
     SET_DETAIL: (state, detail) => {
@@ -110,6 +116,10 @@ const app = {
     // 账户信息
     setAccountInfo({ commit }, accountInfo) {
       commit('SET_ACCOUNTINFO', accountInfo);
+    },
+    // 授权信息
+    setPermission({ commit }, perimission) {
+      commit('SET_PERMISSION', perimission);
     },
     // 订单详情
     setDetail({ commit }, detail) {

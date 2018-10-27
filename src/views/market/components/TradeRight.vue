@@ -67,7 +67,8 @@ export default {
   watch: {
     '$store.state.app.trad': function listen(newVal) {
       this.symbolInfo = newVal;
-      this.handleWsData(this.wsData);
+        this.handlePriceDepthWs();
+      // this.handleDepthData(this.wsData);
     },
     '$route.params.symbol': function listen() {
       Io.cfwsUnsubscribe(`depth.${this.symbol}`);
@@ -104,9 +105,29 @@ export default {
                 limit: '50'
             }
         }).then(res => {
+            // const res = {
+            //     "code": "100200",
+            //     "msg": "成功",
+            //     "data": {
+            //         "map": {
+            //             "base": "EOS",
+            //             "quote": "ABC",
+            //             "bids": [{"price": "0.332", "amount": "1.0000"}, {
+            //                 "price": "0.332",
+            //                 "amount": "0.0025"
+            //             }, {"price": "0.332", "amount": "1.0000"}, {
+            //                 "price": "0.332",
+            //                 "amount": "0.2000"
+            //             }, {"price": "0.332", "amount": "10.0000"}],
+            //             "asks": [{"price": "0.332", "amount": "0.0027"}, {
+            //                 "price": "0.332",
+            //                 "amount": "0.3000"
+            //             }]
+            //         }
+            //     }
+            // };
             const data = res.data.data;
             const map = data.map;
-            console.log(map)
             this.handleDepthData(map);
             // 卖盘列表显示到最后
             if (this.first) {
@@ -116,19 +137,6 @@ export default {
                 }, 100);
             }
         });
-
-      Io.cfwsDepth(params, (data) => {
-        this.wsData = data;
-        console.log(data);
-        this.handleWsData(this.wsData);
-        // 卖盘列表显示到最后
-        if (this.first) {
-          this.first = false;
-          setTimeout(() => {
-            document.getElementsByClassName('list')[0].scrollTop = 10000;
-          }, 100);
-        }
-      });
     },
 
     // 处理数据 - 精度
@@ -137,8 +145,8 @@ export default {
           this.sellCount = 0;
           data.asks.forEach((v) => {
               asks.push({
-                  price: toFixed(Number(v.price), this.symbolInfo.priceDecimal),
-                  num: toFixed(Number(v.amount), this.symbolInfo.coinDecimal),
+                  price: toFixed(Number(v.price), this.symbolData.precision.price),
+                  num: toFixed(Number(v.amount), this.symbolData.precision.coin),
               });
               if (this.sellCount < Number(v.amount)) {
                   this.sellCount = Number(v.amount);
@@ -156,8 +164,8 @@ export default {
           this.buyCount = 0;
           data.bids.forEach((v) => {
               bids.push({
-                  price: toFixed(Number(v.price), this.symbolInfo.priceDecimal),
-                  num: toFixed(Number(v.price), this.symbolInfo.coinDecimal),
+                  price: toFixed(Number(v.price), this.symbolData.precision.price),
+                  num: toFixed(Number(v.amount), this.symbolData.precision.coin),
               });
               if (this.buyCount < Number(v.amount)) {
                   this.buyCount = Number(v.amount);
@@ -169,51 +177,6 @@ export default {
               this.data.bids = bids.slice(0, 50);
           }
       },
-
-    // 处理数据 - 精度
-    handleWsData(data) {
-      const asks = [];
-      this.sellCount = 0;
-      data.asks.forEach((v) => {
-        const vv = v.split(':');
-        // const thisCount = Number(vv[0]) * Number(vv[1])
-        asks.push({
-          price: toFixed(Number(vv[0]), this.symbolInfo.priceDecimal),
-          num: toFixed(Number(vv[1]), this.symbolInfo.coinDecimal),
-          // count: toFixed(thisCount, 4),
-        });
-        if (this.sellCount < Number(vv[1])) {
-          this.sellCount = Number(vv[1]);
-        }
-        // this.sellCount += Number(vv[1]);
-      });
-      // 卖盘需要进行倒序 (这也没倒啊???)
-      const asksArr = asks;
-      this.data.asks = asksArr;
-      if (asksArr.length > 50) {
-        this.data.asks = asksArr.slice(0, 50);
-      }
-
-      const bids = [];
-      this.buyCount = 0;
-      data.bids.forEach((v) => {
-        const vv = v.split(':');
-        // const thisCount = Number(vv[0]) * Number(vv[1])
-        bids.push({
-          price: toFixed(Number(vv[0]), this.symbolInfo.priceDecimal),
-          num: toFixed(Number(vv[1]), this.symbolInfo.coinDecimal),
-          // count: toFixed(thisCount, 4),
-        });
-        if (this.buyCount < Number(vv[1])) {
-          this.buyCount = Number(vv[1]);
-        }
-        // this.buyCount += Number(vv[1]);
-      });
-      this.data.bids = bids;
-      if (bids.length > 50) {
-        this.data.bids = bids.slice(0, 50);
-      }
-    },
 
     // 交易量背景色
     handleBgWidth(num, count) {

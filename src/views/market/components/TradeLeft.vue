@@ -442,7 +442,7 @@ export default {
           if (this.$route.name === 'trade') {
             this.timer = setTimeout(() => {
               this.handleGetSymbil();
-            }, 3000);
+            }, 5000);
           }
           return;
         }
@@ -646,7 +646,7 @@ export default {
       if (sellPrice < Number(this.minSellEos)) {
         const sellCount = Decimal.div(Number(this.minSellEos), this.newPrice).toString();
         this.sellCount = toFixed(sellCount, this.precision.coin);
-        this.flag = true; // 提示文本不显示
+        this.flag = true; // 提示文本不显示]
         return false;
       }
       this.flag = false; // 提示文本不显示
@@ -690,19 +690,7 @@ export default {
     },
     // 买入
     handleBuy(param) {
-      // const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
-      // if (!accountAgree) {
-      //   this.accountAgree = true;
-      //   return;
-      // }
-      // if (!this.handleReg()) {
-      //   return;
-      // }
-      // if (!this.handleRegBanlance()) {
-      //   return;
-      // }
       /* -------- 买入 -------- */
-      let params = {};
       if (this.priceType === '0') {
           // 限价 - 买入
         console.log(param);
@@ -712,12 +700,13 @@ export default {
                 Toast(this.$t('quotation.dealSuccess'));
                 return;
             }
-            if (err && res.type.indexOf('signature_rejected') > -1) {
-                Toast(this.$t('quotation.cancel'));
-                return;
+            if (err && res.type) {
+                if (res.type.indexOf('signature_rejected') > -1) {
+                    Toast(this.$t('quotation.cancel'));
+                    return;
+                }
             }
-            console.log(res.type.indexOf('signature_rejected'));
-            Toast(this.$t('quotation.dealError'));
+            Toast(this.$t('quotation.dealError') + res);
         });
       } else {
         // 市价 - 买入
@@ -736,12 +725,13 @@ export default {
                   Toast(this.$t('quotation.dealSuccess'));
                   return;
               }
-              if (err && res.type.indexOf('signature_rejected') > -1) {
-                  Toast(this.$t('quotation.cancel'));
-                  return;
+              if (err && res.type) {
+                  if (res.type.indexOf('signature_rejected') > -1) {
+                      Toast(this.$t('quotation.cancel'));
+                      return;
+                  }
               }
-              console.log(res);
-              Toast(this.$t('quotation.dealError'));
+              Toast(this.$t('quotation.dealError') + res);
           });
       } else {
         // 市价 - 卖出
@@ -750,6 +740,11 @@ export default {
     // 服务器是否在维护 serverStatus: false - 暂停 | true - 正常
     handleCheckServerStop() {
       const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
+      const permission = this.$store.state.app.permission;
+      console.log(permission)
+      if (!permission) {
+          return;
+      }
       if (!accountAgree) {
         this.accountAgree = true;
         return;

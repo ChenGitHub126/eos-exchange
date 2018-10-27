@@ -118,7 +118,24 @@ const Scatter = {
         catch (e) {
             console.log(e)
         }
+    },
 
+    cancel(param, callback) {
+        try {
+            this.scatterEosJs.contract(scatterConfig.contract).then(res => {
+                console.log(res.cancelorder);
+                res.cancelorder(param.scope, param.maker, param.uuid, param.authorization)
+                    .then(res => {
+                        callback(false, res)
+                    }).catch(err => {
+                    console.log(err);
+                    callback(true, err)
+                })
+            })
+        }
+        catch (e) {
+            console.log(e)
+        }
     },
 
   /* -------- 获取账户信息 start ------- */
@@ -126,7 +143,7 @@ const Scatter = {
   * 获取钱包身份
   * get scatter identityInfo => publicKey
   */
-  getAccount(callback) {
+  getAccount(callback, permissionCb) {
     // alert(this.hasScatter)
     if (!this.hasScatter) {
       setTimeout(() => {
@@ -168,6 +185,29 @@ const Scatter = {
     });
   },
   /* -------- 获取账户信息 end ------- */
+
+    getPermission(accountName, callback) {
+        this.scatterEosJs.getAccount(accountName).then(res => {
+            if (res.permissions) {
+                const permissions = res.permissions;
+                permissions.forEach((v, i, arr) => {
+                    if (v.required_auth.accounts.length > 0) {
+                        let auth = v.required_auth;
+                        const accounts = auth.accounts;
+                        accounts.forEach((v, i, arr) => {
+                            if (v.permission.actor === 'hello23zhang' && v.permission.permission === 'eosio.code') {
+                                callback(true)
+                            } else {
+                                callback(false)
+                            }
+                        })
+                    }
+                });
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    },
 
   /*
   * 获取eos账号信息

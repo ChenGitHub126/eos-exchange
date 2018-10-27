@@ -6,8 +6,8 @@
         <div class="itemTitle">
           <!-- 交易对 -->
           <div class="symbol">
-            <span class="color-red" v-if="item.direction === 2">{{ $t('public.sellShort') }}</span>
-            <span class="color-green" v-if="item.direction === 1">{{ $t('public.buyShort') }}</span>
+            <span class="color-red" v-if="item.type === 'ask'">{{ $t('public.sellShort') }}</span>
+            <span class="color-green" v-if="item.type === 'bid'">{{ $t('public.buyShort') }}</span>
             <span class="coin">{{ item.symbol1 }}/{{ item.symbol2 }}</span>
             <span class="time tip">{{ item.localTime }}</span>
           </div>
@@ -29,11 +29,11 @@
         <div class="showContent" @click="handleRowDetail(item)">
           <div class="">
             <div class="tip">{{ $t('public.myPrice') }}</div>
-            <div class="num">{{ Number(item.orderPriceStr) !== 0 ? item.orderPriceStr : $t('quotation.market') }}</div>
+            <div class="num">{{ Number(item.price) !== 0 ? item.price : $t('quotation.market') }}</div>
           </div>
           <div class="">
             <div class="tip">{{ $t('public.count') }}</div>
-            <div class="num">{{ item.orderCountStr || '—' }}</div>
+            <div class="num">{{ item.amount || '—' }}</div>
           </div>
           <div class="">
             <div class="tip">{{ $t('public.dealCount') }}</div>
@@ -173,39 +173,30 @@ export default {
     },
     /* 数据请求操作 start */
     handleGetOrderList(page) { // 查询订单记录列表信息
-        axios.get('http://120.220.14.100:8088/onedex/v1/order/history', {
-            params: {
-                account_name: this.$store.state.app.accountInfo.account_name
-            }
-        }).then(res => {
-           console.log(res);
-        });
       try {
         this.loading = true;
-        const params = {
-          currPage: page || 1, // 当前页码
-          pageSize: 3, // 每页数量
-          orderByName: '', // 排序字段
-          orderByType: '', // 排序方式(asc, desc)
-          accountNo: this.$store.state.app.accountInfo.account_name, // 账户名
-          symbol: this.symbol, // 交易对
-        };
-        this.$http.post('/order/queryHistoryOrderPage', params).then((res) => {
+        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/history', {
+            params: {
+                account_name: this.$store.state.app.accountInfo.account_name,
+                symbol: this.$store.state.app.symbolInfo.name2
+            }
+        }).then((res) => {
           this.loading = false;
-          const list = res.page.list;
-          list.forEach((item) => {
-            const symbolArr = item.symbol.split('_');
-            this.$set(item, 'symbol1', symbolArr[0]);
-            this.$set(item, 'symbol2', symbolArr[1]);
-            const localTime = toLocalTime(item.orderTime);
-            this.$set(item, 'localTime', localTime.substr(5, 5));
-            this.$set(item, 'open', false);
-          });
+            const data = res.data;
+            const list = data.list;
+            list.forEach((item) => {
+                this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+                this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+                const localTime = toLocalTime(item.create_time);
+                this.$set(item, 'localTime', localTime.substr(5));
+                this.$set(item, 'orderStatus', 0);
+                this.$set(item, 'open', false);
+            });
 
-          if (res.page.totalPage <= this.page) {
-            this.allLoaded = true;
-          } else {
+          if (list.length > 5) {
             this.allLoaded = false;
+          } else {
+            this.allLoaded = true;
           }
 
           // 判断刷新 / 更多

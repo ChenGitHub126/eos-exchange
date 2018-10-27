@@ -18,7 +18,7 @@
     </div>
 
     <div class="scrollView">
-      <!-- 主订单列表展示去 start -->
+      <!-- 主订单列表展示区 start -->
       <mt-loadmore
         :topPullText="$t('public.loadingMoreTip1')"
         :topDropText="$t('public.loadingMoreTip2')"
@@ -30,7 +30,8 @@
         :bottom-method="loadBottom"
         :bottom-all-loaded="allLoaded"
         :auto-fill="false" ref="loadmore">
-        <div class="item" v-if="dataList.length" v-for="(item, $index) in dataList" :key="$index" @click="handleGoToDetail(item)">
+        <!--<div class="item" v-if="dataList.length" v-for="(item, $index) in dataList" :key="$index" @click="handleGoToDetail(item)">-->
+        <div class="item" v-if="dataList.length" v-for="(item, $index) in dataList" :key="$index">
           <!-- title -->
           <div class="itemTitle">
             <!-- 交易对 -->
@@ -51,10 +52,11 @@
                 <!--:class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">-->
                 <!--{{ $t('order.status4') }}<span class="iconfont icon-huaban11" style="font-size: .25rem;"></span>-->
               <!--</span>-->
-              <!--<span v-if="item.dealStatus === 2"-->
-                <!--:class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">-->
-                <!--{{ $t('order.status2') }}<span class="iconfont icon-huaban11" style="font-size: .25rem;"></span>-->
-              <!--</span>-->
+              <span v-if="item.orderStatus === 1"
+                :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">
+                {{ $t('order.status2') }}
+                  <!--<span class="iconfont icon-huaban11" style="font-size: .25rem;"></span>-->
+              </span>
             </div>
           </div>
 
@@ -266,11 +268,7 @@ export default {
       this.dataList = [];
       this.searchData = null; // 清空查询条件
       this.isSearchStarus = null; // 取消查询状态
-        if (index === 1) {
-            this.handleGetOrderListNow();
-        } else {
-            this.handleGetOrderListHistory()
-        }
+      this.handleGetOrderList()
     },
     // 关闭暂停提示框
     handleClose() {
@@ -281,12 +279,7 @@ export default {
     loadTop() {
       this.searchData = null; // 清空查询条件
       this.isSearchStarus = null; // 取消查询状态
-      // this.handleGetOrderList();
-        if (this.active === 1) {
-            this.handleGetOrderListNow();
-        } else {
-            this.handleGetOrderListHistory()
-        }
+      this.handleGetOrderList();
     },
     // 上啦加载更多
     loadBottom() {
@@ -409,24 +402,24 @@ export default {
             this.first = false;
 
             const data = res.data.data;
-            // const list = data.list;
-            const list = [{
-                "maker": "onedexchange",
-                "price": "90000000.0000",
-                "amount": "0.2000",
-                "base_symbol": "EOS",
-                "quote_symbol": "ABC",
-                "publish_account": "onedexchange",
-                "type": "bid",
-                "order_id": "2",
-                "create_time": "2018-10-19T09:01:36.000",
-                "source": "1"
-            }];
+            const list = data.list;
+            // const list = [{
+            //     "maker": "onedexchange",
+            //     "price": "90000000.0000",
+            //     "amount": "0.2000",
+            //     "base_symbol": "EOS",
+            //     "quote_symbol": "ABC",
+            //     "publish_account": "onedexchange",
+            //     "type": "bid",
+            //     "order_id": "2",
+            //     "create_time": "2018-10-19T09:01:36.000",
+            //     "source": "1"
+            // }];
             list.forEach((item) => {
                 this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
                 this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
                 const localTime = toLocalTime(item.create_time);
-                this.$set(item, 'localTime', localTime.substr(5, 5));
+                this.$set(item, 'localTime', localTime.substr(5));
                 this.$set(item, 'orderStatus', 0);
                 this.$set(item, 'open', false);
             });
@@ -456,29 +449,29 @@ export default {
           this.first = false;
 
           const data= res.data.data;
-          // const list = data.list;
-          const list = [{
-              "maker": "onedexchange",
-              "price": "110000000.0000",
-              "amount": "2.5000",
-              "filled_amount": "2.4975",
-              "base_symbol": "EOS",
-              "quote_symbol": "ABC",
-              "publish_account": "onedexchange",
-              "type": "bid",
-              "status": "filled",
-              "order_id": "5",
-              "create_time": "2018-10-19T09:27:21.500",
-              "finish_time": "2018-10-19 18:50:04",
-              "source": "1"
-          }];
+          const list = data.list;
+          // const list = [{
+          //     "maker": "onedexchange",
+          //     "price": "110000000.0000",
+          //     "amount": "2.5000",
+          //     "filled_amount": "2.4975",
+          //     "base_symbol": "EOS",
+          //     "quote_symbol": "ABC",
+          //     "publish_account": "onedexchange",
+          //     "type": "bid",
+          //     "status": "filled",
+          //     "order_id": "5",
+          //     "create_time": "2018-10-19T09:27:21.500",
+          //     "finish_time": "2018-10-19 18:50:04",
+          //     "source": "1"
+          // }];
           list.forEach((item) => {
               this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
               this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
               const localTime = toLocalTime(item.create_time);
-              this.$set(item, 'localTime', localTime.substr(5, 5));
+              this.$set(item, 'localTime', localTime.substr(5));
               this.$set(item, 'orderStatus', 1);
-              this.$set(item, 'open', true);
+              this.$set(item, 'open', false);
           });
 
           // if (res.page.totalPage <= this.page) {
@@ -497,76 +490,19 @@ export default {
       },
 
     handleGetOrderList(page, data) { // 查询订单记录列表信息
-      try {
-        // 获取未读条数
-        // this.handleNotReadCount();
-
-        this.loading = true;
-        let params = null;
-        if (data) {
-          params = data;
-          if (page) {
-            params.currPage = page;
-          }
-        } else {
-          params = {
-            currPage: page || 1, // 当前页码
-            pageSize: 20, // 每页数量
-            orderByName: '', // 排序字段
-            orderByType: '', // 排序方式(asc, desc)
-            accountNo: this.$store.state.app.accountInfo.account_name, // 账户名
-            coinCode: this.$route.params.symbol || '', // 币种
-            direction: '', // 方向
-            orderStatus: '', // 订单状态
-            beginDate: '', // 开始时间
-            endDate: '', // 结束时间
-          };
-        }
-        // 添加请求排序处理参数
         if (this.active === 1) {
-          params.orderByName = 'update_ts';
-          params.orderByType = 'desc';
+            this.handleGetOrderListNow();
+        } else {
+            this.handleGetOrderListHistory()
         }
-
-        this.$http.post('/order/list', params).then((res) => {
-          this.loading = false;
-          this.first = false;
-          const list = res.page.list;
-          list.forEach((item) => {
-            const symbolArr = item.symbol.split('_');
-            this.$set(item, 'symbol1', symbolArr[0]);
-            this.$set(item, 'symbol2', symbolArr[1]);
-            const localTime = toLocalTime(item.orderTime);
-            this.$set(item, 'localTime', localTime.substr(5, 5));
-            this.$set(item, 'open', false);
-          });
-
-          if (res.page.totalPage <= this.page) {
-            this.allLoaded = true;
-          } else {
-            this.allLoaded = false;
-          }
-
-          // 判断刷新 / 更多
-          if (!page) {
-            this.handleRefresh(list);
-            return;
-          }
-          this.handleTopage(list);
-        });
-      } catch (error) {
-        setTimeout(() => {
-          this.handleGetOrderList();
-        }, 500);
-      }
     },
     // 撤销订单
     handleCancelOrder(row) {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        this.handleGetTimestampJson(row);
-        return;
-      }
+      // const token = localStorage.getItem('token');
+      // if (!token) {
+      //   this.handleGetTimestampJson(row);
+      //   return;
+      // }
       MessageBox({
         title: this.$t('public.tip'),
         showConfirmButton: true,
@@ -575,23 +511,48 @@ export default {
         confirmButtonText: this.$t('public.sure'),
         cancelButtonText: this.$t('public.cancel'),
       }).then((data) => {
-        if (data === 'confirm') {
-          // const serverStatus = JSON.parse(sessionStorage.getItem('serverStatus'));
-          // if (!serverStatus) {
-          //   this.serverStop = true;
-          //   return;
-          // }
-          this.$http.get('common/getCommonParam').then((res) => {
-            if (res.code !== 0) {
-              return;
-            }
-            if (!Number(res.exchangeStatus)) {
-              this.serverStop = true;
-              return;
-            }
-            this.handleGetSymbolStatus(row);
-          });
-        }
+          if (data === 'confirm'){
+              this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping',{
+                  params: {
+                      symbol: row.quote_symbol,
+                      contract: row.publish_account
+                  }
+              }).then(res => {
+                  const param = {
+                      scope: row.type === 'bid'? res.data.map.bidscope : res.data.map.askscope,
+                      maker: row.maker,
+                      uuid: row.order_id,
+                      authorization: {
+                          authorization: `${this.$store.state.app.accountInfo.account_name}@active`
+                      },
+                  };
+                  DApp.cancel(param, (err, res) => {
+                      console.log(res);
+                      if(!err) {
+                          Toast(this.$t('order.revokeSuccess'));
+                          setTimeout(this.handleGetOrderList, 1000);
+                          return;
+                      }
+                  })
+              });
+          }
+        // if (data === 'confirm') {
+        //   // const serverStatus = JSON.parse(sessionStorage.getItem('serverStatus'));
+        //   // if (!serverStatus) {
+        //   //   this.serverStop = true;
+        //   //   return;
+        //   // }
+        //   this.$http.get('common/getCommonParam').then((res) => {
+        //     if (res.code !== 0) {
+        //       return;
+        //     }
+        //     if (!Number(res.exchangeStatus)) {
+        //       this.serverStop = true;
+        //       return;
+        //     }
+        //     this.handleGetSymbolStatus(row);
+        //   });
+        // }
       }).catch(() => {});
     },
     // 获取交易对上架信息

@@ -16,8 +16,8 @@
         <div class="itemTitle">
           <!-- 交易对 -->
           <div class="symbol">
-            <span class="color-red" v-if="item.direction === 2">{{ $t('public.sellShort') }}</span>
-            <span class="color-green" v-if="item.direction === 1">{{ $t('public.buyShort') }}</span>
+            <span class="color-red" v-if="item.type === 'ask'">{{ $t('public.sellShort') }}</span>
+            <span class="color-green" v-if="item.type === 'bid'">{{ $t('public.buyShort') }}</span>
             <span class="coin">{{ item.symbol1 }}/{{ item.symbol2 }}</span>
             <span class="time tip">{{ item.localTime }}</span>
           </div>
@@ -25,8 +25,8 @@
           <!-- status -->
           <div class="status">
             <button class="btn" v-if="statusInfo.status != 1" @click="handleCancelOrder(item)">{{ $t('public.revoke') }}</button>
-            <button class="btn stop" v-if="statusInfo.status === 1" @click="handleStop">{{ $t('public.revoke') }}</button>
-            <button class="btn stop" v-if="statusInfo.status === 3" @click="oldDown = true">{{ $t('public.revoke') }}</button>
+            <!--<button class="btn stop" v-if="statusInfo.status === 1" @click="handleStop">{{ $t('public.revoke') }}</button>-->
+            <!--<button class="btn stop" v-if="statusInfo.status === 3" @click="oldDown = true">{{ $t('public.revoke') }}</button>-->
           </div>
         </div>
 
@@ -34,24 +34,24 @@
         <div class="showContent" @click="handleRowDetail(item)">
           <div class="">
             <div class="tip">{{ $t('public.myPrice') }}</div>
-            <div class="num">{{ Number(item.orderPriceStr) !== 0 ? item.orderPriceStr : $t('quotation.market') }}</div>
+            <div class="num">{{ Number(item.price) !== 0 ? item.price : $t('quotation.market') }}</div>
           </div>
           <div class="">
             <div class="tip">{{ $t('public.count') }}</div>
-            <div class="num">{{ item.orderCountStr || '—' }}</div>
+            <div class="num">{{ item.amount || '—' }}</div>
           </div>
           <div class="">
             <div class="tip">{{ $t('public.dealCount') }}</div>
             <div class="num">{{ item.dealCountStr || '—' }}</div>
           </div>
-          <div class="tools color-this">
-            <span v-if="(item.dealStatus !== 0)">
-              <span v-if="!item.open" class="iconfont icon-huaban37 toDetail"></span>
-              <span v-if="item.open" class="iconfont icon-huaban35 toDetail"></span>
+          <!--<div class="tools color-this">-->
+            <!--<span v-if="(item.dealStatus !== 0)">-->
+              <!--<span v-if="!item.open" class="iconfont icon-huaban37 toDetail"></span>-->
+              <!--<span v-if="item.open" class="iconfont icon-huaban35 toDetail"></span>-->
               <!-- <span v-if="!item.open">{{ $t('public.open') }}</span>
               <span v-if="item.open">{{ $t('public.close1') }}</span> -->
-            </span>
-          </div>
+            <!--</span>-->
+          <!--</div>-->
         </div>
         <div class="hiddenContent" v-if="item.open" @click="handleGoToDetail(item)">
           <div class="detail">
@@ -230,41 +230,30 @@ export default {
       try {
         this.symbol = this.$route.params.symbol.toUpperCase();
         this.loading = true;
-        const params = {
-          currPage: page || 1, // 当前页码
-          pageSize: 10, // 每页数量
-          orderByName: '', // 排序字段
-          orderByType: '', // 排序方式(asc, desc)
-          accountNo: this.$store.state.app.accountInfo.account_name, // 账户名
-          // accountNo: 'eosxhbeosxhb', // 账户名 - 测试
-          symbol: this.symbol, // 交易对
-        };
-
-          axios.get('http://120.220.14.100:8088/onedex/v1/order/current', {
-              params: {
-                  account_name: this.$store.state.app.accountInfo.account_name
-              }
-          }).then(res => {
-              console.log(res);
-          });
 
         console.log('OrderListNow.vue', '获取指定交易对的当前订单记录');
-        this.$http.post('/order/queryCurrentOrderPage', params).then((res) => {
+        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/current', {
+            params: {
+                account_name: this.$store.state.app.accountInfo.account_name,
+                symbol: this.$store.state.app.symbolInfo.name2
+            }
+        }).then((res) => {
           this.loading = false;
-          const list = res.page.list;
+          const data = res.data;
+          const list = data.list;
           list.forEach((item) => {
-            const symbolArr = item.symbol.split('_');
-            this.$set(item, 'symbol1', symbolArr[0]);
-            this.$set(item, 'symbol2', symbolArr[1]);
-            const localTime = toLocalTime(item.orderTime);
-            this.$set(item, 'localTime', localTime.substr(5, 5));
-            this.$set(item, 'open', false);
+              this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+              this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+              const localTime = toLocalTime(item.create_time);
+              this.$set(item, 'localTime', localTime.substr(5));
+              this.$set(item, 'orderStatus', 0);
+              this.$set(item, 'open', false);
           });
 
-          if (res.page.totalPage <= this.page) {
-            this.allLoaded = true;
-          } else {
+          if (list.length > 5) {
             this.allLoaded = false;
+          } else {
+            this.allLoaded = true;
           }
 
           // 判断刷新 / 更多
@@ -302,11 +291,11 @@ export default {
     },
     // 撤销订单
     handleCancelOrder(row) {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        this.handleGetTimestampJson(row);
-        return;
-      }
+      // const token = localStorage.getItem('token');
+      // if (!token) {
+      //   this.handleGetTimestampJson(row);
+      //   return;
+      // }
 
       MessageBox({
         title: this.$t('public.tip'),
@@ -316,24 +305,48 @@ export default {
         confirmButtonText: this.$t('public.sure'),
         cancelButtonText: this.$t('public.cancel'),
       }).then((data) => {
-        if (data === 'confirm') {
+          if (data === 'confirm'){
+              this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping',{
+                  params: {
+                      symbol: row.quote_symbol,
+                      contract: row.publish_account
+                  }
+              }).then(res => {
+                  const param = {
+                      scope: row.type === 'bid'? res.data.map.bidscope : res.data.map.askscope,
+                      maker: row.maker,
+                      uuid: row.order_id,
+                      authorization: {
+                          authorization: `${this.$store.state.app.accountInfo.account_name}@active`
+                      },
+                  };
+                  DApp.cancel(param, (err, res) => {
+                      if(!err) {
+                          Toast(this.$t('order.revokeSuccess'));
+                          setTimeout(this.handleGetOrderListNow, 1000);
+                          return;
+                      }
+                  })
+              });
+          }
+        // if (data === 'confirm') {
           // 判断服务器状态
           // const serverStatus = JSON.parse(sessionStorage.getItem('serverStatus'));
           // if (!serverStatus) {
           //   this.serverStop = true;
           //   return;
           // }
-          this.$http.get('common/getCommonParam').then((res) => {
-            if (res.code !== 0) {
-              return;
-            }
-            if (!Number(res.exchangeStatus)) {
-              this.serverStop = true;
-              return;
-            }
-            this.handleGetSymbolStatus(row);
-          });
-        }
+          // this.$http.get('common/getCommonParam').then((res) => {
+          //   if (res.code !== 0) {
+          //     return;
+          //   }
+          //   if (!Number(res.exchangeStatus)) {
+          //     this.serverStop = true;
+          //     return;
+          //   }
+          //   this.handleGetSymbolStatus(row);
+          // });
+        // }
       }).catch((() => {}));
     },
     handleGetSymbolStatus(row) {

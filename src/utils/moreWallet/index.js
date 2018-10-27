@@ -48,8 +48,13 @@ const DApp = {
     },
 
     // 当前账号信息
-    getAccount(callback) {
-        this.obj.getAccount(callback);
+    getAccount(callback, permissionCb) {
+        this.obj.getAccount(callback, permissionCb);
+    },
+
+    // 获取授权
+    getPermission(accountName, callback) {
+        this.obj.getPermission(accountName, callback);
     },
 
     // 获取app版本，提示更新
@@ -68,6 +73,10 @@ const DApp = {
     // 卖单
     ask(param, callback) {
         this.obj.ask(param, callback);
+    },
+    // 撤单
+    cancel(param, callback) {
+        this.obj.cancel(param, callback);
     },
     // 转账
     transfer(params, callback) {

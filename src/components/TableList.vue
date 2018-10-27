@@ -184,7 +184,6 @@ export default {
       this.handleWsListen();
     },
     '$route.params.symbol': function listen(newVal) {
-      console.log('symbol', newVal);
       this.symbol = newVal;
     },
   },
@@ -202,11 +201,10 @@ export default {
     },
     // 跳转到交易
     handleToTrade(item) {
-        console.log(item)
       this.$store.dispatch('setSymbolInfo', item); // 设置交易对信息
       this.$store.dispatch('setPrecision', item.precision); // 设置精度
       const params = {
-        symbol: item.symbol,
+        symbol: `${item.name2}_${item.name1}`,
       };
       this.$router.push({
         name: 'trade',
@@ -266,7 +264,6 @@ export default {
                       list2.forEach((v, i, arr) => {
                           modelData.forEach((val, index, array) => {
                               if (v.symbol === val.asset_code1) {
-                                  console.log(123);
                                   val.code1 = v.publish_account
                                   val.name1 = v.display_symbol
                               }
@@ -297,7 +294,6 @@ export default {
                           }
                       })
                   });
-                  console.log(modelData);
                   this.loading = false;
                   this.allData[item] = modelData;
                   // 自选 - 行情页
@@ -322,30 +318,14 @@ export default {
                   return;
               });
           });
-        return;
-
-        Io.cfwsUnsubscribe(`markets.${item}`); // 停止交易对推送
-        const subCoinPair = (item).toLowerCase() || 'eos';
-        console.log('TableList.vue', '获取行情列表');
-        const params = {
-          symbol: subCoinPair,
-          offset: 0,
-          count: 1000,
-        };
-        Io.cfwsPricesSymbol(params, (res) => {
-          this.loading = false;
-          const rows = Array.isArray(res) ? res : [res];
-          if (rows.length > 1) {
-
-          }
+        // return;
 
           // 单条数据更新
-          if (this.activeIndex === 1 && this.$route.name !== 'index') {
-            this.handleThisDataUpdata(rows[0], 'self');
-            return;
-          }
-          this.handleThisDataUpdata(rows[0], item);
-        });
+          // if (this.activeIndex === 1 && this.$route.name !== 'index') {
+          //   this.handleThisDataUpdata(rows[0], 'self');
+          //   return;
+          // }
+          // this.handleThisDataUpdata(rows[0], item);
       });
     },
     // 单条数据更新

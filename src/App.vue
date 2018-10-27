@@ -68,9 +68,9 @@ export default {
         console.log('App.vue', '执行IO');
         this.handleGetAccountAgree();
         this.handleNotReadCount();
-        Io.accountOut(this.$store.state.app.accountInfo.account_name); // 退出账号
-        Io.accountBind(this.$store.state.app.accountInfo.account_name); // 绑定账号
-        this.handleOrderUpdata();
+        // Io.accountOut(this.$store.state.app.accountInfo.account_name); // 退出账号
+        // Io.accountBind(this.$store.state.app.accountInfo.account_name); // 绑定账号
+        // this.handleOrderUpdata();
       }
     },
   },
@@ -132,8 +132,15 @@ export default {
             localStorage.removeItem('token');
           }
           this.$store.dispatch('setAccountInfo', data);
+          this.getPermission(data.account_name);
         });
       }
+    },
+    getPermission (accountName) {
+        DApp.getPermission(accountName, (res) =>{
+            console.log(res);
+            this.$store.dispatch('setPermission', res);
+        });
     },
     // 第一次使用dapp时，获取手机语言
     handleGetPhoneLanguage() {
@@ -160,20 +167,6 @@ export default {
         }
       });
     },
-    // 获取委托账户(已无用，改为在查询服务器状态时一起返回)
-    handleGetChainFlyAccount() {
-      this.$http.post('/account/exchangeEosAccount').then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        this.$store.dispatch('setToAccount', res.exchangeEosAccount);
-      });
-    },
     // 查询服务器状态 - 0：暂停 | 1：正常，(并设置委托账户)
     handleCheckServerStop() {
       console.log('App.vue', '检查服务器状态并设置委托账户');
@@ -184,7 +177,7 @@ export default {
       //     }, 500);
       //     return;
       //   }
-      this.$store.dispatch('setToAccount', 'newdexpocket');
+      this.$store.dispatch('setToAccount', 'onedexchange');
       // if (Number(res.exchangeStatus) === 0) {
       //   sessionStorage.setItem('serverStatus', false); // 服务暂停
       //   return;

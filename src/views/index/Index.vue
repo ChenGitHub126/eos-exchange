@@ -58,22 +58,22 @@
     <!-- accountInfo end -->
 
     <!-- content table start -->
-    <!--<div class="content">-->
-      <!--<div class="contentTop" style="width:100%">-->
-        <!--<div class="item" :class="{'activeThis': activeIndex === 1}" @click="handleActiveChange(1)">-->
-          <!--{{ $t('index.riseList') }}-->
-        <!--</div>-->
-        <!--<div class="item" :class="{'activeThis': activeIndex === 2}" @click="handleActiveChange(2)">-->
-          <!--24H{{ $t('index.turnoverList') }}-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--<div class="data">-->
-        <!--<table-list :activeIndex="activeIndex"/>-->
-      <!--</div>-->
-      <!--<div class="more">-->
-        <!--<a href="javascript:;" class="color-blue" @click="handleToMore">{{ $t('index.more') }}&gt;</a>-->
-      <!--</div>-->
-    <!--</div>-->
+    <div class="content">
+      <div class="contentTop" style="width:100%">
+        <div class="item" :class="{'activeThis': activeIndex === 1}" @click="handleActiveChange(1)">
+          {{ $t('index.riseList') }}
+        </div>
+        <div class="item" :class="{'activeThis': activeIndex === 2}" @click="handleActiveChange(2)">
+          24H{{ $t('index.turnoverList') }}
+        </div>
+      </div>
+      <div class="data">
+        <table-list :activeIndex="activeIndex"/>
+      </div>
+      <div class="more">
+        <a href="javascript:;" class="color-blue" @click="handleToMore">{{ $t('index.more') }}&gt;</a>
+      </div>
+    </div>
     <!-- content table end -->
 
     <!-- advantage 优势 start -->
