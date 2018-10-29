@@ -38,7 +38,6 @@
 // import { Decimal } from 'decimal.js';
 import Io from '@/utils/socket/index';
 import { toFixed } from '@/utils/public';
-import axios from 'axios';
 
 export default {
   data() {
@@ -71,7 +70,6 @@ export default {
       // this.handleDepthData(this.wsData);
     },
     '$route.params.symbol': function listen() {
-      Io.cfwsUnsubscribe(`depth.${this.symbol}`);
       this.handleMouted();
     },
   },
@@ -98,35 +96,14 @@ export default {
         symbol: this.symbol.toLowerCase(),
       };
 
-        axios.get('http://120.220.14.100:8088/onedex/v1/order/book', {
+        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', {
             params: {
                 base: this.symbol.toUpperCase().split('_')[1],
                 quote: this.symbol.toUpperCase().split('_')[0],
                 limit: '50'
             }
         }).then(res => {
-            // const res = {
-            //     "code": "100200",
-            //     "msg": "成功",
-            //     "data": {
-            //         "map": {
-            //             "base": "EOS",
-            //             "quote": "ABC",
-            //             "bids": [{"price": "0.332", "amount": "1.0000"}, {
-            //                 "price": "0.332",
-            //                 "amount": "0.0025"
-            //             }, {"price": "0.332", "amount": "1.0000"}, {
-            //                 "price": "0.332",
-            //                 "amount": "0.2000"
-            //             }, {"price": "0.332", "amount": "10.0000"}],
-            //             "asks": [{"price": "0.332", "amount": "0.0027"}, {
-            //                 "price": "0.332",
-            //                 "amount": "0.3000"
-            //             }]
-            //         }
-            //     }
-            // };
-            const data = res.data.data;
+            const data = res.data;
             const map = data.map;
             this.handleDepthData(map);
             // 卖盘列表显示到最后
@@ -189,7 +166,6 @@ export default {
     },
   },
   beforeDestroy() {
-    Io.cfwsUnsubscribe(`depth.${this.symbol}`);
   },
 };
 </script>

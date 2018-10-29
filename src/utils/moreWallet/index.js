@@ -52,9 +52,14 @@ const DApp = {
         this.obj.getAccount(callback, permissionCb);
     },
 
-    // 获取授权
+    // 查询授权
     getPermission(accountName, callback) {
         this.obj.getPermission(accountName, callback);
+    },
+
+    // 获取授权
+    updateauth(param, callback) {
+        this.obj.updateauth(param, callback);
     },
 
     // 获取app版本，提示更新

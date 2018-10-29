@@ -139,21 +139,28 @@ export default {
       console.log('Account.vue', '获取EOS余额及其它币种余额');
       try {
         const params = {
-          account: this.$store.state.app.accountInfo.account_name,
+            code: 'eosio.token',
+            coin: 'EOS'
         };
-        this.$http.post('/accountCoin/getBalance', params).then((res) => {
+        DApp.getCurrencyBalance(params, (err, res) => {
           this.refresh = false;
-          if (res.code !== 0) {
-            Toast({
-              message: res.msg,
-              position: 'center',
-              duration: 2000,
-            });
-            return;
+          // if (res.code !== 0) {
+          //   Toast({
+          //     message: res.msg,
+          //     position: 'center',
+          //     duration: 2000,
+          //   });
+          //   return;
+          // }
+          if (err) {
+              setTimeout(() => {
+                  this.handleGetCoinBanlance();
+              }, 1000);
+              return;
           }
-          this.totalEosValuation = toFixed(res.totalEosValuation, 4);
-          this.coinList = res.accountCoinList;
-          this.$store.dispatch('setCoinList', this.coinList);
+          this.totalEosValuation = toFixed(res, 4);
+          // this.coinList = res.accountCoinList;
+          // this.$store.dispatch('setCoinList', this.coinList);
         });
       } catch (error) {
         setTimeout(() => {

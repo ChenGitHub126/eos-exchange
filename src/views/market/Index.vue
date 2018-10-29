@@ -2,9 +2,9 @@
   <div class="market">
     <div class="tools">
       <div class="favorite">
-        <span class="iconfont icon-huaban21 icon fl"
-          :class="{'hidden': activeIndex !== 1}"
-          @click="$router.push('/selfAreaSetting')"></span>
+        <!--<span class="iconfont icon-huaban21 icon fl"-->
+          <!--:class="{'hidden': activeIndex !== 1}"-->
+          <!--@click="$router.push('/selfAreaSetting')"></span>-->
         <span class="color-999" :class="{'color-this': activeIndex === 1}" @click="handleChangeArea(1)">
           <span class="iconfont icon-huaban29 icon" :class="{'color-this':activeIndex === 1}"></span>
           {{ $t('quotation.self') }}

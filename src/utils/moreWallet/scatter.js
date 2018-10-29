@@ -93,7 +93,6 @@ const Scatter = {
                   .then(res => {
                       callback(false, res)
                   }).catch(err => {
-                    console.log(err);
                     callback(true, err)
               })
           })
@@ -106,11 +105,10 @@ const Scatter = {
     ask(param, callback) {
         try {
             this.scatterEosJs.contract(scatterConfig.contract).then(res => {
-                res.ask(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid, param.authorization)
+                res.ask(param.maker, param.quantity, param.price, param.ask_contract, 1, param.uuid, param.authorization)
                     .then(res => {
                         callback(false, res)
                     }).catch(err => {
-                        console.log(err);
                         callback(true, err)
                 })
             })
@@ -123,12 +121,10 @@ const Scatter = {
     cancel(param, callback) {
         try {
             this.scatterEosJs.contract(scatterConfig.contract).then(res => {
-                console.log(res.cancelorder);
                 res.cancelorder(param.scope, param.maker, param.uuid, param.authorization)
                     .then(res => {
                         callback(false, res)
                     }).catch(err => {
-                    console.log(err);
                     callback(true, err)
                 })
             })
@@ -195,7 +191,7 @@ const Scatter = {
                         let auth = v.required_auth;
                         const accounts = auth.accounts;
                         accounts.forEach((v, i, arr) => {
-                            if (v.permission.actor === 'hello23zhang' && v.permission.permission === 'eosio.code') {
+                            if (v.permission.actor === scatterConfig.contract && v.permission.permission === 'eosio.code') {
                                 callback(true)
                             } else {
                                 callback(false)
@@ -209,17 +205,46 @@ const Scatter = {
         })
     },
 
+    updateauth(param, callback) {
+        const auth = {
+            threshold: 1,
+            keys: [
+                {
+                    key: "EOS7BqvZ2JScja9dsX9z81QoAehHX5Zixf66uzYqZqdnFkRhHB1Ns",
+                    weight: 1
+                }
+            ],
+            accounts: [
+                {
+                    permission: {
+                        actor: scatterConfig.contract,
+                        permission: "eosio.code"
+                    },
+                    weight: 1
+                }
+            ],
+            waits: []
+        };
+        this.scatterEosJs.updateauth(store.state.app.accountInfo.account_name,"active","owner",auth,{
+            authorization: `${store.state.app.accountInfo.account_name}@active`
+        }).then(res => {
+            callback(true)
+        }).catch(err => {
+            callback(false);
+        })
+    },
+
   /*
   * 获取eos账号信息
   * @params eosAccount
   * @return 账户信息
   */
-  getAccountMain(callback) {
-    const params = {
-      account_name: this.scatter.identity.accounts[0].name,
-    };
-    this.EosJs.getAccount(params).then(callback).catch(e => this.errorCall(e, callback));
-  },
+  // getAccountMain(callback) {
+  //   const params = {
+  //     account_name: this.scatter.identity.accounts[0].name,
+  //   };
+  //   this.EosJs.getAccount(params).then(callback).catch(e => this.errorCall(e, callback));
+  // },
 
   /* -------- 签名 start -------- */
   /*
@@ -229,26 +254,26 @@ const Scatter = {
   * @params whatFor 标题
   * @params isHash data是否为hash
   */
-  signText(text, callback) {
-    const self = this;
-    self.getAccountMain((res) => {
-      // onechain getAccountMain方法连续返回两次 - 1.正常 / 2.错误 - 这个作为容错处理。
-      if (res.error) {
-        return;
-      }
-      const permission = self.scatter.identity.accounts[0].authority;
-      const publicKey = res.permissions.find(v => v.perm_name === permission).required_auth.keys[0].key;
-      const data = text;
-      const whatFor = '';
-      const isHash = false;
-
-      self.scatter.getArbitrarySignature(publicKey, data, whatFor, isHash).then((signature) => {
-        callback(null, signature);
-      }).catch((error) => {
-        callback(error, null);
-      });
-    });
-  },
+  // signText(text, callback) {
+  //   const self = this;
+  //   self.getAccountMain((res) => {
+  //     // onechain getAccountMain方法连续返回两次 - 1.正常 / 2.错误 - 这个作为容错处理。
+  //     if (res.error) {
+  //       return;
+  //     }
+  //     const permission = self.scatter.identity.accounts[0].authority;
+  //     const publicKey = res.permissions.find(v => v.perm_name === permission).required_auth.keys[0].key;
+  //     const data = text;
+  //     const whatFor = '';
+  //     const isHash = false;
+  //
+  //     self.scatter.getArbitrarySignature(publicKey, data, whatFor, isHash).then((signature) => {
+  //       callback(null, signature);
+  //     }).catch((error) => {
+  //       callback(error, null);
+  //     });
+  //   });
+  // },
   /* -------- 签名 end -------- */
 
   /* -------- 转账 start ------- */

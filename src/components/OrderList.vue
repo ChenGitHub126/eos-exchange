@@ -498,11 +498,11 @@ export default {
     },
     // 撤销订单
     handleCancelOrder(row) {
-      // const token = localStorage.getItem('token');
-      // if (!token) {
-      //   this.handleGetTimestampJson(row);
-      //   return;
-      // }
+      const permission = this.$store.state.app.permission;
+      if (!permission) {
+        this.$store.dispatch('updateauth');
+        return;
+      }
       MessageBox({
         title: this.$t('public.tip'),
         showConfirmButton: true,
@@ -527,7 +527,6 @@ export default {
                       },
                   };
                   DApp.cancel(param, (err, res) => {
-                      console.log(res);
                       if(!err) {
                           Toast(this.$t('order.revokeSuccess'));
                           setTimeout(this.handleGetOrderList, 1000);

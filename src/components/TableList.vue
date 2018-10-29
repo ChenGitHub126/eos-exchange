@@ -60,7 +60,7 @@
           <div class="increase">
             <span class="riseAndFallSpan"
               :class="{'bgcolor-red': item.change < 0,'bgcolor-999':item.change === 0,'bgcolor-green':item.change > 0}">
-              <span v-if="item.change > 0">+</span>{{ handleToFixed(item.change * 100, 2) }}%
+              <span v-if="item.change > 0">+</span>{{ handleToFixed(item.change, 2) }}%
             </span>
           </div>
         </div>
@@ -97,7 +97,7 @@
         <div class="symbolPrice">{{ handleToFixed(item.price, item.precision.price) }}</div>
         <div class="symbolChange"
           :class="{'color-red': item.change < 0,'color-999':item.change === 0,'color-green':item.change > 0}">
-          <span v-if="item.change > 0">+</span>{{ handleToFixed(item.change *100, 2) }}%
+          <span v-if="item.change > 0">+</span>{{ handleToFixed(item.change, 2) }}%
         </div>
       </div>
 
@@ -129,10 +129,8 @@
 </template>
 
 <script>
-import Io from '@/utils/socket/index';
 import { toFixed } from '@/utils/public';
 import { Toast } from 'mint-ui';
-import axios from 'axios';
 
 export default {
   data() {
@@ -170,7 +168,7 @@ export default {
   },
   mounted() {
     this.symbol = this.$route.params.symbol;
-    this.handleWsListen();
+    this.handleGetData();
     // 判断是否为ios
     const u = navigator.userAgent;
     this.isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); // ios终端
@@ -181,7 +179,7 @@ export default {
       this.newPrice = 0;
       this.dealCount = 0;
       this.showData = [];
-      this.handleWsListen();
+      this.handleGetData();
     },
     '$route.params.symbol': function listen(newVal) {
       this.symbol = newVal;
@@ -224,16 +222,10 @@ export default {
     handleToFixed(num, p) {
       return toFixed(num, p);
     },
-    // 取消所有推送
-    handleUnsubscribeWs() {
-      Io.cfwsUnsubscribe();
-      Io.addListenerOrder('stop');
-    },
     // ws监听
-    handleWsListen() {
+    handleGetData() {
       this.loading = true;
       this.partition.forEach((item) => {
-
           let modelData = [];
           let eosSymbolArr = [];
           this.$http.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_symbol_new').then(res => {
@@ -273,15 +265,15 @@ export default {
                               }
                           })
                       });
-                      // this.allData[item] = modelData;
+                      this.handleData(item, modelData);
               });
 
-              axios.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_quotations',{
+              this.$http.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_quotations',{
                   params: {
                       symbol: eosSymbolArr.toString()
                   }
               }).then(res => {
-                  const data1 = res.data.data;
+                  const data1 = res.data;
                   const list1 = data1.list;
                   list1.forEach((v, i, arr) => {
                       modelData.forEach((val, index, array) => {
@@ -294,52 +286,34 @@ export default {
                           }
                       })
                   });
-                  this.loading = false;
-                  this.allData[item] = modelData;
-                  // 自选 - 行情页
-                  if (this.activeIndex === 1 && this.$route.name !== 'index') {
-                      this.handleFavorite();
-                      return;
-                  }
-                  // 排序展示
-                  // (首页跳入 - type - 1: 涨幅榜 | 2: 交易量)
-                  if (this.$route.params.type && this.first) {
-                      this.first = false;
-                      if (this.$route.params.type === 1) {
-                          this.quoteChange = 2;
-                      } else {
-                          this.dealCount = 2;
-                      }
-                      this.handleSort(item, 2);
-                      return;
-                  }
-                  // (直接tabBar进入)
-                  this.handleSort(item);
-                  return;
+                  this.handleData(item, modelData);
               });
           });
-        // return;
-
-          // 单条数据更新
-          // if (this.activeIndex === 1 && this.$route.name !== 'index') {
-          //   this.handleThisDataUpdata(rows[0], 'self');
-          //   return;
-          // }
-          // this.handleThisDataUpdata(rows[0], item);
       });
     },
-    // 单条数据更新
-    handleThisDataUpdata(res, key) {
-        console.log('TableList.vue' ,'单条数据更新');
-      const newTableData = this.allData[key].find(item => item.symbol.toLowerCase() === res.symbol);
-      if (newTableData) {
-        newTableData.change = res.change;
-        newTableData.price = res.price;
-        newTableData.high = res.high;
-        newTableData.low = res.low;
-        newTableData.amount = res.amount;
-      }
-      this.handleSort(key);
+    handleData(item, modelData) {
+        this.loading = false;
+        this.allData[item] = modelData;
+        // 自选 - 行情页
+        if (this.activeIndex === 1 && this.$route.name !== 'index') {
+            this.handleFavorite();
+            return;
+        }
+        // 排序展示
+        // (首页跳入 - type - 1: 涨幅榜 | 2: 交易量)
+        if (this.$route.params.type && this.first) {
+            this.first = false;
+            if (this.$route.params.type === 1) {
+                this.quoteChange = 2;
+            } else {
+                this.dealCount = 2;
+            }
+            this.handleSort(item, 2);
+            return;
+        }
+        // (直接tabBar进入)
+        this.handleSort(item);
+        return;
     },
     // 排序 - 成交量
     handleDealCount() {
@@ -447,42 +421,30 @@ export default {
       this.loading = true;
       this.showData = [];
       // 异步获取自选交易对 - 进行匹配添加list
-      const params = {
-        accountNo: this.$store.state.app.accountInfo.account_name,
-      };
-      this.$http.get('/accountFavorite/list', { params }).then((res) => {
-        this.loading = false;
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
+      setTimeout(() => {
+          this.loading = false;
+          this.allFavoriteData = this.$store.state.app.selfList;
+          this.showData = [];
+          // 循环收藏列表
+          console.log(this.allFavoriteData)
+          this.allFavoriteData.forEach((v, i, arr) => {
+              // 循环 allData 列表
+              for (const i in this.allData) { // eslint-disable-line
+                  if (i !== 'self') {
+                      this.allData[i].forEach((list) => {
+                          if (v === list.name2) {
+                              this.showData.push(list);
+                          }
+                      });
+                  }
+              }
           });
-          return;
-        }
-        this.allFavoriteData = res.favoriteList;
-        this.showData = [];
-        // 循环收藏列表
-        this.allFavoriteData.forEach((item) => {
-          // 循环 allData 列表
-          for (const i in this.allData) { // eslint-disable-line
-            if (i !== 'self') {
-              this.allData[i].forEach(((list) => {
-                if (item.symbol === list.symbol.toUpperCase()) {
-                  this.showData.push(list);
-                }
-              }));
-            }
-          }
-        });
-        const key = 'self';
-        this.allData[key] = this.showData;
-      });
+          const key = 'self';
+          this.allData[key] = this.showData;
+      }, 300);
     },
   },
   beforeDestroy() {
-    // 取消所有推送
-    this.handleUnsubscribeWs();
   },
 };
 </script>

@@ -196,7 +196,7 @@ import AccountAgree from '@/views/market/components/AccountAgree';
 import OldDownTip from '@/views/market/components/OldDownTip';
 import ServerStop from '@/components/ServerStop';
 
-import { toFixed, uuid } from '@/utils/public';
+import { toFixed, uuid, randomNum } from '@/utils/public';
 import { Decimal } from 'decimal.js';
 import { Toast } from 'mint-ui';
 import DApp from '@/utils/moreWallet';
@@ -229,8 +229,8 @@ export default {
       priceFocus: false,
       rangeFocus: false,
       flag: false,
-      minSellEos: '0.0100',
-      sellCount: '0.0100',
+      minSellEos: '0.100',
+      sellCount: '0.100',
 
       showSpecial: false,
       stop: false, // 暂停交易
@@ -369,10 +369,10 @@ export default {
 
       this.handlePriceDefault();
       this.symbol = this.$route.params.symbol.toUpperCase();
-      const t = this.symbol.split('_');
-      this.symbol1 = this.$store.state.app.trad.symbol1;
-      this.symbol2 = this.$store.state.app.trad.symbol2;
-
+      this.$nextTick(() => {
+          this.symbol1 = this.$store.state.app.trad.symbol1;
+          this.symbol2 = this.$store.state.app.trad.symbol2;
+      });
       this.handleGetSymbil();
     },
     // 限价数量获取焦点变成浮点型数字
@@ -741,8 +741,8 @@ export default {
     handleCheckServerStop() {
       const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
       const permission = this.$store.state.app.permission;
-      console.log(permission)
       if (!permission) {
+          this.$store.dispatch('updateauth');
           return;
       }
       if (!accountAgree) {
@@ -762,16 +762,17 @@ export default {
             maker: this.$store.state.app.accountInfo.account_name,
             quantity: `${toFixed(this.num, 4)} ${this.symbol1}`,
             price: this.thisPrice * 100000000,
-            bid_contract: this.$store.state.app.trad.symbol2_code,
             source: 1,
-            uuid: uuid(5, 10),
+            uuid: randomNum(9223372036854775807),
         };
         // 买入
         if (this.activeType === 'buy') {
+          param.bid_contract = this.$store.state.app.trad.symbol2_code;
           this.handleBuy(param);
           return;
         }
         // 卖出
+        param.ask_contract = this.$store.state.app.trad.symbol2_code;
         this.handleSell(param);
     },
   },

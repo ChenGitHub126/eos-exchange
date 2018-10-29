@@ -26,7 +26,8 @@
         </div>
 
         <!-- showContent -->
-        <div class="showContent" @click="handleRowDetail(item)">
+        <!--<div class="showContent" @click="handleRowDetail(item)">-->
+        <div class="showContent">
           <div class="">
             <div class="tip">{{ $t('public.myPrice') }}</div>
             <div class="num">{{ Number(item.price) !== 0 ? item.price : $t('quotation.market') }}</div>
@@ -35,18 +36,18 @@
             <div class="tip">{{ $t('public.count') }}</div>
             <div class="num">{{ item.amount || '—' }}</div>
           </div>
-          <div class="">
-            <div class="tip">{{ $t('public.dealCount') }}</div>
-            <div class="num">{{ item.dealCountStr || '—' }}</div>
-          </div>
-          <div class="tools color-this">
-            <span :class="{'hidden': item.dealStatus === 0}">
-              <span v-if="!item.open" class="iconfont icon-huaban37 toDetail"></span>
-              <span v-if="item.open" class="iconfont icon-huaban35 toDetail"></span>
-              <!-- <span v-if="!item.open">{{ $t('public.open') }}</span>
-              <span v-if="item.open">{{ $t('public.close1') }}</span> -->
-            </span>
-          </div>
+          <!--<div class="">-->
+            <!--<div class="tip">{{ $t('public.dealCount') }}</div>-->
+            <!--<div class="num">{{ item.dealCountStr || '—' }}</div>-->
+          <!--</div>-->
+          <!--<div class="tools color-this">-->
+            <!--<span :class="{'hidden': item.dealStatus === 0}">-->
+              <!--<span v-if="!item.open" class="iconfont icon-huaban37 toDetail"></span>-->
+              <!--<span v-if="item.open" class="iconfont icon-huaban35 toDetail"></span>-->
+               <!--<span v-if="!item.open">{{ $t('public.open') }}</span>-->
+              <!--<span v-if="item.open">{{ $t('public.close1') }}</span> -->
+            <!--</span>-->
+          <!--</div>-->
         </div>
         <div class="hiddenContent" v-if="item.open" @click="handleGoToDetail(item)">
           <div class="detail">
@@ -69,9 +70,7 @@
           <div class="go color-this" @click="handleGoToDetail(item)">
             <span class="iconfont icon-huaban36-copy goRight"></span>
           </div>
-
         </div>
-
       </div>
 
       <!-- 加载中 -->
@@ -342,7 +341,7 @@ export default {
 
       &>div{
         flex: 3;
-        text-align: right;
+        text-align: center;
         margin-right: .4rem;
       }
 

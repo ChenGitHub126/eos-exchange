@@ -7,12 +7,12 @@
 */
 
 
+import DApp from "../../utils/moreWallet";
+
 const app = {
   state: {
     language: 'zh-CN', // 多语言
-    symbolInfo: localStorage.getItem('symbolInfo') ? JSON.parse(localStorage.getItem('symbolInfo')) : {
-
-    },
+    symbolInfo: localStorage.getItem('symbolInfo') ? JSON.parse(localStorage.getItem('symbolInfo')) : {},
     trad: localStorage.getItem('trad') ? JSON.parse(localStorage.getItem('trad')) : { // 交易对默认信息 - key
       id: 1,
       symbol1: 'IQ',
@@ -23,6 +23,7 @@ const app = {
       coinDecimal: 3,
       priceDecimal: 4,
     },
+    selfList: localStorage.getItem('selfList') ? JSON.parse(localStorage.getItem('selfList')) : [],
     toAccount: localStorage.getItem('toAccount') ? localStorage.getItem('toAccount') : null, // 智能合约
     accountInfo: localStorage.getItem('accountInfo') ? JSON.parse(localStorage.getItem('accountInfo')) : null, // 账户信息
     permission: false, // 授权信息
@@ -50,6 +51,10 @@ const app = {
     SET_TRAD: (state, trad) => {
       state.trad = trad;
       localStorage.setItem('trad', JSON.stringify(trad));
+    },
+    //自选
+    SET_SELFLIST: (state, list) => {
+        localStorage.setItem('selfList', JSON.stringify(list));
     },
     // 委托账户
     SET_TOACCOUNT: (state, toAccount) => {
@@ -109,6 +114,10 @@ const app = {
     setTrad({ commit }, trad) {
       commit('SET_TRAD', trad);
     },
+    // 自选
+    setSelfList({ commit }, list) {
+      commit('SET_SELFLIST', list);
+    },
     // 委托账户
     setToAccount({ commit }, toAccount) {
       commit('SET_TOACCOUNT', toAccount);
@@ -120,6 +129,11 @@ const app = {
     // 授权信息
     setPermission({ commit }, perimission) {
       commit('SET_PERMISSION', perimission);
+    },
+    updateauth({ commit }, param) {
+      DApp.updateauth(param, (res) => {
+          commit('SET_PERMISSION', res);
+      })
     },
     // 订单详情
     setDetail({ commit }, detail) {

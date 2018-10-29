@@ -185,117 +185,30 @@ export default {
     /* -------- 交易对收藏 start -------- */
     // 添加收藏
     handleSelfAdd() {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        this.handleGetTimestampJson();
-        return;
-      }
       this.isFavorite = true;
-      const params = {
-        accountNo: this.$store.state.app.accountInfo.account_name,
-        symbols: this.symbol,
-        enable: 1,
-      };
-      console.log('Trade.vue', '添加自选交易对');
-      this.$http.post('/accountFavorite/setting', params).then((res) => {
-        if (res.code === 401) {
-          this.isFavorite = false;
-          localStorage.removeItem('token');
-          Toast({
-            message: this.$t('error.token'),
-            position: 'center',
-            duration: 2000,
-          });
-          // 延时调用授权
-          setTimeout(() => {
-            this.handleGetTimestampJson();
-          }, 2000);
-          return;
-        }
-        if (res.code !== 0) {
-          this.isFavorite = false;
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        Toast({
-          message: '添加成功',
-          position: 'center',
-          duration: 2000,
-        });
-        this.isFavorite = true;
-      });
+      const list = this.$store.state.app.selfList;
+      list.push(this.symbolInfo.symbol1);
+      this.$store.dispatch('setSelfList', list);
     },
     // 取消收藏
     handleSelfCancel() {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        this.handleGetTimestampJson();
-        return;
-      }
-      this.isFavorite = false;
-      const params = {
-        accountNo: this.$store.state.app.accountInfo.account_name,
-        symbols: this.symbol.toUpperCase(),
-        enable: 0,
-      };
-      console.log('Trade.vue', '移除自选交易对');
-      this.$http.post('/accountFavorite/setting', params).then((res) => {
-        if (res.code === 401) {
-          this.isFavorite = true;
-          localStorage.removeItem('token');
-          Toast({
-            message: this.$t('error.token'),
-            position: 'center',
-            duration: 2000,
-          });
-          // 延时调用授权
-          setTimeout(() => {
-            this.handleGetTimestampJson();
-          }, 2000);
-          return;
-        }
-        if (res.code !== 0) {
-          this.isFavorite = true;
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        Toast({
-          message: '取消成功',
-          position: 'center',
-          duration: 2000,
+        let list = this.$store.state.app.selfList;
+        list.forEach((v, i, arr) => {
+            if (v === this.symbolInfo.symbol1) {
+                list.splice(i, 1)
+            }
         });
+        this.$store.dispatch('setSelfList', list);
         this.isFavorite = false;
-      });
     },
     // 获取收藏列表 (判断当前交易对是否在收藏列表)
     handleGetSelf() {
       console.log('TableList.vue', '查询自选列表，判断当前交易对是否在收藏列表');
-      const params = {
-        accountNo: this.$store.state.app.accountInfo.account_name,
-      };
-      this.$http.get('/accountFavorite/list', { params }).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        const thisFacorite = res.favoriteList.find(item => item.symbol.toUpperCase() === this.symbol.toUpperCase());
-        if (thisFacorite) {
+      const list = this.$store.state.app.selfList;
+      list.forEach((v, i, arr) => {
+        if (v === this.symbolInfo.symbol1) {
           this.isFavorite = true;
-          return;
         }
-        this.isFavorite = false;
       });
     },
     /* -------- 交易对收藏 end -------- */

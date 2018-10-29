@@ -65,12 +65,8 @@ export default {
     },
     '$store.state.app.accountInfo': function listen() {
       if (this.$store.state.app.accountInfo && this.$store.state.app.accountInfo.account_name) {
-        console.log('App.vue', '执行IO');
         this.handleGetAccountAgree();
         this.handleNotReadCount();
-        // Io.accountOut(this.$store.state.app.accountInfo.account_name); // 退出账号
-        // Io.accountBind(this.$store.state.app.accountInfo.account_name); // 绑定账号
-        // this.handleOrderUpdata();
       }
     },
   },
@@ -137,10 +133,16 @@ export default {
       }
     },
     getPermission (accountName) {
-        DApp.getPermission(accountName, (res) =>{
-            console.log(res);
-            this.$store.dispatch('setPermission', res);
-        });
+        try {
+            DApp.getPermission(accountName, (res) =>{
+                this.$store.dispatch('setPermission', res);
+            });
+        }
+        catch (e) {
+            setTimeout(() => {
+                this.getPermission()
+            }, 1000)
+        }
     },
     // 第一次使用dapp时，获取手机语言
     handleGetPhoneLanguage() {
@@ -224,17 +226,7 @@ export default {
       //   }
       //   this.$store.dispatch('setUnReadCount', res.unReadCount);
       // });
-    },
-    // 监听账户订单状态
-    handleOrderUpdata() {
-      Io.addListenerOrder('stop');
-      Io.addListenerOrder('start', (res) => {
-        console.log('App.vue', res);
-        if (res.type === 'orderupdate') { // 订单更新 - 查询未读订单条数
-          this.handleNotReadCount();
-        }
-      });
-    },
+    }
   },
   beforeDestroy() {
     Io.accountOut(this.$store.state.app.accountInfo.account_name); // 退出账号

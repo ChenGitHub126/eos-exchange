@@ -31,7 +31,8 @@
         </div>
 
         <!-- showContent -->
-        <div class="showContent" @click="handleRowDetail(item)">
+        <!--<div class="showContent" @click="handleRowDetail(item)">-->
+        <div class="showContent">
           <div class="">
             <div class="tip">{{ $t('public.myPrice') }}</div>
             <div class="num">{{ Number(item.price) !== 0 ? item.price : $t('quotation.market') }}</div>
@@ -40,10 +41,10 @@
             <div class="tip">{{ $t('public.count') }}</div>
             <div class="num">{{ item.amount || '—' }}</div>
           </div>
-          <div class="">
-            <div class="tip">{{ $t('public.dealCount') }}</div>
-            <div class="num">{{ item.dealCountStr || '—' }}</div>
-          </div>
+          <!--<div class="">-->
+            <!--<div class="tip">{{ $t('public.dealCount') }}</div>-->
+            <!--<div class="num">{{ item.dealCountStr || '—' }}</div>-->
+          <!--</div>-->
           <!--<div class="tools color-this">-->
             <!--<span v-if="(item.dealStatus !== 0)">-->
               <!--<span v-if="!item.open" class="iconfont icon-huaban37 toDetail"></span>-->
@@ -177,28 +178,6 @@ export default {
   mounted() {
     // Toast(this.$route.params.symbol)
     this.handleGetOrderList();
-    /*
-    * ORDER_UPDATE(1, "orderupdate", "订单更新"),
-    * ORDER_SUCCESS(2, "ordersuccess", "下单成功"),
-    * CANCEL_SUCCESS(3, "cancelsuccess", "撤单成功"),
-    * ORDER_FAIL(4, "orderfail", "下单失败"),
-    * CANCEL_FAIL(5, "cancelfail", "撤单失败");
-    */
-    console.log('OrderListNow.vue', 'IO开始监听订单状态的改变');
-    Io.addListenerOrder('start', (res) => {
-      // console.log('-------------当前订单-------------'); // eslint-disable-line
-      if (res.type === 'orderupdate' || res.type === 'ordersuccess') { // 下单成功 - 接口获取新的列表
-        this.handleGetOrderList();
-        // this.$store.dispatch('setBadge', true); // 标记
-      }
-      if (res.type === 'cancelsuccess') { // 撤单成功
-        this.handleGetOrderList();
-      }
-      if (res.type === 'cancelfail') { // 撤单失败
-        Toast(this.$t('error.revokeError'));
-        this.handleGetOrderList();
-      }
-    });
   },
   methods: {
     // 展示暂停交易
@@ -551,7 +530,7 @@ export default {
 
       &>div{
         flex: 3;
-        text-align: right;
+        text-align: center;
         margin-right: .4rem;
       }
 

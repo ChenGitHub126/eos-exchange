@@ -6,10 +6,10 @@
 //     chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
 // };
 const envobj = {
-    httpEndpoint: 'https://api.kylin-testnet.eospace.io',
-    protocol: 'https',
-    host: 'api.kylin-testnet.eospace.io',
-    port: 443,
+    httpEndpoint: 'http://222.180.164.141:8888',
+    protocol: 'http',
+    host: '222.180.164.141',
+    port: 8888,
     chainId: '5fff1dae8dc8e2fc4d5b23b2c7665c97f9e9d8edf2b6485a86ba311c25639191',
 };
 
