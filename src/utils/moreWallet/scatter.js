@@ -4,7 +4,6 @@
  */
 import Eos from 'eosjs';
 import Ecc from 'eosjs-ecc';
-import axios from 'axios';
 import config from '../../config';
 
 // store

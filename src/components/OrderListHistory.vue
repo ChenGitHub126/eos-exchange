@@ -176,11 +176,11 @@ export default {
                 this.$set(item, 'open', false);
             });
 
-          if (list.length > 5) {
-            this.allLoaded = false;
-          } else {
-            this.allLoaded = true;
-          }
+          // if (list.length > 5) {
+          //   this.allLoaded = false;
+          // } else {
+          //   this.allLoaded = true;
+          // }
 
           // 判断刷新 / 更多
           if (!page) {

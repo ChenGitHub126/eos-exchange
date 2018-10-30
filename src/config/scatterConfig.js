@@ -6,6 +6,8 @@
 //     chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
 // };
 const envobj = {
+    blockchain: 'eos',
+    contract: 'hello23zhang',
     httpEndpoint: 'http://222.180.164.141:8888',
     protocol: 'http',
     host: '222.180.164.141',
@@ -14,13 +16,13 @@ const envobj = {
 };
 
 const scatterConfig = {
-    contract: 'hello23zhang',
+    contract: envobj.contract,
     eosConfig: {
         httpEndpoint: envobj.httpEndpoint,
         chainId: envobj.chainId,
     },
     network: {
-        blockchain: 'eos',
+        blockchain: envobj.blockchain,
         protocol: envobj.protocol,
         host: envobj.host,
         port: envobj.port,
