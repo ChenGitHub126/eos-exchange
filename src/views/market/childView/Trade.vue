@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import Io from '@/utils/socket/index';
 import { Toast } from 'mint-ui';
 import DApp from '@/utils/moreWallet';
 import { toFixed } from '@/utils/public';
@@ -147,8 +146,6 @@ export default {
 
       this.handlaGetSymbolInfo();
 
-      // 绑定账号
-      // Io.accountBind(this.$store.state.app.accountInfo.account_name);
     },
     // 关闭切换币种
     handleClose() {

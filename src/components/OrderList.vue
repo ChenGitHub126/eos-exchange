@@ -172,7 +172,6 @@ import OrderSearch from '@/components/OrderSearch';
 import { toLocalTime } from '@/utils/public';
 import DApp from '@/utils/moreWallet';
 import { Toast, MessageBox } from 'mint-ui';
-import axios from 'axios';
 
 export default {
   data() {
@@ -393,7 +392,7 @@ export default {
 
     handleGetOrderListNow(page, data) {
         this.loading = true;
-        axios.get('http://120.220.14.100:8088/onedex/v1/order/current', {
+        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/current', {
             params: {
                 account_name: this.$store.state.app.accountInfo.account_name
             }
@@ -401,7 +400,7 @@ export default {
             this.loading = false;
             this.first = false;
 
-            const data = res.data.data;
+            const data = res.data;
             const list = data.list;
             // const list = [{
             //     "maker": "onedexchange",
@@ -440,7 +439,7 @@ export default {
     },
     handleGetOrderListHistory(page, data) {
       this.loading = true;
-      axios.get('http://120.220.14.100:8088/onedex/v1/order/history', {
+      this.$http.get('http://120.220.14.100:8088/onedex/v1/order/history', {
           params: {
               account_name: this.$store.state.app.accountInfo.account_name
           }
@@ -448,7 +447,7 @@ export default {
           this.loading = false;
           this.first = false;
 
-          const data= res.data.data;
+          const data= res.data;
           const list = data.list;
           // const list = [{
           //     "maker": "onedexchange",
@@ -535,53 +534,7 @@ export default {
                   })
               });
           }
-        // if (data === 'confirm') {
-        //   // const serverStatus = JSON.parse(sessionStorage.getItem('serverStatus'));
-        //   // if (!serverStatus) {
-        //   //   this.serverStop = true;
-        //   //   return;
-        //   // }
-        //   this.$http.get('common/getCommonParam').then((res) => {
-        //     if (res.code !== 0) {
-        //       return;
-        //     }
-        //     if (!Number(res.exchangeStatus)) {
-        //       this.serverStop = true;
-        //       return;
-        //     }
-        //     this.handleGetSymbolStatus(row);
-        //   });
-        // }
       }).catch(() => {});
-    },
-    // 获取交易对上架信息
-    handleGetSymbolStatus(row) {
-      const params = {
-        symbol: row.symbol.toUpperCase(),
-      };
-      this.$http.get('/symbol/getSymbolStatus', { params }).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        // 服务器暂停
-        if (Number(res.exchangeStatus) === 0) {
-          sessionStorage.setItem('serverStatus', false); // 服务暂停
-          return;
-        }
-        sessionStorage.setItem('serverStatus', true); // 服务正常
-
-        this.statusInfo = res.symbolInfo;
-        if (res.symbolInfo.status === 1) {
-          this.stop = true;
-          return;
-        }
-        this.handleRevoke(row);
-      });
     },
     handleRevoke(row) {
       const params = {

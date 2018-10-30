@@ -742,7 +742,8 @@ export default {
       const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
       const permission = this.$store.state.app.permission;
       if (!permission) {
-          this.$store.dispatch('updateauth');
+          Toast('未授权，请刷新页面进行授权');
+          // this.$store.dispatch('updateauth');
           return;
       }
       if (!accountAgree) {

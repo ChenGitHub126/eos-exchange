@@ -13,7 +13,7 @@ console.log('本地启动或构建的文件信息 | ----------------------------
 
 module.exports = {
   // 项目在服务器的根目录
-  // baseUrl,
+  baseUrl: '/onedex/',
   // 打包目录
   // outputDir: 'dist',
   // 打包后静态资源存放目录，默认为"static"

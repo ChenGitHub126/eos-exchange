@@ -53,18 +53,18 @@ export const constantRouterMap = [
                 component: resolve => require(['@/views/market/childView/Trade'], resolve),
                 meta: { title: 'Newdex - Trade' },
             },
-            {
-                path: '/coinHistoryList/:symbol',
-                name: 'coinHistoryList',
-                component: resolve => require(['@/views/market/childView/CoinHistoryList'], resolve),
-                meta: { title: 'Newdex - CoinHistoryList' },
-            },
-            {
-                path: '/linek/:symbol',
-                name: 'linek',
-                component: resolve => require(['@/views/market/childView/LineK'], resolve),
-                meta: { title: 'Newdex - LineK' },
-            },
+            // {
+            //     path: '/coinHistoryList/:symbol',
+            //     name: 'coinHistoryList',
+            //     component: resolve => require(['@/views/market/childView/CoinHistoryList'], resolve),
+            //     meta: { title: 'Newdex - CoinHistoryList' },
+            // },
+            // {
+            //     path: '/linek/:symbol',
+            //     name: 'linek',
+            //     component: resolve => require(['@/views/market/childView/LineK'], resolve),
+            //     meta: { title: 'Newdex - LineK' },
+            // },
         ],
     },
     // 订单
@@ -80,12 +80,12 @@ export const constantRouterMap = [
                 component: resolve => require(['@/views/order/Index'], resolve),
                 meta: { title: 'Newdex - Order' },
             },
-            {
-                path: '/orderDetail',
-                name: 'orderDetail',
-                component: resolve => require(['@/views/order/components/OrderDetail'], resolve),
-                meta: { title: 'Newdex - OrderDetail' },
-            },
+            // {
+            //     path: '/orderDetail',
+            //     name: 'orderDetail',
+            //     component: resolve => require(['@/views/order/components/OrderDetail'], resolve),
+            //     meta: { title: 'Newdex - OrderDetail' },
+            // },
         ],
     },
     // 资产
@@ -128,7 +128,7 @@ export const constantRouterMap = [
 
 const myRouter = new Router({
     base: '/',
-    mode: 'history',
+    // mode: 'history',
     routes: constantRouterMap,
 });
 

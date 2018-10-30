@@ -58,8 +58,8 @@ const DApp = {
     },
 
     // 获取授权
-    updateauth(param, callback) {
-        this.obj.updateauth(param, callback);
+    updateauth(key, callback) {
+        this.obj.updateauth(key, callback);
     },
 
     // 获取app版本，提示更新

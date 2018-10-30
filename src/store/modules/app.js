@@ -130,8 +130,8 @@ const app = {
     setPermission({ commit }, perimission) {
       commit('SET_PERMISSION', perimission);
     },
-    updateauth({ commit }, param) {
-      DApp.updateauth(param, (res) => {
+    updateauth({ commit }, key) {
+      DApp.updateauth(key, (res) => {
           commit('SET_PERMISSION', res);
       })
     },

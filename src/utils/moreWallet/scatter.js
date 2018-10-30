@@ -184,33 +184,39 @@ const Scatter = {
 
     getPermission(accountName, callback) {
         this.scatterEosJs.getAccount(accountName).then(res => {
+            let flag = false;
+            let key = '';
             if (res.permissions) {
+                console.log(accountName, res);
                 const permissions = res.permissions;
                 permissions.forEach((v, i, arr) => {
+                    if (v.required_auth.keys[0].key) {
+                        key = v.required_auth.keys[0].key;
+                    }
                     if (v.required_auth.accounts.length > 0) {
                         let auth = v.required_auth;
                         const accounts = auth.accounts;
                         accounts.forEach((v, i, arr) => {
                             if (v.permission.actor === scatterConfig.contract && v.permission.permission === 'eosio.code') {
-                                callback(true)
-                            } else {
-                                callback(false)
+                                flag = true;
                             }
                         })
                     }
                 });
             }
+            console.log(flag, key);
+            callback(flag, key)
         }).catch(err => {
             console.log(err)
         })
     },
 
-    updateauth(param, callback) {
+    updateauth(key, callback) {
         const auth = {
             threshold: 1,
             keys: [
                 {
-                    key: "EOS7BqvZ2JScja9dsX9z81QoAehHX5Zixf66uzYqZqdnFkRhHB1Ns",
+                    key,
                     weight: 1
                 }
             ],
@@ -225,6 +231,7 @@ const Scatter = {
             ],
             waits: []
         };
+        console.log(auth);
         this.scatterEosJs.updateauth(store.state.app.accountInfo.account_name,"active","owner",auth,{
             authorization: `${store.state.app.accountInfo.account_name}@active`
         }).then(res => {

@@ -256,11 +256,11 @@ export default {
                       list2.forEach((v, i, arr) => {
                           modelData.forEach((val, index, array) => {
                               if (v.symbol === val.asset_code1) {
-                                  val.code1 = v.publish_account
-                                  val.name1 = v.display_symbol
+                                  val.code1 = v.publish_account;
+                                  val.name1 = v.display_symbol;
                               }
                               if (v.symbol === val.asset_code2) {
-                                  val.code2 = v.publish_account
+                                  val.code2 = v.publish_account;
                                   val.name2 = v.display_symbol
                               }
                           })

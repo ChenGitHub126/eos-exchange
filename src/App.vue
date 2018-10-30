@@ -34,7 +34,6 @@
 <script>
 // import HeadNav from '@/components/HeadNav';
 // import Footer from '@/components/Footer';
-import Io from '@/utils/socket/index';
 import Tabbar from '@/components/Tabbar';
 import DApp from '@/utils/moreWallet';
 import { GetUrlPara } from '@/utils/public';
@@ -134,7 +133,11 @@ export default {
     },
     getPermission (accountName) {
         try {
-            DApp.getPermission(accountName, (res) =>{
+            DApp.getPermission(accountName, (res, key) =>{
+                if (!res) {
+                    this.$store.dispatch('updateauth', key);
+                    return;
+                }
                 this.$store.dispatch('setPermission', res);
             });
         }
@@ -229,7 +232,6 @@ export default {
     }
   },
   beforeDestroy() {
-    Io.accountOut(this.$store.state.app.accountInfo.account_name); // 退出账号
   },
 };
 </script>

@@ -24,7 +24,7 @@
 
           <!-- status -->
           <div class="status">
-            <button class="btn" v-if="statusInfo.status != 1" @click="handleCancelOrder(item)">{{ $t('public.revoke') }}</button>
+            <button class="btn" v-if="item.orderStatus === 0" @click="handleCancelOrder(item)">{{ $t('public.revoke') }}</button>
             <!--<button class="btn stop" v-if="statusInfo.status === 1" @click="handleStop">{{ $t('public.revoke') }}</button>-->
             <!--<button class="btn stop" v-if="statusInfo.status === 3" @click="oldDown = true">{{ $t('public.revoke') }}</button>-->
           </div>
@@ -130,7 +130,6 @@ import ServerStop from '@/components/ServerStop';
 
 import { toLocalTime } from '@/utils/public';
 import DApp from '@/utils/moreWallet';
-import Io from '@/utils/socket/index';
 import { Toast, MessageBox } from 'mint-ui';
 import axios from 'axios';
 
@@ -214,7 +213,9 @@ export default {
         this.$http.get('http://120.220.14.100:8088/onedex/v1/order/current', {
             params: {
                 account_name: this.$store.state.app.accountInfo.account_name,
-                symbol: this.$store.state.app.symbolInfo.name2
+                symbol: this.$store.state.app.symbolInfo.name2,
+                position: 0,
+                offset: 5
             }
         }).then((res) => {
           this.loading = false;
@@ -424,7 +425,6 @@ export default {
     /* -------- 权限校验 end -------- */
   },
   beforeDestroy() {
-    Io.addListenerOrder('stop');
   },
 };
 </script>

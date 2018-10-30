@@ -36,7 +36,6 @@
 <script>
 // JS
 // import { Decimal } from 'decimal.js';
-import Io from '@/utils/socket/index';
 import { toFixed } from '@/utils/public';
 
 export default {

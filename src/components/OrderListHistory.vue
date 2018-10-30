@@ -14,14 +14,14 @@
 
           <!-- status -->
           <div class="status">
-            <span v-if="item.dealStatus === 0 && item.orderStatus === 0"
-              :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">{{ $t('order.status') }}</span>
-            <span v-if="item.dealStatus === 0 && item.orderStatus === 2" class="color-333">{{ $t('order.status3') }}</span>
-            <span v-if="item.dealStatus === 1 && item.orderStatus === 0"
-              :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">{{ $t('order.status1') }}</span>
-            <span v-if="item.dealStatus === 1 && item.orderStatus === 2" class="color-333">{{ $t('order.status4') }}</span>
-            <span v-if="item.dealStatus === 2"
-              :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">{{ $t('order.status2') }}</span>
+            <!--<span v-if="item.dealStatus === 0 && item.orderStatus === 0"-->
+              <!--:class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">{{ $t('order.status') }}</span>-->
+            <!--<span v-if="item.dealStatus === 0 && item.orderStatus === 2" class="color-333">{{ $t('order.status3') }}</span>-->
+            <!--<span v-if="item.dealStatus === 1 && item.orderStatus === 0"-->
+              <!--:class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">{{ $t('order.status1') }}</span>-->
+            <!--<span v-if="item.dealStatus === 1 && item.orderStatus === 2" class="color-333">{{ $t('order.status4') }}</span>-->
+            <!--<span v-if="item.dealStatus === 2" :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">{{ $t('order.status2') }}</span>-->
+            <span v-if="item.orderStatus === 1" :class="{'color-green': item.direction === 1,'color-red': item.direction === 2}">{{ $t('order.status2') }}</span>
           </div>
         </div>
 
@@ -96,7 +96,6 @@
 <script>
 import { toLocalTime } from '@/utils/public';
 // import { Toast } from 'mint-ui';
-import Io from '@/utils/socket/index';
 import axios from 'axios';
 
 export default {
@@ -129,23 +128,6 @@ export default {
   },
   mounted() {
     this.handleGetOrderList();
-
-    /*
-    * ORDER_UPDATE(1, "orderupdate", "订单更新"),
-    * ORDER_SUCCESS(2, "ordersuccess", "下单成功"),
-    * CANCEL_SUCCESS(3, "cancelsuccess", "撤单成功"),
-    * ORDER_FAIL(4, "orderfail", "下单失败"),
-    * CANCEL_FAIL(5, "cancelfail", "撤单失败");
-    */
-    Io.addListenerOrder('start', (res) => {
-      // console.log('-------------历史订单-------------'); // eslint-disable-line
-      if (res.type === 'orderupdate' || res.type === 'ordersuccess') { // 下单成功
-        this.handleGetOrderList();
-      }
-      if (res.type === 'cancelsuccess') { // 撤单成功
-        this.handleGetOrderList();
-      }
-    });
   },
   methods: {
     handleTomore() {
@@ -177,7 +159,9 @@ export default {
         this.$http.get('http://120.220.14.100:8088/onedex/v1/order/history', {
             params: {
                 account_name: this.$store.state.app.accountInfo.account_name,
-                symbol: this.$store.state.app.symbolInfo.name2
+                symbol: this.$store.state.app.symbolInfo.name2,
+                position: 0,
+                offset: 5
             }
         }).then((res) => {
           this.loading = false;
@@ -188,7 +172,7 @@ export default {
                 this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
                 const localTime = toLocalTime(item.create_time);
                 this.$set(item, 'localTime', localTime.substr(5));
-                this.$set(item, 'orderStatus', 0);
+                this.$set(item, 'orderStatus', 1);
                 this.$set(item, 'open', false);
             });
 
@@ -252,7 +236,6 @@ export default {
     },
   },
   beforeDestroy() {
-    Io.addListenerOrder('stop');
   },
 };
 </script>

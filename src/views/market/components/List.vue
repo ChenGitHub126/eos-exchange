@@ -42,7 +42,6 @@
 
 <script>
 // JS
-import Io from '@/utils/socket/index';
 import { toFixed } from '@/utils/public';
 
 export default {
@@ -89,14 +88,14 @@ export default {
 
     // 获取深度数据
     handlePriceDepthWs() {
-      const params = {
-        symbol: this.symbol,
-      };
-      Io.cfwsDepth(params, (data) => {
-        // this.data = data;
-        this.wsData = data;
-        this.handleWsData(this.wsData);
-      });
+      // const params = {
+      //   symbol: this.symbol,
+      // };
+      // Io.cfwsDepth(params, (data) => {
+      //   // this.data = data;
+      //   this.wsData = data;
+      //   this.handleWsData(this.wsData);
+      // });
     },
 
     // 处理数据 - 精度
@@ -150,7 +149,6 @@ export default {
     },
   },
   beforeDestroy() {
-    Io.cfwsUnsubscribe(`depth.${this.symbol}`);
   },
 };
 </script>
