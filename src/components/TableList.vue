@@ -241,8 +241,8 @@ export default {
                               symbol: v.symbol,
                               name: v.name,
                               precision: {
-                                  coin: v.min_precision2,
-                                  price: v.min_amount2.toString().split('.')[1].length
+                                  coin: 4,
+                                  price: 4
                               },
                           });
                       }
@@ -261,7 +261,8 @@ export default {
                               }
                               if (v.symbol === val.asset_code2) {
                                   val.code2 = v.publish_account;
-                                  val.name2 = v.display_symbol
+                                  val.name2 = v.display_symbol;
+                                  val.precision.coin = v.decimals
                               }
                           })
                       });
@@ -382,13 +383,13 @@ export default {
       if (this.activeIndex === 1 && this.$route.name === 'index') {
         let arr = JSON.stringify(this.allData[key]);
         arr = JSON.parse(arr);
-        this.showData = arr.sort(compare('change')).slice(0, 10);
+        this.showData = arr.sort(compare('change')).slice(0, 5);
         return;
       }
       if (this.activeIndex === 2 && this.$route.name === 'index') {
         let arr = JSON.stringify(this.allData[key]);
         arr = JSON.parse(arr);
-        this.showData = arr.sort(compare('amount')).slice(0, 10);
+        this.showData = arr.sort(compare('amount')).slice(0, 5);
         return;
       }
 

@@ -20,7 +20,7 @@ module.exports = {
   // assetsDir: 'static',
   // lintOnSave: true,
   // runtimeCompiler: true,
-  // productionSourceMap: false,
+  productionSourceMap: false,
   // parallel: undefined,
   // css: {
   //   extract: true,

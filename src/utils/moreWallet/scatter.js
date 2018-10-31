@@ -46,7 +46,6 @@ const Scatter = {
   checkAvailable(callback) {
     setTimeout(() => {
       let available = false;
-      // console.log(this.scatter); // eslint-disable-line
       if (this.scatter) {
         available = true;
         callback(null, available);
@@ -185,7 +184,6 @@ const Scatter = {
             let flag = false;
             let key = '';
             if (res.permissions) {
-                console.log(accountName, res);
                 const permissions = res.permissions;
                 permissions.forEach((v, i, arr) => {
                     if (v.required_auth.keys[0].key) {
@@ -202,7 +200,6 @@ const Scatter = {
                     }
                 });
             }
-            console.log(flag, key);
             callback(flag, key)
         }).catch(err => {
             console.log(err)
@@ -229,7 +226,6 @@ const Scatter = {
             ],
             waits: []
         };
-        console.log(auth);
         this.scatterEosJs.updateauth(store.state.app.accountInfo.account_name,"active","owner",auth,{
             authorization: `${store.state.app.accountInfo.account_name}@active`
         }).then(res => {

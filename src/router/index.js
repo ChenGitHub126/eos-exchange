@@ -24,7 +24,7 @@ export const constantRouterMap = [
                 path: '/',
                 name: 'index',
                 component: resolve => require(['@/views/index/Index'], resolve),
-                meta: { title: 'Onedex - ' },
+                meta: { title: 'Onedex - The first completely decentralized exchange based on EOS' },
             }
         ],
     },
