@@ -13,15 +13,18 @@ import TokenPocket from './tokenpocket';
 import MeetOne from './meetone';
 
 // 来源于哪个APP
-let channel = '';
+let source = '';
 
 const DApp = {
     obj: null,
 
-    // 设置channel
-    setChannel(c) {
-        channel = c
-        switch (channel) {
+    // 设置source
+    setSource(c) {
+        // source = c
+        // 暂时写死为scatter
+        source = 'scatter';
+
+        switch (source) {
             // morewallet
             case 'morewallet':
                 this.obj = MoreWallet;

@@ -83,10 +83,10 @@
               <div class="tip">{{ $t('public.dealAveragePrice') }}</div>
               <div class="num">{{ item.filled_amount }}</div>
             </div>
-            <!--<div class="">-->
-              <!--<div class="tip">{{ $t('public.dealTotal') }}</div>-->
-              <!--<div class="num">{{ item.dealAmountStr || '—' }}</div>-->
-            <!--</div>-->
+            <div class="">
+              <div class="tip">{{ $t('public.dealTotal') }}</div>
+              <div class="num">{{ item.dealAmountStr || '—' }}</div>
+            </div>
             <div class="">
               <div class="tip">{{ $t('public.charge') }}</div>
               <div class="num">{{ item.finish_time || '—' }}</div>
@@ -171,7 +171,7 @@ import OrderSearch from '@/components/OrderSearch';
 
 import { toLocalTime } from '@/utils/public';
 import DApp from '@/utils/moreWallet';
-import { Toast, MessageBox } from 'mint-ui';
+import { Toast, MessageBox, Indicator } from 'mint-ui';
 
 export default {
   data() {
@@ -315,23 +315,6 @@ export default {
       this.$router.push('/orderDetail');
       // this.$emit('listenToDetail', item);
     },
-    // 获取账户未读消息总数
-    handleNotReadCount() {
-      const params = {
-        accountNo: this.$store.state.app.accountInfo.account_name,
-      };
-      this.$http.post('/order/getUnReadCount', params).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        this.$store.dispatch('setUnReadCount', res.unReadCount);
-      });
-    },
     // 筛选
     handleSearch(data) {
       this.search = false;
@@ -402,22 +385,10 @@ export default {
 
             const data = res.data;
             const list = data.list;
-            // const list = [{
-            //     "maker": "onedexchange",
-            //     "price": "90000000.0000",
-            //     "amount": "0.2000",
-            //     "base_symbol": "EOS",
-            //     "quote_symbol": "ABC",
-            //     "publish_account": "onedexchange",
-            //     "type": "bid",
-            //     "order_id": "2",
-            //     "create_time": "2018-10-19T09:01:36.000",
-            //     "source": "1"
-            // }];
             list.forEach((item) => {
                 this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
                 this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-                const localTime = toLocalTime(item.create_time);
+                const localTime = toLocalTime(item.order_time);
                 this.$set(item, 'localTime', localTime.substr(5));
                 this.$set(item, 'orderStatus', 0);
                 this.$set(item, 'open', false);
@@ -449,25 +420,10 @@ export default {
 
           const data= res.data;
           const list = data.list;
-          // const list = [{
-          //     "maker": "onedexchange",
-          //     "price": "110000000.0000",
-          //     "amount": "2.5000",
-          //     "filled_amount": "2.4975",
-          //     "base_symbol": "EOS",
-          //     "quote_symbol": "ABC",
-          //     "publish_account": "onedexchange",
-          //     "type": "bid",
-          //     "status": "filled",
-          //     "order_id": "5",
-          //     "create_time": "2018-10-19T09:27:21.500",
-          //     "finish_time": "2018-10-19 18:50:04",
-          //     "source": "1"
-          // }];
           list.forEach((item) => {
               this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
               this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-              const localTime = toLocalTime(item.create_time);
+              const localTime = toLocalTime(item.order_time);
               this.$set(item, 'localTime', localTime.substr(5));
               this.$set(item, 'orderStatus', 1);
               this.$set(item, 'open', false);
@@ -499,7 +455,8 @@ export default {
     handleCancelOrder(row) {
       const permission = this.$store.state.app.permission;
       if (!permission) {
-        this.$store.dispatch('updateauth');
+        Toast('未授权，请先进行授权');
+        this.$store.dispatch('updateauth', this.$store.state.app.key);
         return;
       }
       MessageBox({
@@ -511,6 +468,7 @@ export default {
         cancelButtonText: this.$t('public.cancel'),
       }).then((data) => {
           if (data === 'confirm'){
+              Indicator.open();
               this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping',{
                   params: {
                       symbol: row.quote_symbol,
@@ -526,6 +484,7 @@ export default {
                       },
                   };
                   DApp.cancel(param, (err, res) => {
+                      Indicator.close();
                       if(!err) {
                           Toast(this.$t('order.revokeSuccess'));
                           setTimeout(this.handleGetOrderList, 1000);

@@ -23,12 +23,13 @@ const app = {
       coinDecimal: 3,
       priceDecimal: 4,
     },
+    key: '',
     selfList: localStorage.getItem('selfList') ? JSON.parse(localStorage.getItem('selfList')) : [],
     toAccount: localStorage.getItem('toAccount') ? localStorage.getItem('toAccount') : null, // 智能合约
     accountInfo: localStorage.getItem('accountInfo') ? JSON.parse(localStorage.getItem('accountInfo')) : null, // 账户信息
     permission: false, // 授权信息
     detail: localStorage.getItem('detail') ? JSON.parse(localStorage.getItem('detail')) : null, // 订单详情
-    channel: localStorage.getItem('channel') ? localStorage.getItem('channel') : '', // app名称
+    source: localStorage.getItem('source') ? localStorage.getItem('source') : '', // app名称
     precision: localStorage.getItem('precision') ? JSON.parse(localStorage.getItem('precision')) : { // 精度
       coin: 4,
       price: 4,
@@ -66,6 +67,9 @@ const app = {
       state.accountInfo = accountInfo;
       localStorage.setItem('accountInfo', JSON.stringify(accountInfo));
     },
+    SET_KEY: (state, key) => {
+      state.key = key;
+    },
     // 授权信息
     SET_PERMISSION: (state, permission) => {
       state.permission = permission;
@@ -76,10 +80,10 @@ const app = {
       state.detail = detail;
       localStorage.setItem('detail', JSON.stringify(detail));
     },
-    // channel
-    SET_CHANNEL: (state, channel) => {
-      state.channel = channel;
-      localStorage.setItem('channel', channel);
+    // source
+    SET_SOURCE: (state, source) => {
+      state.source = source;
+      localStorage.setItem('source', source);
     },
     // 精度
     SET_PRECISION: (state, precision) => {
@@ -126,6 +130,10 @@ const app = {
     setAccountInfo({ commit }, accountInfo) {
       commit('SET_ACCOUNTINFO', accountInfo);
     },
+    // 公钥
+    setKey({ commit }, key) {
+        commit('SET_KEY', key);
+    },
     // 授权信息
     setPermission({ commit }, perimission) {
       commit('SET_PERMISSION', perimission);
@@ -139,9 +147,9 @@ const app = {
     setDetail({ commit }, detail) {
       commit('SET_DETAIL', detail);
     },
-    // channel
-    setChannel({ commit }, channel) {
-      commit('SET_CHANNEL', channel);
+    // source
+    setSource({ commit }, source) {
+      commit('SET_SOURCE', source);
     },
     // 精度
     setPrecision({ commit }, precision) {

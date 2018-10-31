@@ -171,10 +171,22 @@ export default {
 
         this.precision = this.$store.state.app.symbolInfo.precision;
 
-        this.priceDefault = {
-          buy: 1,
-          sell: 1,
+        const params = {
+            params: {
+                base: this.symbol.toUpperCase().split('_')[1],
+                quote: this.symbol.toUpperCase().split('_')[0],
+                limit: '1'
+            }
         };
+        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
+            .then(res => {
+                const data = res.data;
+                const map = data.map;
+                this.priceDefault = {
+                    buy: map.bids[0] ? map.bids[0].price : '0',
+                    sell: map.asks[0] ? map.asks[0].price : '0',
+                };
+            });
 
         // 查询收藏列表
         this.handleGetSelf();

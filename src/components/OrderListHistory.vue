@@ -170,7 +170,7 @@ export default {
             list.forEach((item) => {
                 this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
                 this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-                const localTime = toLocalTime(item.create_time);
+                const localTime = toLocalTime(item.order_time);
                 this.$set(item, 'localTime', localTime.substr(5));
                 this.$set(item, 'orderStatus', 1);
                 this.$set(item, 'open', false);

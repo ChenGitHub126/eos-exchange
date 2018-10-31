@@ -92,7 +92,7 @@ export default {
 
     // 获取深度数据
     handlePriceDepthWs() {
-        clearInterval(this.timer);
+      clearInterval(this.timer);
       const params = {
           params: {
               base: this.symbol.toUpperCase().split('_')[1],
@@ -101,19 +101,19 @@ export default {
           }
       };
 
-        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
-            .then(res => {
-                const data = res.data;
-                const map = data.map;
-                this.handleDepthData(map);
-                // 卖盘列表显示到最后
-                if (this.first) {
-                    this.first = false;
-                    setTimeout(() => {
-                        document.getElementsByClassName('list')[0].scrollTop = 10000;
-                    }, 100);
-                }
-            });
+      this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
+        .then(res => {
+          const data = res.data;
+          const map = data.map;
+          this.handleDepthData(map);
+          // 卖盘列表显示到最后
+          if (this.first) {
+            this.first = false;
+            setTimeout(() => {
+              document.getElementsByClassName('list')[0].scrollTop = 10000;
+            }, 100);
+          }
+        });
         this.timer = setInterval(this.handlePriceDepthWs, 5000);
     },
 

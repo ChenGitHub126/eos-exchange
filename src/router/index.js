@@ -24,7 +24,7 @@ export const constantRouterMap = [
                 path: '/',
                 name: 'index',
                 component: resolve => require(['@/views/index/Index'], resolve),
-                meta: { title: 'Newdex - The first global decerntralized exchange base on EOS' },
+                meta: { title: 'Onedex - ' },
             }
         ],
     },
@@ -39,31 +39,31 @@ export const constantRouterMap = [
                 path: '/',
                 name: 'market',
                 component: resolve => require(['@/views/market/Index'], resolve),
-                meta: { title: 'Newdex - Market' },
+                meta: { title: 'Onedex - Market' },
             },
             {
                 path: '/selfAreaSetting',
                 name: 'selfAreaSetting',
                 component: resolve => require(['@/views/market/childView/SelfAreaSetting'], resolve),
-                meta: { title: 'Newdex - SelfAreaSetting' },
+                meta: { title: 'Onedex - SelfAreaSetting' },
             },
             {
                 path: '/trade/:symbol',
                 name: 'trade',
                 component: resolve => require(['@/views/market/childView/Trade'], resolve),
-                meta: { title: 'Newdex - Trade' },
+                meta: { title: 'Onedex - Trade' },
             },
             // {
             //     path: '/coinHistoryList/:symbol',
             //     name: 'coinHistoryList',
             //     component: resolve => require(['@/views/market/childView/CoinHistoryList'], resolve),
-            //     meta: { title: 'Newdex - CoinHistoryList' },
+            //     meta: { title: 'Onedex - CoinHistoryList' },
             // },
             // {
             //     path: '/linek/:symbol',
             //     name: 'linek',
             //     component: resolve => require(['@/views/market/childView/LineK'], resolve),
-            //     meta: { title: 'Newdex - LineK' },
+            //     meta: { title: 'Onedex - LineK' },
             // },
         ],
     },
@@ -78,13 +78,13 @@ export const constantRouterMap = [
                 path: '/',
                 name: 'order',
                 component: resolve => require(['@/views/order/Index'], resolve),
-                meta: { title: 'Newdex - Order' },
+                meta: { title: 'Onedex - Order' },
             },
             // {
             //     path: '/orderDetail',
             //     name: 'orderDetail',
             //     component: resolve => require(['@/views/order/components/OrderDetail'], resolve),
-            //     meta: { title: 'Newdex - OrderDetail' },
+            //     meta: { title: 'Onedex - OrderDetail' },
             // },
         ],
     },
@@ -99,7 +99,7 @@ export const constantRouterMap = [
     //             path: '/',
     //             name: 'property',
     //             component: resolve => require(['@/views/property/Index'], resolve),
-    //             meta: { title: 'Newdex - Property' },
+    //             meta: { title: 'Onedex - Property' },
     //         }
     //     ],
     // },
@@ -114,7 +114,7 @@ export const constantRouterMap = [
     //             path: '/',
     //             name: 'more',
     //             component: resolve => require(['@/views/more/Index'], resolve),
-    //             meta: { title: 'Newdex - More' },
+    //             meta: { title: 'Onedex - More' },
     //         }
     //     ],
     // },
@@ -122,13 +122,13 @@ export const constantRouterMap = [
     {
         path: '*',
         component: resolve => require(['@/views/error/404.vue'], resolve),
-        meta: { title: '404 - Newdex' },
+        meta: { title: '404 - Onedex' },
     },
 ];
 
 const myRouter = new Router({
-    base: '/',
-    // mode: 'history',
+    base: '/onedex/',
+    mode: 'history',
     routes: constantRouterMap,
 });
 

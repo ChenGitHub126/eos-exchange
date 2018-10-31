@@ -8,7 +8,6 @@ import config from '../../config';
 
 // store
 import store from '../../store';
-import scatterConfig from "../../config/scatterConfig";
 
 // 配置
 const EosJs = Eos(config.scatterConfig.eosConfig);
@@ -87,7 +86,7 @@ const Scatter = {
 
   bids(param, callback) {
       try {
-          this.scatterEosJs.contract(scatterConfig.contract).then(res => {
+          this.scatterEosJs.contract(config.scatterConfig.contract).then(res => {
               res.bid(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid, param.authorization)
                   .then(res => {
                       callback(false, res)
@@ -103,7 +102,7 @@ const Scatter = {
 
     ask(param, callback) {
         try {
-            this.scatterEosJs.contract(scatterConfig.contract).then(res => {
+            this.scatterEosJs.contract(config.scatterConfig.contract).then(res => {
                 res.ask(param.maker, param.quantity, param.price, param.ask_contract, 1, param.uuid, param.authorization)
                     .then(res => {
                         callback(false, res)
@@ -119,7 +118,7 @@ const Scatter = {
 
     cancel(param, callback) {
         try {
-            this.scatterEosJs.contract(scatterConfig.contract).then(res => {
+            this.scatterEosJs.contract(config.scatterConfig.contract).then(res => {
                 res.cancelorder(param.scope, param.maker, param.uuid, param.authorization)
                     .then(res => {
                         callback(false, res)
@@ -196,7 +195,7 @@ const Scatter = {
                         let auth = v.required_auth;
                         const accounts = auth.accounts;
                         accounts.forEach((v, i, arr) => {
-                            if (v.permission.actor === scatterConfig.contract && v.permission.permission === 'eosio.code') {
+                            if (v.permission.actor === config.scatterConfig.contract && v.permission.permission === 'eosio.code') {
                                 flag = true;
                             }
                         })
@@ -222,7 +221,7 @@ const Scatter = {
             accounts: [
                 {
                     permission: {
-                        actor: scatterConfig.contract,
+                        actor: config.scatterConfig.contract,
                         permission: "eosio.code"
                     },
                     weight: 1

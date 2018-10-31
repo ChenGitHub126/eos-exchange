@@ -426,7 +426,6 @@ export default {
           this.allFavoriteData = this.$store.state.app.selfList;
           this.showData = [];
           // 循环收藏列表
-          console.log(this.allFavoriteData)
           this.allFavoriteData.forEach((v, i, arr) => {
               // 循环 allData 列表
               for (const i in this.allData) { // eslint-disable-line

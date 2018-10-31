@@ -105,7 +105,9 @@
 
       <!-- btn - 正常交易 -->
       <div class="btnDiv m40" v-if="statusInfo.status === 0">
-        <button class="btn buy" v-if="activeType === 'buy'" @click="handleCheckServerStop">{{ $t('public.buy') }}</button>
+        <button class="btn buy" v-if="activeType === 'buy'" @click="handleCheckServerStop">
+            {{ $t('public.buy') }}
+        </button>
         <button class="btn sell bgcolor-red" v-if="activeType === 'sell'" @click="handleCheckServerStop">{{ $t('public.sell') }}</button>
       </div>
       <!-- btn -->
@@ -198,7 +200,7 @@ import ServerStop from '@/components/ServerStop';
 
 import { toFixed, uuid, randomNum } from '@/utils/public';
 import { Decimal } from 'decimal.js';
-import { Toast } from 'mint-ui';
+import { Toast, Indicator } from 'mint-ui';
 import DApp from '@/utils/moreWallet';
 import SpecialTip from './SpecialTip';
 import SpecialTipLucky from './SpecialTipLucky';
@@ -623,7 +625,7 @@ export default {
       }
       this.rangeValue = Number(this.toFixed(precent * 100, 2));
     },
-    // 验证是否 > 0.0100 EOS
+    // 验证是否 > 0.100 EOS
     handleReg() {
       if (this.priceType === '0') {
         const buyPrice = Decimal.mul(this.thisPrice, this.num).toString();
@@ -695,6 +697,7 @@ export default {
           // 限价 - 买入
         console.log(param);
         DApp.bids(param, (err, res) => {
+            Indicator.close();
             if (!err) {
                 console.log('success', res)
                 Toast(this.$t('quotation.dealSuccess'));
@@ -720,6 +723,7 @@ export default {
         // 限价 - 卖出
           console.log(param);
           DApp.ask(param, (err, res) => {
+              Indicator.close();
               if (!err) {
                   console.log('success', res)
                   Toast(this.$t('quotation.dealSuccess'));
@@ -742,8 +746,8 @@ export default {
       const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
       const permission = this.$store.state.app.permission;
       if (!permission) {
-          Toast('未授权，请刷新页面进行授权');
-          // this.$store.dispatch('updateauth');
+          Toast('未授权，请先进行授权');
+          this.$store.dispatch('updateauth', this.$store.state.app.key);
           return;
       }
       if (!accountAgree) {
@@ -763,10 +767,11 @@ export default {
             maker: this.$store.state.app.accountInfo.account_name,
             quantity: `${toFixed(this.num, 4)} ${this.symbol1}`,
             price: this.thisPrice * 100000000,
-            source: 1,
+            source: this.$store.state.app.source,
             uuid: randomNum(9223372036854775807),
         };
         // 买入
+        Indicator.open();
         if (this.activeType === 'buy') {
           param.bid_contract = this.$store.state.app.trad.symbol2_code;
           this.handleBuy(param);

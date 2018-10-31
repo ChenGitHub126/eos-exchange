@@ -36,7 +36,7 @@ export function toFixed(number, p) {
  * 时间戳转成本地时间
  */
 export function toLocalTime(time) {
-  return moment(time).format('YYYY-MM-DD HH:mm:ss');
+  return moment.utc(time).local().format('YYYY-MM-DD HH:mm:ss');
 }
 
 export function toLocalTimeOld(time) {

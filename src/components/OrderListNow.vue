@@ -130,7 +130,7 @@ import ServerStop from '@/components/ServerStop';
 
 import { toLocalTime } from '@/utils/public';
 import DApp from '@/utils/moreWallet';
-import { Toast, MessageBox } from 'mint-ui';
+import { Toast, MessageBox, Indicator } from 'mint-ui';
 import axios from 'axios';
 
 export default {
@@ -224,7 +224,7 @@ export default {
           list.forEach((item) => {
               this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
               this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-              const localTime = toLocalTime(item.create_time);
+              const localTime = toLocalTime(item.order_time);
               this.$set(item, 'localTime', localTime.substr(5));
               this.$set(item, 'orderStatus', 0);
               this.$set(item, 'open', false);
@@ -271,12 +271,12 @@ export default {
     },
     // 撤销订单
     handleCancelOrder(row) {
-      // const token = localStorage.getItem('token');
-      // if (!token) {
-      //   this.handleGetTimestampJson(row);
-      //   return;
-      // }
-
+      const permission = this.$store.state.app.permission;
+      if (!permission) {
+        Toast('未授权，请先进行授权');
+        this.$store.dispatch('updateauth', this.$store.state.app.key);
+        return;
+      }
       MessageBox({
         title: this.$t('public.tip'),
         showConfirmButton: true,
@@ -286,6 +286,7 @@ export default {
         cancelButtonText: this.$t('public.cancel'),
       }).then((data) => {
           if (data === 'confirm'){
+              Indicator.open();
               this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping',{
                   params: {
                       symbol: row.quote_symbol,
@@ -301,10 +302,16 @@ export default {
                       },
                   };
                   DApp.cancel(param, (err, res) => {
+                      Indicator.close();
                       if(!err) {
                           Toast(this.$t('order.revokeSuccess'));
                           setTimeout(this.handleGetOrderListNow, 1000);
                           return;
+                      }
+                      if (err && res.type) {
+                          if (res.type.indexOf('signature_rejected') > -1) {
+                              Toast(this.$t('quotation.cancel'));
+                          }
                       }
                   })
               });

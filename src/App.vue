@@ -37,6 +37,7 @@
 import Tabbar from '@/components/Tabbar';
 import DApp from '@/utils/moreWallet';
 import { GetUrlPara } from '@/utils/public';
+import cfg from '@/config'
 import { Toast } from 'mint-ui';
 
 export default {
@@ -89,18 +90,14 @@ export default {
   methods: {
     // 获取dapp名称
     handleGetChannel() {
-      // const oldChannel = localStorage.getItem('channel');
-      // const newChannel = GetUrlPara().channel;
-      // let channel = newChannel && oldChannel !== newChannel ? newChannel : oldChannel;
-      // if (!channel) {
-      //   channel = 'scatter';
-      // }
-
-      // 暂时设置为仅支持scatter
-      const channel = 'scatter';
-
-      this.$store.dispatch('setChannel', channel);
-      DApp.setChannel(channel);
+      const oldSource = localStorage.getItem('source');
+      const newSource = GetUrlPara().source;
+      let source = newSource && oldSource !== newSource ? newSource : oldSource;
+      if (!source) {
+          source = cfg.publicCfg.defaultSource;
+      }
+      this.$store.dispatch('setSource', source);
+      DApp.setSource(source);
 
       // 只有获得channel后，才能继续
       // this.handleCheckAvailable(); // 暂时不检测版本
@@ -134,6 +131,7 @@ export default {
     getPermission (accountName) {
         try {
             DApp.getPermission(accountName, (res, key) =>{
+                this.$store.dispatch('setKey', key);
                 if (!res) {
                     this.$store.dispatch('updateauth', key);
                     return;
