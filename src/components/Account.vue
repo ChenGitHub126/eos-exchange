@@ -139,8 +139,8 @@ export default {
       console.log('Account.vue', '获取EOS余额及其它币种余额');
       try {
         const params = {
-            code: 'eosio.token',
-            coin: 'EOS'
+          code: 'eosio.token',
+          coin: 'EOS',
         };
         DApp.getCurrencyBalance(params, (err, res) => {
           this.refresh = false;
@@ -153,10 +153,10 @@ export default {
           //   return;
           // }
           if (err) {
-              setTimeout(() => {
-                  this.handleGetCoinBanlance();
-              }, 1000);
-              return;
+            setTimeout(() => {
+              this.handleGetCoinBanlance();
+            }, 1000);
+            return;
           }
           this.totalEosValuation = toFixed(res, 4);
           // this.coinList = res.accountCoinList;

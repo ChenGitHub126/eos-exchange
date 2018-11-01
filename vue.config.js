@@ -65,15 +65,15 @@ module.exports = {
   //     .set('@', resolve('src'))
   //     .set('_assets', resolve('src/assets'));
   // },
-  devServer: {
-    proxy: {
-      '/api': {
-        target: 'https://newdex.340wan.com',
-        ws: true,
-        changeOrigin: true,
-      },
-    },
-  },
+  // devServer: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://newdex.340wan.com',
+  //       ws: true,
+  //       changeOrigin: true,
+  //     },
+  //   },
+  // },
 
-  lintOnSave: undefined
+  lintOnSave: undefined,
 };

@@ -226,95 +226,94 @@ export default {
     handleGetData() {
       this.loading = true;
       this.partition.forEach((item) => {
-          let modelData = [];
-          let eosSymbolArr = [];
-          this.$http.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_symbol_new').then(res => {
-              const data = res.data;
-              const list = data.list;
-              if (list) {
-                  list.forEach((v, i, arr) => {
-                      if (v.chain_symbol.toUpperCase() === 'QILINEOS') {
-                          eosSymbolArr.push(v.symbol);
-                          modelData.push({
-                              asset_code1: v.asset_code1,
-                              asset_code2: v.asset_code2,
-                              symbol: v.symbol,
-                              name: v.name,
-                              precision: {
-                                  coin: 4,
-                                  price: 4
-                              },
-                          });
-                      }
-                  })
+        const modelData = [];
+        const eosSymbolArr = [];
+        this.$http.get('/exchangeApi/wallet/trade_symbol_new').then((res) => {
+          const data = res.data;
+          const list = data.list;
+          if (list) {
+            list.forEach((v, i, arr) => {
+              if (v.chain_symbol.toUpperCase() === 'QILINEOS') {
+                eosSymbolArr.push(v.symbol);
+                modelData.push({
+                  asset_code1: v.asset_code1,
+                  asset_code2: v.asset_code2,
+                  symbol: v.symbol,
+                  name: v.name,
+                  precision: {
+                    coin: 4,
+                    price: 4,
+                  },
+                });
               }
+            });
+          }
 
-              this.$http.get('http://120.220.14.100:8581/exchangeApi/wallet/geteoswalletasset')
-                  .then(res => {
-                      const data2 = res.data;
-                      const list2 = data2.list;
-                      list2.forEach((v, i, arr) => {
-                          modelData.forEach((val, index, array) => {
-                              if (v.symbol === val.asset_code1) {
-                                  val.code1 = v.publish_account;
-                                  val.name1 = v.display_symbol;
-                              }
-                              if (v.symbol === val.asset_code2) {
-                                  val.code2 = v.publish_account;
-                                  val.name2 = v.display_symbol;
-                                  val.precision.coin = v.decimals
-                              }
-                          })
-                      });
-                      this.handleData(item, modelData);
-              });
-
-              this.$http.get('http://120.220.14.100:8581/exchangeApi/wallet/trade_quotations',{
-                  params: {
-                      symbol: eosSymbolArr.toString()
+          this.$http.get('/exchangeApi/wallet/geteoswalletasset')
+            .then((res) => {
+              const data2 = res.data;
+              const list2 = data2.list;
+              list2.forEach((v, i, arr) => {
+                modelData.forEach((val, index, array) => {
+                  if (v.symbol === val.asset_code1) {
+                    val.code1 = v.publish_account;
+                    val.name1 = v.display_symbol;
                   }
-              }).then(res => {
-                  const data1 = res.data;
-                  const list1 = data1.list;
-                  list1.forEach((v, i, arr) => {
-                      modelData.forEach((val, index, array) => {
-                          if (v.symbol === val.symbol) {
-                              val.amount = v.quote_volume;
-                              val.price = v.latest;
-                              val.change = v.percent_change;
-                              val.high = v.highest_bid;
-                              val.low = v.lowest_ask;
-                          }
-                      })
-                  });
-                  this.handleData(item, modelData);
+                  if (v.symbol === val.asset_code2) {
+                    val.code2 = v.publish_account;
+                    val.name2 = v.display_symbol;
+                    val.precision.coin = v.decimals;
+                  }
+                });
               });
+              this.handleData(item, modelData);
+            });
+
+          this.$http.get('/exchangeApi/wallet/trade_quotations', {
+            params: {
+              symbol: eosSymbolArr.toString(),
+            },
+          }).then((res) => {
+            const data1 = res.data;
+            const list1 = data1.list;
+            list1.forEach((v, i, arr) => {
+              modelData.forEach((val, index, array) => {
+                if (v.symbol === val.symbol) {
+                  val.amount = v.quote_volume;
+                  val.price = v.latest;
+                  val.change = v.percent_change;
+                  val.high = v.highest_bid;
+                  val.low = v.lowest_ask;
+                }
+              });
+            });
+            this.handleData(item, modelData);
           });
+        });
       });
     },
     handleData(item, modelData) {
-        this.loading = false;
-        this.allData[item] = modelData;
-        // 自选 - 行情页
-        if (this.activeIndex === 1 && this.$route.name !== 'index') {
-            this.handleFavorite();
-            return;
-        }
-        // 排序展示
-        // (首页跳入 - type - 1: 涨幅榜 | 2: 交易量)
-        if (this.$route.params.type && this.first) {
-            this.first = false;
-            if (this.$route.params.type === 1) {
-                this.quoteChange = 2;
-            } else {
-                this.dealCount = 2;
-            }
-            this.handleSort(item, 2);
-            return;
-        }
-        // (直接tabBar进入)
-        this.handleSort(item);
+      this.loading = false;
+      this.allData[item] = modelData;
+      // 自选 - 行情页
+      if (this.activeIndex === 1 && this.$route.name !== 'index') {
+        this.handleFavorite();
         return;
+      }
+      // 排序展示
+      // (首页跳入 - type - 1: 涨幅榜 | 2: 交易量)
+      if (this.$route.params.type && this.first) {
+        this.first = false;
+        if (this.$route.params.type === 1) {
+          this.quoteChange = 2;
+        } else {
+          this.dealCount = 2;
+        }
+        this.handleSort(item, 2);
+        return;
+      }
+      // (直接tabBar进入)
+      this.handleSort(item);
     },
     // 排序 - 成交量
     handleDealCount() {
@@ -423,24 +422,24 @@ export default {
       this.showData = [];
       // 异步获取自选交易对 - 进行匹配添加list
       setTimeout(() => {
-          this.loading = false;
-          this.allFavoriteData = this.$store.state.app.selfList;
-          this.showData = [];
-          // 循环收藏列表
-          this.allFavoriteData.forEach((v, i, arr) => {
-              // 循环 allData 列表
+        this.loading = false;
+        this.allFavoriteData = this.$store.state.app.selfList;
+        this.showData = [];
+        // 循环收藏列表
+        this.allFavoriteData.forEach((v, i, arr) => {
+          // 循环 allData 列表
               for (const i in this.allData) { // eslint-disable-line
-                  if (i !== 'self') {
-                      this.allData[i].forEach((list) => {
-                          if (v === list.name2) {
-                              this.showData.push(list);
-                          }
-                      });
-                  }
-              }
-          });
-          const key = 'self';
-          this.allData[key] = this.showData;
+            if (i !== 'self') {
+              this.allData[i].forEach((list) => {
+                if (v === list.name2) {
+                  this.showData.push(list);
+                }
+              });
+            }
+          }
+        });
+        const key = 'self';
+        this.allData[key] = this.showData;
       }, 300);
     },
   },

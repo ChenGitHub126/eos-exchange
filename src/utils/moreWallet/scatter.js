@@ -64,14 +64,14 @@ const Scatter = {
       account: store.state.app.accountInfo.account_name,
     };
 
-    this.EosJs.getCurrencyBalance(newParams).then(res => {
+    this.EosJs.getCurrencyBalance(newParams).then((res) => {
       if (!res.length) {
         callback(null, `0.0000 ${params.coin}`);
-          return;
-        }
-        const returnData = res[0];
-        callback(null, returnData);
-      }).catch((e) => {
+        return;
+      }
+      const returnData = res[0];
+      callback(null, returnData);
+    }).catch((e) => {
         console.log(`e: ${e}`); // eslint-disable-line
     });
     //     const param = {
@@ -84,52 +84,49 @@ const Scatter = {
   /* -------- 获取余额 end -------- */
 
   bids(param, callback) {
-      try {
-          this.scatterEosJs.contract(config.scatterConfig.contract).then(res => {
-              res.bid(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid, param.authorization)
-                  .then(res => {
-                      callback(false, res)
-                  }).catch(err => {
-                    callback(true, err)
-              })
-          })
-      }
-      catch (e) {
-          console.log(e)
-      }
+    try {
+      this.scatterEosJs.contract(config.scatterConfig.contract).then((res) => {
+        res.bid(param.maker, param.quantity, param.price, param.bid_contract, 1, param.uuid, param.authorization)
+          .then((res) => {
+            callback(false, res);
+          }).catch((err) => {
+            callback(true, err);
+          });
+      });
+    } catch (e) {
+      console.log(e);
+    }
   },
 
-    ask(param, callback) {
-        try {
-            this.scatterEosJs.contract(config.scatterConfig.contract).then(res => {
-                res.ask(param.maker, param.quantity, param.price, param.ask_contract, 1, param.uuid, param.authorization)
-                    .then(res => {
-                        callback(false, res)
-                    }).catch(err => {
-                        callback(true, err)
-                })
-            })
-        }
-        catch (e) {
-            console.log(e)
-        }
-    },
+  ask(param, callback) {
+    try {
+      this.scatterEosJs.contract(config.scatterConfig.contract).then((res) => {
+        res.ask(param.maker, param.quantity, param.price, param.ask_contract, 1, param.uuid, param.authorization)
+          .then((res) => {
+            callback(false, res);
+          }).catch((err) => {
+            callback(true, err);
+          });
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  },
 
-    cancel(param, callback) {
-        try {
-            this.scatterEosJs.contract(config.scatterConfig.contract).then(res => {
-                res.cancelorder(param.scope, param.maker, param.uuid, param.authorization)
-                    .then(res => {
-                        callback(false, res)
-                    }).catch(err => {
-                    callback(true, err)
-                })
-            })
-        }
-        catch (e) {
-            console.log(e)
-        }
-    },
+  cancel(param, callback) {
+    try {
+      this.scatterEosJs.contract(config.scatterConfig.contract).then((res) => {
+        res.cancelorder(param.scope, param.maker, param.uuid, param.authorization)
+          .then((res) => {
+            callback(false, res);
+          }).catch((err) => {
+            callback(true, err);
+          });
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  },
 
   /* -------- 获取账户信息 start ------- */
   /*
@@ -179,61 +176,61 @@ const Scatter = {
   },
   /* -------- 获取账户信息 end ------- */
 
-    getPermission(accountName, callback) {
-        this.scatterEosJs.getAccount(accountName).then(res => {
-            let flag = false;
-            let key = '';
-            if (res.permissions) {
-                const permissions = res.permissions;
-                permissions.forEach((v, i, arr) => {
-                    if (v.required_auth.keys[0].key) {
-                        key = v.required_auth.keys[0].key;
-                    }
-                    if (v.required_auth.accounts.length > 0) {
-                        let auth = v.required_auth;
-                        const accounts = auth.accounts;
-                        accounts.forEach((v, i, arr) => {
-                            if (v.permission.actor === config.scatterConfig.contract && v.permission.permission === 'eosio.code') {
-                                flag = true;
-                            }
-                        })
-                    }
-                });
-            }
-            callback(flag, key)
-        }).catch(err => {
-            console.log(err)
-        })
-    },
+  getPermission(accountName, callback) {
+    this.scatterEosJs.getAccount(accountName).then((res) => {
+      let flag = false;
+      let key = '';
+      if (res.permissions) {
+        const permissions = res.permissions;
+        permissions.forEach((v, i, arr) => {
+          if (v.required_auth.keys[0].key) {
+            key = v.required_auth.keys[0].key;
+          }
+          if (v.required_auth.accounts.length > 0) {
+            const auth = v.required_auth;
+            const accounts = auth.accounts;
+            accounts.forEach((v, i, arr) => {
+              if (v.permission.actor === config.scatterConfig.contract && v.permission.permission === 'eosio.code') {
+                flag = true;
+              }
+            });
+          }
+        });
+      }
+      callback(flag, key);
+    }).catch((err) => {
+      console.log(err);
+    });
+  },
 
-    updateauth(key, callback) {
-        const auth = {
-            threshold: 1,
-            keys: [
-                {
-                    key,
-                    weight: 1
-                }
-            ],
-            accounts: [
-                {
-                    permission: {
-                        actor: config.scatterConfig.contract,
-                        permission: "eosio.code"
-                    },
-                    weight: 1
-                }
-            ],
-            waits: []
-        };
-        this.scatterEosJs.updateauth(store.state.app.accountInfo.account_name,"active","owner",auth,{
-            authorization: `${store.state.app.accountInfo.account_name}@active`
-        }).then(res => {
-            callback(true)
-        }).catch(err => {
-            callback(false);
-        })
-    },
+  updateauth(key, callback) {
+    const auth = {
+      threshold: 1,
+      keys: [
+        {
+          key,
+          weight: 1,
+        },
+      ],
+      accounts: [
+        {
+          permission: {
+            actor: config.scatterConfig.contract,
+            permission: 'eosio.code',
+          },
+          weight: 1,
+        },
+      ],
+      waits: [],
+    };
+    this.scatterEosJs.updateauth(store.state.app.accountInfo.account_name, 'active', 'owner', auth, {
+      authorization: `${store.state.app.accountInfo.account_name}@active`,
+    }).then((res) => {
+      callback(true);
+    }).catch((err) => {
+      callback(false);
+    });
+  },
 
   /*
   * 获取eos账号信息

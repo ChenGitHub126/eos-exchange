@@ -214,7 +214,7 @@ export default {
   },
   mounted() {
     // this.handleGetOrderList();
-      this.handleGetOrderListNow()
+    this.handleGetOrderListNow();
   },
   methods: {
     // 跳转到交易对
@@ -267,7 +267,7 @@ export default {
       this.dataList = [];
       this.searchData = null; // 清空查询条件
       this.isSearchStarus = null; // 取消查询状态
-      this.handleGetOrderList()
+      this.handleGetOrderList();
     },
     // 关闭暂停提示框
     handleClose() {
@@ -374,82 +374,82 @@ export default {
     /* 数据请求操作 start */
 
     handleGetOrderListNow(page, data) {
-        this.loading = true;
-        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/current', {
-            params: {
-                account_name: this.$store.state.app.accountInfo.account_name
-            }
-        }).then(res => {
-            this.loading = false;
-            this.first = false;
+      this.loading = true;
+      this.$http.get('http://120.220.14.100:8088/onedex/v1/order/current', {
+        params: {
+          account_name: this.$store.state.app.accountInfo.account_name,
+        },
+      }).then((res) => {
+        this.loading = false;
+        this.first = false;
 
-            const data = res.data;
-            const list = data.list;
-            list.forEach((item) => {
-                this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
-                this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-                const localTime = toLocalTime(item.order_time);
-                this.$set(item, 'localTime', localTime.substr(5));
-                this.$set(item, 'orderStatus', 0);
-                this.$set(item, 'open', false);
-            });
-
-            // if (res.page.totalPage <= this.page) {
-            this.allLoaded = true;
-            // } else {
-            //     this.allLoaded = false;
-            // }
-
-            // 判断刷新 / 更多
-            if (!page) {
-                this.handleRefresh(list);
-                return;
-            }
-            this.handleTopage(list);
+        const data = res.data;
+        const list = data.list;
+        list.forEach((item) => {
+          this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+          this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+          const localTime = toLocalTime(item.order_time);
+          this.$set(item, 'localTime', localTime.substr(5));
+          this.$set(item, 'orderStatus', 0);
+          this.$set(item, 'open', false);
         });
+
+        // if (res.page.totalPage <= this.page) {
+        this.allLoaded = true;
+        // } else {
+        //     this.allLoaded = false;
+        // }
+
+        // 判断刷新 / 更多
+        if (!page) {
+          this.handleRefresh(list);
+          return;
+        }
+        this.handleTopage(list);
+      });
     },
     handleGetOrderListHistory(page, data) {
       this.loading = true;
       this.$http.get('http://120.220.14.100:8088/onedex/v1/order/history', {
-          params: {
-              account_name: this.$store.state.app.accountInfo.account_name
-          }
-      }).then(res => {
-          this.loading = false;
-          this.first = false;
+        params: {
+          account_name: this.$store.state.app.accountInfo.account_name,
+        },
+      }).then((res) => {
+        this.loading = false;
+        this.first = false;
 
-          const data= res.data;
-          const list = data.list;
-          list.forEach((item) => {
-              this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
-              this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-              const localTime = toLocalTime(item.order_time);
-              this.$set(item, 'localTime', localTime.substr(5));
-              this.$set(item, 'orderStatus', 1);
-              this.$set(item, 'open', false);
-          });
+        const data = res.data;
+        const list = data.list;
+        list.forEach((item) => {
+          this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+          this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+          const localTime = toLocalTime(item.order_time);
+          this.$set(item, 'localTime', localTime.substr(5));
+          this.$set(item, 'orderStatus', 1);
+          this.$set(item, 'open', false);
+        });
 
-          // if (res.page.totalPage <= this.page) {
-          this.allLoaded = true;
-          // } else {
-          //     this.allLoaded = false;
-          // }
+        // if (res.page.totalPage <= this.page) {
+        this.allLoaded = true;
+        // } else {
+        //     this.allLoaded = false;
+        // }
 
-          // 判断刷新 / 更多
-          if (!page) {
-              this.handleRefresh(list);
-              return;
-          }
-          this.handleTopage(list);
+        // 判断刷新 / 更多
+        if (!page) {
+          this.handleRefresh(list);
+          return;
+        }
+        this.handleTopage(list);
       });
-      },
+    },
 
     handleGetOrderList(page, data) { // 查询订单记录列表信息
-        if (this.active === 1) {
-            this.handleGetOrderListNow();
-        } else {
-            this.handleGetOrderListHistory()
-        }
+      if (this.active === 1) {
+        this.handleGetOrderListNow();
+      } else {
+        this.handleGetOrderListHistory();
+      }
     },
     // 撤销订单
     handleCancelOrder(row) {
@@ -467,32 +467,31 @@ export default {
         confirmButtonText: this.$t('public.sure'),
         cancelButtonText: this.$t('public.cancel'),
       }).then((data) => {
-          if (data === 'confirm'){
-              Indicator.open();
-              this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping',{
-                  params: {
-                      symbol: row.quote_symbol,
-                      contract: row.publish_account
-                  }
-              }).then(res => {
-                  const param = {
-                      scope: row.type === 'bid'? res.data.map.bidscope : res.data.map.askscope,
-                      maker: row.maker,
-                      uuid: row.order_id,
-                      authorization: {
-                          authorization: `${this.$store.state.app.accountInfo.account_name}@active`
-                      },
-                  };
-                  DApp.cancel(param, (err, res) => {
-                      Indicator.close();
-                      if(!err) {
-                          Toast(this.$t('order.revokeSuccess'));
-                          setTimeout(this.handleGetOrderList, 1000);
-                          return;
-                      }
-                  })
-              });
-          }
+        if (data === 'confirm') {
+          Indicator.open();
+          this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping', {
+            params: {
+              symbol: row.quote_symbol,
+              contract: row.publish_account,
+            },
+          }).then((res) => {
+            const param = {
+              scope: row.type === 'bid' ? res.data.map.bidscope : res.data.map.askscope,
+              maker: row.maker,
+              uuid: row.order_id,
+              authorization: {
+                authorization: `${this.$store.state.app.accountInfo.account_name}@active`,
+              },
+            };
+            DApp.cancel(param, (err, res) => {
+              Indicator.close();
+              if (!err) {
+                Toast(this.$t('order.revokeSuccess'));
+                setTimeout(this.handleGetOrderList, 1000);
+              }
+            });
+          });
+        }
       }).catch(() => {});
     },
     handleRevoke(row) {

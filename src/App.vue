@@ -37,7 +37,7 @@
 import Tabbar from '@/components/Tabbar';
 import DApp from '@/utils/moreWallet';
 import { GetUrlPara } from '@/utils/public';
-import cfg from '@/config'
+import cfg from '@/config';
 import { Toast } from 'mint-ui';
 
 export default {
@@ -94,7 +94,7 @@ export default {
       const newSource = GetUrlPara().source;
       let source = newSource && oldSource !== newSource ? newSource : oldSource;
       if (!source) {
-          source = cfg.publicCfg.defaultSource;
+        source = cfg.publicCfg.defaultSource;
       }
       this.$store.dispatch('setSource', source);
       DApp.setSource(source);
@@ -128,22 +128,21 @@ export default {
         });
       }
     },
-    getPermission (accountName) {
-        try {
-            DApp.getPermission(accountName, (res, key) =>{
-                this.$store.dispatch('setKey', key);
-                if (!res) {
-                    this.$store.dispatch('updateauth', key);
-                    return;
-                }
-                this.$store.dispatch('setPermission', res);
-            });
-        }
-        catch (e) {
-            setTimeout(() => {
-                this.getPermission()
-            }, 1000)
-        }
+    getPermission(accountName) {
+      try {
+        DApp.getPermission(accountName, (res, key) => {
+          this.$store.dispatch('setKey', key);
+          if (!res) {
+            this.$store.dispatch('updateauth', key);
+            return;
+          }
+          this.$store.dispatch('setPermission', res);
+        });
+      } catch (e) {
+        setTimeout(() => {
+          this.getPermission();
+        }, 1000);
+      }
     },
     // 第一次使用dapp时，获取手机语言
     handleGetPhoneLanguage() {
@@ -227,7 +226,7 @@ export default {
       //   }
       //   this.$store.dispatch('setUnReadCount', res.unReadCount);
       // });
-    }
+    },
   },
   beforeDestroy() {
   },

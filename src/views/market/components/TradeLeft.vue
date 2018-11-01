@@ -372,8 +372,8 @@ export default {
       this.handlePriceDefault();
       this.symbol = this.$route.params.symbol.toUpperCase();
       this.$nextTick(() => {
-          this.symbol1 = this.$store.state.app.trad.symbol1;
-          this.symbol2 = this.$store.state.app.trad.symbol2;
+        this.symbol1 = this.$store.state.app.trad.symbol1;
+        this.symbol2 = this.$store.state.app.trad.symbol2;
       });
       this.handleGetSymbil();
     },
@@ -694,22 +694,22 @@ export default {
     handleBuy(param) {
       /* -------- 买入 -------- */
       if (this.priceType === '0') {
-          // 限价 - 买入
+        // 限价 - 买入
         console.log(param);
         DApp.bids(param, (err, res) => {
-            Indicator.close();
-            if (!err) {
-                console.log('success', res)
-                Toast(this.$t('quotation.dealSuccess'));
-                return;
+          Indicator.close();
+          if (!err) {
+            console.log('success', res);
+            Toast(this.$t('quotation.dealSuccess'));
+            return;
+          }
+          if (err && res.type) {
+            if (res.type.indexOf('signature_rejected') > -1) {
+              Toast(this.$t('quotation.cancel'));
+              return;
             }
-            if (err && res.type) {
-                if (res.type.indexOf('signature_rejected') > -1) {
-                    Toast(this.$t('quotation.cancel'));
-                    return;
-                }
-            }
-            Toast(this.$t('quotation.dealError') + res);
+          }
+          Toast(this.$t('quotation.dealError') + res);
         });
       } else {
         // 市价 - 买入
@@ -721,22 +721,22 @@ export default {
       /* -------- 卖出 -------- */
       if (this.priceType === '0') {
         // 限价 - 卖出
-          console.log(param);
-          DApp.ask(param, (err, res) => {
-              Indicator.close();
-              if (!err) {
-                  console.log('success', res)
-                  Toast(this.$t('quotation.dealSuccess'));
-                  return;
-              }
-              if (err && res.type) {
-                  if (res.type.indexOf('signature_rejected') > -1) {
-                      Toast(this.$t('quotation.cancel'));
-                      return;
-                  }
-              }
-              Toast(this.$t('quotation.dealError') + res);
-          });
+        console.log(param);
+        DApp.ask(param, (err, res) => {
+          Indicator.close();
+          if (!err) {
+            console.log('success', res);
+            Toast(this.$t('quotation.dealSuccess'));
+            return;
+          }
+          if (err && res.type) {
+            if (res.type.indexOf('signature_rejected') > -1) {
+              Toast(this.$t('quotation.cancel'));
+              return;
+            }
+          }
+          Toast(this.$t('quotation.dealError') + res);
+        });
       } else {
         // 市价 - 卖出
       }
@@ -746,9 +746,9 @@ export default {
       const accountAgree = sessionStorage.getItem('accountAgree') ? JSON.parse(sessionStorage.getItem('accountAgree')) : false;
       const permission = this.$store.state.app.permission;
       if (!permission) {
-          Toast('未授权，请先进行授权');
-          this.$store.dispatch('updateauth', this.$store.state.app.key);
-          return;
+        Toast('未授权，请先进行授权');
+        this.$store.dispatch('updateauth', this.$store.state.app.key);
+        return;
       }
       if (!accountAgree) {
         this.accountAgree = true;
@@ -760,26 +760,26 @@ export default {
       if (!this.handleRegBanlance()) {
         return;
       }
-        const param = {
-            authorization: {
-                authorization: `${this.$store.state.app.accountInfo.account_name}@active`
-            },
-            maker: this.$store.state.app.accountInfo.account_name,
-            quantity: `${toFixed(this.num, 4)} ${this.symbol1}`,
-            price: this.thisPrice * 100000000,
-            source: this.$store.state.app.source,
-            uuid: randomNum(9223372036854775807),
-        };
+      const param = {
+        authorization: {
+          authorization: `${this.$store.state.app.accountInfo.account_name}@active`,
+        },
+        maker: this.$store.state.app.accountInfo.account_name,
+        quantity: `${toFixed(this.num, 4)} ${this.symbol1}`,
+        price: this.thisPrice * 100000000,
+        source: this.$store.state.app.source,
+        uuid: randomNum(9223372036854775807),
+      };
         // 买入
-        Indicator.open();
-        if (this.activeType === 'buy') {
-          param.bid_contract = this.$store.state.app.trad.symbol2_code;
-          this.handleBuy(param);
-          return;
-        }
-        // 卖出
-        param.ask_contract = this.$store.state.app.trad.symbol2_code;
-        this.handleSell(param);
+      Indicator.open();
+      if (this.activeType === 'buy') {
+        param.bid_contract = this.$store.state.app.trad.symbol2_code;
+        this.handleBuy(param);
+        return;
+      }
+      // 卖出
+      param.ask_contract = this.$store.state.app.trad.symbol2_code;
+      this.handleSell(param);
     },
   },
   beforeDestroy() {

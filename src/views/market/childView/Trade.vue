@@ -145,7 +145,6 @@ export default {
       this.symbol2 = symbolArr[1];
 
       this.handlaGetSymbolInfo();
-
     },
     // 关闭切换币种
     handleClose() {
@@ -159,37 +158,37 @@ export default {
     // 获取交易对信息
     handlaGetSymbolInfo() {
       console.log('Trade.vue', '获取指定交易对信息');
-        this.symbolInfo = {
-          symbol1: this.$store.state.app.symbolInfo.name2,
-          symbol2: this.$store.state.app.symbolInfo.name1,
-          symbol1_code: this.$store.state.app.symbolInfo.code1,
-          symbol2_code: this.$store.state.app.symbolInfo.code2,
-          coinDecimal: this.$store.state.app.symbolInfo.precision.coin,
-          priceDecimal: this.$store.state.app.symbolInfo.precision.price,
-        };
-        this.$store.dispatch('setTrad', this.symbolInfo);
+      this.symbolInfo = {
+        symbol1: this.$store.state.app.symbolInfo.name2,
+        symbol2: this.$store.state.app.symbolInfo.name1,
+        symbol1_code: this.$store.state.app.symbolInfo.code1,
+        symbol2_code: this.$store.state.app.symbolInfo.code2,
+        coinDecimal: this.$store.state.app.symbolInfo.precision.coin,
+        priceDecimal: this.$store.state.app.symbolInfo.precision.price,
+      };
+      this.$store.dispatch('setTrad', this.symbolInfo);
 
-        this.precision = this.$store.state.app.symbolInfo.precision;
+      this.precision = this.$store.state.app.symbolInfo.precision;
 
-        const params = {
-            params: {
-                base: this.symbol.toUpperCase().split('_')[1],
-                quote: this.symbol.toUpperCase().split('_')[0],
-                limit: '1'
-            }
-        };
-        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
-            .then(res => {
-                const data = res.data;
-                const map = data.map;
-                this.priceDefault = {
-                    buy: map.bids[0] ? map.bids[0].price : '0',
-                    sell: map.asks[0] ? map.asks[0].price : '0',
-                };
-            });
+      const params = {
+        params: {
+          base: this.symbol.toUpperCase().split('_')[1],
+          quote: this.symbol.toUpperCase().split('_')[0],
+          limit: '1',
+        },
+      };
+      this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
+        .then((res) => {
+          const data = res.data;
+          const map = data.map;
+          this.priceDefault = {
+            buy: map.bids[0] ? map.bids[0].price : '0',
+            sell: map.asks[0] ? map.asks[0].price : '0',
+          };
+        });
 
-        // 查询收藏列表
-        this.handleGetSelf();
+      // 查询收藏列表
+      this.handleGetSelf();
     },
     /* -------- 交易对收藏 start -------- */
     // 添加收藏
@@ -201,14 +200,14 @@ export default {
     },
     // 取消收藏
     handleSelfCancel() {
-        let list = this.$store.state.app.selfList;
-        list.forEach((v, i, arr) => {
-            if (v === this.symbolInfo.symbol1) {
-                list.splice(i, 1)
-            }
-        });
-        this.$store.dispatch('setSelfList', list);
-        this.isFavorite = false;
+      const list = this.$store.state.app.selfList;
+      list.forEach((v, i, arr) => {
+        if (v === this.symbolInfo.symbol1) {
+          list.splice(i, 1);
+        }
+      });
+      this.$store.dispatch('setSelfList', list);
+      this.isFavorite = false;
     },
     // 获取收藏列表 (判断当前交易对是否在收藏列表)
     handleGetSelf() {

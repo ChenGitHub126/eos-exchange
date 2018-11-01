@@ -7,7 +7,7 @@
 */
 
 
-import DApp from "../../utils/moreWallet";
+import DApp from '../../utils/moreWallet';
 
 const app = {
   state: {
@@ -53,9 +53,9 @@ const app = {
       state.trad = trad;
       localStorage.setItem('trad', JSON.stringify(trad));
     },
-    //自选
+    // 自选
     SET_SELFLIST: (state, list) => {
-        localStorage.setItem('selfList', JSON.stringify(list));
+      localStorage.setItem('selfList', JSON.stringify(list));
     },
     // 委托账户
     SET_TOACCOUNT: (state, toAccount) => {
@@ -132,7 +132,7 @@ const app = {
     },
     // 公钥
     setKey({ commit }, key) {
-        commit('SET_KEY', key);
+      commit('SET_KEY', key);
     },
     // 授权信息
     setPermission({ commit }, perimission) {
@@ -140,8 +140,8 @@ const app = {
     },
     updateauth({ commit }, key) {
       DApp.updateauth(key, (res) => {
-          commit('SET_PERMISSION', res);
-      })
+        commit('SET_PERMISSION', res);
+      });
     },
     // 订单详情
     setDetail({ commit }, detail) {

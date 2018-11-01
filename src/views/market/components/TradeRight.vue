@@ -54,7 +54,7 @@ export default {
       sellCount: 0,
       first: true,
       symbolData: this.$store.state.app.symbolInfo,
-      timer: 0
+      timer: 0,
     };
   },
   props: [
@@ -66,7 +66,7 @@ export default {
   watch: {
     '$store.state.app.trad': function listen(newVal) {
       this.symbolInfo = newVal;
-        this.handlePriceDepthWs();
+      this.handlePriceDepthWs();
       // this.handleDepthData(this.wsData);
     },
     '$route.params.symbol': function listen() {
@@ -94,15 +94,15 @@ export default {
     handlePriceDepthWs() {
       clearInterval(this.timer);
       const params = {
-          params: {
-              base: this.symbol.toUpperCase().split('_')[1],
-              quote: this.symbol.toUpperCase().split('_')[0],
-              limit: '50'
-          }
+        params: {
+          base: this.symbol.toUpperCase().split('_')[1],
+          quote: this.symbol.toUpperCase().split('_')[0],
+          limit: '50',
+        },
       };
 
       this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
-        .then(res => {
+        .then((res) => {
           const data = res.data;
           const map = data.map;
           this.handleDepthData(map);
@@ -114,47 +114,47 @@ export default {
             }, 100);
           }
         });
-        this.timer = setInterval(this.handlePriceDepthWs, 5000);
+      this.timer = setInterval(this.handlePriceDepthWs, 5000);
     },
 
     // 处理数据 - 精度
     handleDepthData(data) {
-          const asks = [];
-          this.sellCount = 0;
-          data.asks.forEach((v) => {
-              asks.push({
-                  price: toFixed(Number(v.price), this.symbolData.precision.price),
-                  num: toFixed(Number(v.amount), this.symbolData.precision.coin),
-              });
-              if (this.sellCount < Number(v.amount)) {
-                  this.sellCount = Number(v.amount);
-              }
-              // this.sellCount += Number(vv[1]);
-          });
-          // 卖盘需要进行倒序 (这也没倒啊???)
-          const asksArr = asks;
-          this.data.asks = asksArr;
-          if (asksArr.length > 50) {
-              this.data.asks = asksArr.slice(0, 50);
-          }
+      const asks = [];
+      this.sellCount = 0;
+      data.asks.forEach((v) => {
+        asks.push({
+          price: toFixed(Number(v.price), this.symbolData.precision.price),
+          num: toFixed(Number(v.amount), this.symbolData.precision.coin),
+        });
+        if (this.sellCount < Number(v.amount)) {
+          this.sellCount = Number(v.amount);
+        }
+        // this.sellCount += Number(vv[1]);
+      });
+      // 卖盘需要进行倒序 (这也没倒啊???)
+      const asksArr = asks;
+      this.data.asks = asksArr;
+      if (asksArr.length > 50) {
+        this.data.asks = asksArr.slice(0, 50);
+      }
 
-          const bids = [];
-          this.buyCount = 0;
-          data.bids.forEach((v) => {
-              bids.push({
-                  price: toFixed(Number(v.price), this.symbolData.precision.price),
-                  num: toFixed(Number(v.amount), this.symbolData.precision.coin),
-              });
-              if (this.buyCount < Number(v.amount)) {
-                  this.buyCount = Number(v.amount);
-              }
-              // this.buyCount += Number(vv[1]);
-          });
-          this.data.bids = bids;
-          if (bids.length > 50) {
-              this.data.bids = bids.slice(0, 50);
-          }
-      },
+      const bids = [];
+      this.buyCount = 0;
+      data.bids.forEach((v) => {
+        bids.push({
+          price: toFixed(Number(v.price), this.symbolData.precision.price),
+          num: toFixed(Number(v.amount), this.symbolData.precision.coin),
+        });
+        if (this.buyCount < Number(v.amount)) {
+          this.buyCount = Number(v.amount);
+        }
+        // this.buyCount += Number(vv[1]);
+      });
+      this.data.bids = bids;
+      if (bids.length > 50) {
+        this.data.bids = bids.slice(0, 50);
+      }
+    },
 
     // 交易量背景色
     handleBgWidth(num, count) {
@@ -167,7 +167,7 @@ export default {
     },
   },
   beforeDestroy() {
-      clearInterval(this.timer);
+    clearInterval(this.timer);
   },
 };
 </script>

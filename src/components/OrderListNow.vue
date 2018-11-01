@@ -211,23 +211,23 @@ export default {
 
         console.log('OrderListNow.vue', '获取指定交易对的当前订单记录');
         this.$http.get('http://120.220.14.100:8088/onedex/v1/order/current', {
-            params: {
-                account_name: this.$store.state.app.accountInfo.account_name,
-                symbol: this.$store.state.app.symbolInfo.name2,
-                position: 0,
-                offset: 5
-            }
+          params: {
+            account_name: this.$store.state.app.accountInfo.account_name,
+            symbol: this.$store.state.app.symbolInfo.name2,
+            position: 0,
+            offset: 5,
+          },
         }).then((res) => {
           this.loading = false;
           const data = res.data;
           const list = data.list;
           list.forEach((item) => {
-              this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
-              this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-              const localTime = toLocalTime(item.order_time);
-              this.$set(item, 'localTime', localTime.substr(5));
-              this.$set(item, 'orderStatus', 0);
-              this.$set(item, 'open', false);
+            this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+            this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+            const localTime = toLocalTime(item.order_time);
+            this.$set(item, 'localTime', localTime.substr(5));
+            this.$set(item, 'orderStatus', 0);
+            this.$set(item, 'open', false);
           });
 
           if (list.length > 5) {
@@ -285,54 +285,54 @@ export default {
         confirmButtonText: this.$t('public.sure'),
         cancelButtonText: this.$t('public.cancel'),
       }).then((data) => {
-          if (data === 'confirm'){
-              Indicator.open();
-              this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping',{
-                  params: {
-                      symbol: row.quote_symbol,
-                      contract: row.publish_account
-                  }
-              }).then(res => {
-                  const param = {
-                      scope: row.type === 'bid'? res.data.map.bidscope : res.data.map.askscope,
-                      maker: row.maker,
-                      uuid: row.order_id,
-                      authorization: {
-                          authorization: `${this.$store.state.app.accountInfo.account_name}@active`
-                      },
-                  };
-                  DApp.cancel(param, (err, res) => {
-                      Indicator.close();
-                      if(!err) {
-                          Toast(this.$t('order.revokeSuccess'));
-                          setTimeout(this.handleGetOrderListNow, 1000);
-                          return;
-                      }
-                      if (err && res.type) {
-                          if (res.type.indexOf('signature_rejected') > -1) {
-                              Toast(this.$t('quotation.cancel'));
-                          }
-                      }
-                  })
-              });
-          }
+        if (data === 'confirm') {
+          Indicator.open();
+          this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping', {
+            params: {
+              symbol: row.quote_symbol,
+              contract: row.publish_account,
+            },
+          }).then((res) => {
+            const param = {
+              scope: row.type === 'bid' ? res.data.map.bidscope : res.data.map.askscope,
+              maker: row.maker,
+              uuid: row.order_id,
+              authorization: {
+                authorization: `${this.$store.state.app.accountInfo.account_name}@active`,
+              },
+            };
+            DApp.cancel(param, (err, res) => {
+              Indicator.close();
+              if (!err) {
+                Toast(this.$t('order.revokeSuccess'));
+                setTimeout(this.handleGetOrderListNow, 1000);
+                return;
+              }
+              if (err && res.type) {
+                if (res.type.indexOf('signature_rejected') > -1) {
+                  Toast(this.$t('quotation.cancel'));
+                }
+              }
+            });
+          });
+        }
         // if (data === 'confirm') {
-          // 判断服务器状态
-          // const serverStatus = JSON.parse(sessionStorage.getItem('serverStatus'));
-          // if (!serverStatus) {
-          //   this.serverStop = true;
-          //   return;
-          // }
-          // this.$http.get('common/getCommonParam').then((res) => {
-          //   if (res.code !== 0) {
-          //     return;
-          //   }
-          //   if (!Number(res.exchangeStatus)) {
-          //     this.serverStop = true;
-          //     return;
-          //   }
-          //   this.handleGetSymbolStatus(row);
-          // });
+        // 判断服务器状态
+        // const serverStatus = JSON.parse(sessionStorage.getItem('serverStatus'));
+        // if (!serverStatus) {
+        //   this.serverStop = true;
+        //   return;
+        // }
+        // this.$http.get('common/getCommonParam').then((res) => {
+        //   if (res.code !== 0) {
+        //     return;
+        //   }
+        //   if (!Number(res.exchangeStatus)) {
+        //     this.serverStop = true;
+        //     return;
+        //   }
+        //   this.handleGetSymbolStatus(row);
+        // });
         // }
       }).catch((() => {}));
     },

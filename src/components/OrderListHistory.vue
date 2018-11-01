@@ -157,24 +157,24 @@ export default {
       try {
         this.loading = true;
         this.$http.get('http://120.220.14.100:8088/onedex/v1/order/history', {
-            params: {
-                account_name: this.$store.state.app.accountInfo.account_name,
-                symbol: this.$store.state.app.symbolInfo.name2,
-                position: 0,
-                offset: 5
-            }
+          params: {
+            account_name: this.$store.state.app.accountInfo.account_name,
+            symbol: this.$store.state.app.symbolInfo.name2,
+            position: 0,
+            offset: 5,
+          },
         }).then((res) => {
           this.loading = false;
-            const data = res.data;
-            const list = data.list;
-            list.forEach((item) => {
-                this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
-                this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
-                const localTime = toLocalTime(item.order_time);
-                this.$set(item, 'localTime', localTime.substr(5));
-                this.$set(item, 'orderStatus', 1);
-                this.$set(item, 'open', false);
-            });
+          const data = res.data;
+          const list = data.list;
+          list.forEach((item) => {
+            this.$set(item, 'symbol1', item.quote_symbol.toUpperCase());
+            this.$set(item, 'symbol2', item.base_symbol.toUpperCase());
+            const localTime = toLocalTime(item.order_time);
+            this.$set(item, 'localTime', localTime.substr(5));
+            this.$set(item, 'orderStatus', 1);
+            this.$set(item, 'open', false);
+          });
 
           // if (list.length > 5) {
           //   this.allLoaded = false;
