@@ -130,6 +130,7 @@ import ServerStop from '@/components/ServerStop';
 
 import { toLocalTime } from '@/utils/public';
 import DApp from '@/utils/moreWallet';
+import { api } from '@/api';
 import { Toast, MessageBox, Indicator } from 'mint-ui';
 import axios from 'axios';
 
@@ -210,7 +211,7 @@ export default {
         this.loading = true;
 
         console.log('OrderListNow.vue', '获取指定交易对的当前订单记录');
-        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/current', {
+        this.$http.get(api.currentOrderList, {
           params: {
             account_name: this.$store.state.app.accountInfo.account_name,
             symbol: this.$store.state.app.symbolInfo.name2,
@@ -287,7 +288,7 @@ export default {
       }).then((data) => {
         if (data === 'confirm') {
           Indicator.open();
-          this.$http.get('http://120.220.14.100:8088/onedex/v1/symbol/mapping', {
+          this.$http.get(api.symbolScope, {
             params: {
               symbol: row.quote_symbol,
               contract: row.publish_account,
@@ -360,75 +361,75 @@ export default {
     },
     /* -------- 权限校验 start -------- */
     // 获取服务器时间戳
-    handleGetTimestampJson(row) {
-      this.$http.get('/common/getTimestampJson').then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        const timestamp = res.timestamp;
-        DApp.signText(`${this.$store.state.app.accountInfo.account_name} ${timestamp}`, (err, data) => {
-          if (err) {
-            Toast(this.$t('error.tokenError'));
-            return;
-          }
-          // 针对tokenpocket特殊处理对签名
-          if (this.$store.state.app.channel === 'tokenpocket') {
-            this.handleTokenPocket(data, timestamp, row);
-            return;
-          }
-          const signature = data;
-          this.handleAccountReg(signature, timestamp, row);
-        });
-      });
-    },
+    // handleGetTimestampJson(row) {
+    //   this.$http.get('/common/getTimestampJson').then((res) => {
+    //     if (res.code !== 0) {
+    //       Toast({
+    //         message: res.msg,
+    //         position: 'center',
+    //         duration: 2000,
+    //       });
+    //       return;
+    //     }
+    //     const timestamp = res.timestamp;
+    //     DApp.signText(`${this.$store.state.app.accountInfo.account_name} ${timestamp}`, (err, data) => {
+    //       if (err) {
+    //         Toast(this.$t('error.tokenError'));
+    //         return;
+    //       }
+    //       // 针对tokenpocket特殊处理对签名
+    //       if (this.$store.state.app.channel === 'tokenpocket') {
+    //         this.handleTokenPocket(data, timestamp, row);
+    //         return;
+    //       }
+    //       const signature = data;
+    //       this.handleAccountReg(signature, timestamp, row);
+    //     });
+    //   });
+    // },
     // 权限获取校验 - 正常签名校验
-    handleAccountReg(sign, time, row) {
-      const params = {
-        signature: sign, // 钱包签名
-        account: this.$store.state.app.accountInfo.account_name, // 账户名
-        timestamp: time, // 时间戳
-        type: this.$store.state.app.channel, // channel
-      };
-      this.$http.post('/account/verify', params).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        localStorage.setItem('token', res.token);
-        this.handleCancelOrder(row);
-      });
-    },
+    // handleAccountReg(sign, time, row) {
+    //   const params = {
+    //     signature: sign, // 钱包签名
+    //     account: this.$store.state.app.accountInfo.account_name, // 账户名
+    //     timestamp: time, // 时间戳
+    //     type: this.$store.state.app.channel, // channel
+    //   };
+    //   this.$http.post('/account/verify', params).then((res) => {
+    //     if (res.code !== 0) {
+    //       Toast({
+    //         message: res.msg,
+    //         position: 'center',
+    //         duration: 2000,
+    //       });
+    //       return;
+    //     }
+    //     localStorage.setItem('token', res.token);
+    //     this.handleCancelOrder(row);
+    //   });
+    // },
     // tokenpocket sdk签名自带时间戳 - 特殊处理
-    handleTokenPocket(data, time, row) {
-      const params = {
-        signature: data.signature, // 钱包签名
-        account: this.$store.state.app.accountInfo.account_name, // 账户名
-        timestamp: time, // 服务器时间戳
-        mTimeStamp: data.timestamp, // tokenpocket返回的���间戳
-        type: this.$store.state.app.channel, // channel
-      };
-      this.$http.post('/account/tokenPocketVerify', params).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        localStorage.setItem('token', res.token);
-        this.handleCancelOrder(row);
-      });
-    },
+    // handleTokenPocket(data, time, row) {
+    //   const params = {
+    //     signature: data.signature, // 钱包签名
+    //     account: this.$store.state.app.accountInfo.account_name, // 账户名
+    //     timestamp: time, // 服务器时间戳
+    //     mTimeStamp: data.timestamp, // tokenpocket返回的���间戳
+    //     type: this.$store.state.app.channel, // channel
+    //   };
+    //   this.$http.post('/account/tokenPocketVerify', params).then((res) => {
+    //     if (res.code !== 0) {
+    //       Toast({
+    //         message: res.msg,
+    //         position: 'center',
+    //         duration: 2000,
+    //       });
+    //       return;
+    //     }
+    //     localStorage.setItem('token', res.token);
+    //     this.handleCancelOrder(row);
+    //   });
+    // },
     /* -------- 权限校验 end -------- */
   },
   beforeDestroy() {

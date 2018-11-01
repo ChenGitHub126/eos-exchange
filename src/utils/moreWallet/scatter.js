@@ -27,7 +27,11 @@ const Scatter = {
   init() {
     if (window.scatter) {
       this.scatter = window.scatter;
-      this.scatterEosJs = this.scatter.eos(network, Eos, eosOptions, config.scatterConfig.network.protocol);
+      this.scatterEosJs = this.scatter.eos(network, Eos, eosOptions, config.scatterConfig.network.protocol).then(res => {
+
+      }).catch(err => {
+          console.log(err)
+      });
       this.hasScatter = true;
       // 登出
       // if (self.scatter.identity) {
@@ -133,7 +137,7 @@ const Scatter = {
   * 获取钱包身份
   * get scatter identityInfo => publicKey
   */
-  getAccount(callback, permissionCb) {
+  getAccount(callback) {
     // alert(this.hasScatter)
     if (!this.hasScatter) {
       setTimeout(() => {

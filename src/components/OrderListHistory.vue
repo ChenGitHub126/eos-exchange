@@ -97,6 +97,7 @@
 import { toLocalTime } from '@/utils/public';
 // import { Toast } from 'mint-ui';
 import axios from 'axios';
+import { api } from '@/api';
 
 export default {
   data() {
@@ -156,7 +157,7 @@ export default {
     handleGetOrderList(page) { // 查询订单记录列表信息
       try {
         this.loading = true;
-        this.$http.get('http://120.220.14.100:8088/onedex/v1/order/history', {
+        this.$http.get(api.historyOrderList, {
           params: {
             account_name: this.$store.state.app.accountInfo.account_name,
             symbol: this.$store.state.app.symbolInfo.name2,

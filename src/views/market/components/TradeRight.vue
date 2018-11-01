@@ -37,6 +37,7 @@
 // JS
 // import { Decimal } from 'decimal.js';
 import { toFixed } from '@/utils/public';
+import { api } from '@/api';
 
 export default {
   data() {
@@ -101,7 +102,7 @@ export default {
         },
       };
 
-      this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
+      this.$http.get(api.orderMap, params)
         .then((res) => {
           const data = res.data;
           const map = data.map;

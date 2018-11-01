@@ -1,3 +1,6 @@
+import env from './env.js'
+
 export default {
-  defaultSource: 1234, // 'onedex123451'
+  chainSymbol: env === 'dev'? 'QILINEOS' : 'EOS',
+  defaultSource: env === 'dev'? '1234' : 'onedex123451'
 };

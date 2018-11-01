@@ -38,6 +38,7 @@ import Tabbar from '@/components/Tabbar';
 import DApp from '@/utils/moreWallet';
 import { GetUrlPara } from '@/utils/public';
 import cfg from '@/config';
+import { api } from '@/api';
 import { Toast } from 'mint-ui';
 
 export default {
@@ -99,14 +100,14 @@ export default {
       this.$store.dispatch('setSource', source);
       DApp.setSource(source);
 
-      // 只有获得channel后，才能继续
+      // 只有获得source后，才能继续
       // this.handleCheckAvailable(); // 暂时不检测版本
 
       setTimeout(() => {
         this.handleGetAccount();
       }, 1000);
-      // 判断是否是scatter
-      // if (channel !== 'scatter' && channel !== 'mathwallet') {
+      // 判断是否是source
+      // if (source !== 'scatter' && source !== 'mathwallet') {
       //   this.handleGetAccount();
       // }
     },
@@ -172,60 +173,26 @@ export default {
     // 查询服务器状态 - 0：暂停 | 1：正常，(并设置委托账户)
     handleCheckServerStop() {
       console.log('App.vue', '检查服务器状态并设置委托账户');
-      // this.$http.get('common/getCommonParam').then((res) => {
-      //   if (res.code !== 0) {
-      //     setTimeout(() => {
-      //       this.handleCheckServerStop();
-      //     }, 500);
-      //     return;
-      //   }
-      this.$store.dispatch('setToAccount', 'onedexchange');
-      // if (Number(res.exchangeStatus) === 0) {
-      //   sessionStorage.setItem('serverStatus', false); // 服务暂停
-      //   return;
-      // }
-      sessionStorage.setItem('serverStatus', true); // 服务正常
-      // });
+      this.$http.get(api.checkServer).then((res) => {
+        if (res.code !== '100200') {
+          sessionStorage.setItem('serverStatus', false); // 服务暂停
+          setTimeout(() => {
+            this.handleCheckServerStop();
+          }, 500);
+          return;
+        }
+        sessionStorage.setItem('serverStatus', true); // 服务正常
+      // this.$store.dispatch('setToAccount', 'onedexchange');
+      });
     },
     // 获取用户是否同意使用协议
     handleGetAccountAgree() {
-      // const params = {
-      //   account: this.$store.state.app.accountInfo.account_name,
-      //   type: 1, // 1 - eos | 2 - 其他
-      // };
-      // this.$http.post('/account/getAccountAgreement', params).then((res) => {
-      //   if (res.code !== 0) {
-      //     Toast({
-      //       message: res.msg,
-      //       position: 'center',
-      //       duration: 2000,
-      //     });
-      //     return;
-      //   }
-      //   if (res.status === 1) {
       sessionStorage.setItem('accountAgree', true);
-      //     return;
-      //   }
-      //   sessionStorage.setItem('accountAgree', false);
-      // });
     },
     // 获取账户未读消息总数
     handleNotReadCount() {
       console.log('App.vue', '获取账户未读消息总数');
-      // const params = {
-      //   accountNo: this.$store.state.app.accountInfo.account_name,
-      // };
-      // this.$http.post('/order/getUnReadCount', params).then((res) => {
-      //   if (res.code !== 0) {
-      //     Toast({
-      //       message: res.msg,
-      //       position: 'center',
-      //       duration: 2000,
-      //     });
-      //     return;
-      //   }
       //   this.$store.dispatch('setUnReadCount', res.unReadCount);
-      // });
     },
   },
   beforeDestroy() {

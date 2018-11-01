@@ -70,7 +70,7 @@ import TradeLeft from '../components/TradeLeft';
 import TradeRight from '../components/TradeRight';
 import ChangeSymbol from '../components/ChangeSymbol';
 import NewdexTip from '../components/NewdexTip';
-import axios from 'axios';
+import { api } from '@/api';
 
 export default {
   data() {
@@ -177,7 +177,7 @@ export default {
           limit: '1',
         },
       };
-      this.$http.get('http://120.220.14.100:8088/onedex/v1/order/book', params)
+      this.$http.get(api.orderMap, params)
         .then((res) => {
           const data = res.data;
           const map = data.map;
@@ -222,87 +222,87 @@ export default {
     /* -------- 交易对收藏 end -------- */
     /* -------- 权限校验 start -------- */
     // 获取服务器时间戳
-    handleGetTimestampJson() {
-      console.log('Trade.vue', '获取服务器时间戳');
-      this.$http.get('/common/getTimestampJson').then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        const timestamp = res.timestamp;
-        // 把EOS账户名+时间戳作为字符串交给scatter用publicKey进行签名处理
-        DApp.signText(`${this.$store.state.app.accountInfo.account_name} ${timestamp}`, (err, data) => {
-          if (err) {
-            Toast(this.$t('error.tokenError'));
-            return;
-          }
-          // 针对tp特殊处理对签名
-          if (this.$store.state.app.channel === 'tokenpocket') {
-            this.handleTokenPocket(data, timestamp);
-            return;
-          }
-          const signature = data;
-          this.handleAccountReg(signature, timestamp);
-        });
-      });
-    },
+    // handleGetTimestampJson() {
+    //   console.log('Trade.vue', '获取服务器时间戳');
+    //   this.$http.get('/common/getTimestampJson').then((res) => {
+    //     if (res.code !== 0) {
+    //       Toast({
+    //         message: res.msg,
+    //         position: 'center',
+    //         duration: 2000,
+    //       });
+    //       return;
+    //     }
+    //     const timestamp = res.timestamp;
+    //     // 把EOS账户名+时间戳作为字符串交给scatter用publicKey进行签名处理
+    //     DApp.signText(`${this.$store.state.app.accountInfo.account_name} ${timestamp}`, (err, data) => {
+    //       if (err) {
+    //         Toast(this.$t('error.tokenError'));
+    //         return;
+    //       }
+    //       // 针对tp特殊处理对签名
+    //       if (this.$store.state.app.channel === 'tokenpocket') {
+    //         this.handleTokenPocket(data, timestamp);
+    //         return;
+    //       }
+    //       const signature = data;
+    //       this.handleAccountReg(signature, timestamp);
+    //     });
+    //   });
+    // },
     // 权限获取校验
-    handleAccountReg(sign, time) {
-      const params = {
-        signature: sign, // 钱包签名
-        account: this.$store.state.app.accountInfo.account_name, // 账户名
-        timestamp: time, // 时间戳
-        type: this.$store.state.app.channel, // channel
-        // type: 4, // channel
-      };
-      console.log('Trade.vue', '向服务器验证签名，返回token');
-      this.$http.post('/account/verify', params).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        localStorage.setItem('token', res.token);
-        if (this.isFavorite) {
-          this.handleSelfCancel();
-          return;
-        }
-        this.handleSelfAdd();
-      });
-    },
+    // handleAccountReg(sign, time) {
+    //   const params = {
+    //     signature: sign, // 钱包签名
+    //     account: this.$store.state.app.accountInfo.account_name, // 账户名
+    //     timestamp: time, // 时间戳
+    //     type: this.$store.state.app.channel, // channel
+    //     // type: 4, // channel
+    //   };
+    //   console.log('Trade.vue', '向服务器验证签名，返回token');
+    //   this.$http.post('/account/verify', params).then((res) => {
+    //     if (res.code !== 0) {
+    //       Toast({
+    //         message: res.msg,
+    //         position: 'center',
+    //         duration: 2000,
+    //       });
+    //       return;
+    //     }
+    //     localStorage.setItem('token', res.token);
+    //     if (this.isFavorite) {
+    //       this.handleSelfCancel();
+    //       return;
+    //     }
+    //     this.handleSelfAdd();
+    //   });
+    // },
     // tokenpocket sdk签名自带时间戳 - 特殊处理
-    handleTokenPocket(data, time) {
-      const params = {
-        signature: data.signature, // 钱包签名
-        account: this.$store.state.app.accountInfo.account_name, // 账户名
-        timestamp: time, // 服务器时间戳
-        mTimeStamp: data.timestamp, // tokenpocket返回的时间戳
-        type: this.$store.state.app.channel, // channel
-      };
-      this.$http.post('/account/tokenPocketVerify', params).then((res) => {
-        if (res.code !== 0) {
-          Toast({
-            message: res.msg,
-            position: 'center',
-            duration: 2000,
-          });
-          return;
-        }
-        localStorage.setItem('token', res.token);
-        if (this.isFavorite) {
-          this.handleSelfCancel();
-          return;
-        }
-        this.handleSelfAdd();
-      });
-    },
+    // handleTokenPocket(data, time) {
+    //   const params = {
+    //     signature: data.signature, // 钱包签名
+    //     account: this.$store.state.app.accountInfo.account_name, // 账户名
+    //     timestamp: time, // 服务器时间戳
+    //     mTimeStamp: data.timestamp, // tokenpocket返回的时间戳
+    //     type: this.$store.state.app.channel, // channel
+    //   };
+    //   this.$http.post('/account/tokenPocketVerify', params).then((res) => {
+    //     if (res.code !== 0) {
+    //       Toast({
+    //         message: res.msg,
+    //         position: 'center',
+    //         duration: 2000,
+    //       });
+    //       return;
+    //     }
+    //     localStorage.setItem('token', res.token);
+    //     if (this.isFavorite) {
+    //       this.handleSelfCancel();
+    //       return;
+    //     }
+    //     this.handleSelfAdd();
+    //   });
+    // },
     /* -------- 权限校验 end -------- */
   },
   beforeDestroy() {

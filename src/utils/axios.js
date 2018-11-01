@@ -1,11 +1,11 @@
 import axios from 'axios';
 import qs from 'qs'; // fromData 转 string
 import { Toast } from 'mint-ui';
+import { baseUrl } from '@/api'
 import store from '@/store';
 
-const ApiVersion = 'http://120.220.14.100:8581'; // 默认请求地址 http://120.220.14.100:8088
 const https = axios.create({
-  baseURL: ApiVersion,
+  baseURL: baseUrl,
   timeout: 30000,
 });
 

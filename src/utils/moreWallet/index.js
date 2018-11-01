@@ -51,8 +51,8 @@ const DApp = {
     },
 
     // 当前账号信息
-    getAccount(callback, permissionCb) {
-        this.obj.getAccount(callback, permissionCb);
+    getAccount(callback) {
+        this.obj.getAccount(callback);
     },
 
     // 查询授权

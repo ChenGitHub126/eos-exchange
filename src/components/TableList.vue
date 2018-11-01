@@ -130,7 +130,9 @@
 
 <script>
 import { toFixed } from '@/utils/public';
+import { api } from '@/api';
 import { Toast } from 'mint-ui';
+import cfg from '@/config';
 
 export default {
   data() {
@@ -157,6 +159,8 @@ export default {
       // 当前交易对
       symbol: '',
       isIOS: false,
+
+      timer: 0,
     };
   },
   props: [
@@ -228,12 +232,12 @@ export default {
       this.partition.forEach((item) => {
         const modelData = [];
         const eosSymbolArr = [];
-        this.$http.get('/exchangeApi/wallet/trade_symbol_new').then((res) => {
+        this.$http.get(api.tradeSymbolList).then((res) => {
           const data = res.data;
           const list = data.list;
           if (list) {
             list.forEach((v, i, arr) => {
-              if (v.chain_symbol.toUpperCase() === 'QILINEOS') {
+              if (v.chain_symbol.toUpperCase() === cfg.publicCfg.chainSymbol) {
                 eosSymbolArr.push(v.symbol);
                 modelData.push({
                   asset_code1: v.asset_code1,
@@ -249,8 +253,7 @@ export default {
             });
           }
 
-          this.$http.get('/exchangeApi/wallet/geteoswalletasset')
-            .then((res) => {
+          this.$http.get(api.eosAssetList).then((res) => {
               const data2 = res.data;
               const list2 = data2.list;
               list2.forEach((v, i, arr) => {
@@ -269,7 +272,7 @@ export default {
               this.handleData(item, modelData);
             });
 
-          this.$http.get('/exchangeApi/wallet/trade_quotations', {
+          this.$http.get(api.tradeQuatationsList, {
             params: {
               symbol: eosSymbolArr.toString(),
             },
@@ -291,6 +294,8 @@ export default {
           });
         });
       });
+      clearInterval(this.timer);
+      this.timer = setInterval(this.handleGetData, 5000)
     },
     handleData(item, modelData) {
       this.loading = false;
@@ -444,6 +449,7 @@ export default {
     },
   },
   beforeDestroy() {
+      clearInterval(this.timer);
   },
 };
 </script>
